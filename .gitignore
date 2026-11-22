@@ -1,0 +1,11 @@
+node_modules/
+dist/
+dist-review/
+tmp/
+.vite/
+*.local
+.env
+.env.local
+.DS_Store
+dist-live/
+scripts/out/

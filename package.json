@@ -1,0 +1,32 @@
+{
+  "name": "byulgyeol-ziwei-app",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5173 --strictPort",
+    "build": "tsc --noEmit && vite build",
+    "build:pages": "VITE_BASE_PATH=/ VITE_ENABLE_GOODS_CHECKOUT=false npm run build",
+    "build:ziwei-only": "VITE_ZIWEI_ONLY=true VITE_BASE_PATH=/ npm run build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
+    "worker:typecheck": "tsc -p workers/tsconfig.json",
+    "worker:dev": "npm --prefix workers run dev",
+    "worker:deploy": "npm --prefix workers run deploy"
+  },
+  "dependencies": {
+    "iztro": "2.6.5",
+    "korean-lunar-calendar": "0.4.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.3"
+  }
+}

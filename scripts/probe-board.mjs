@@ -1,0 +1,22 @@
+import { chromium } from '/workspace/.scratch/pw/node_modules/playwright/index.mjs';
+const browser = await chromium.launch({ executablePath: '/workspace/.scratch/pw/browsers/chromium-1148/chrome-linux/chrome', args: ['--no-sandbox'] });
+const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: 'ko-KR' });
+const page = await ctx.newPage();
+const errors = [];
+page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+page.on('pageerror', (e) => errors.push(e.message));
+await page.goto('http://127.0.0.1:4173/?theme=character', { waitUntil: 'networkidle' });
+await page.getByRole('button', { name: /예시 먼저 보기|예시 명반/ }).first().click();
+await page.waitForTimeout(1800);
+const board = page.locator('.chart-board').first();
+await board.scrollIntoViewIfNeeded();
+await page.waitForTimeout(400);
+await board.screenshot({ path: '/workspace/projects/ziwei-app/scripts/out/board.png' });
+const truncated = await page.evaluate(() => [...document.querySelectorAll('.pcell *')].filter((el) => el.scrollWidth > el.clientWidth + 1).map((el) => el.className + ':' + el.textContent.trim().slice(0, 8)).slice(0, 12));
+console.log('truncated cells:', truncated);
+// 헤더 확인
+const hdr = await page.evaluate(() => [...document.querySelectorAll('button')].filter((b) => b.getBoundingClientRect().top < 70).map((b) => { const r = b.getBoundingClientRect(); return [b.textContent.trim().slice(0, 10), Math.round(r.left), Math.round(r.right)]; }));
+console.log('header:', JSON.stringify(hdr));
+await page.screenshot({ path: '/workspace/projects/ziwei-app/scripts/out/result_header.png', clip: { x: 0, y: 0, width: 390, height: 120 } });
+console.log('console errors:', errors.length, errors.slice(0, 3));
+await browser.close();
