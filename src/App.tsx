@@ -18,7 +18,6 @@ import WesternReport from './components/WesternReport';
 import SynastryPreview from './components/SynastryPreview';
 import SynastryReport from './components/SynastryReport';
 import NewYearReport from './components/NewYearReport';
-import ThemeToggle from './components/ThemeToggle';
 import LegalFooter from './components/LegalFooter';
 import { PAYMENTS_LIVE, ZIWEI_ONLY } from './config/env';
 import {
@@ -580,8 +579,6 @@ export default function App() {
         )}
 
         <LegalFooter />
-
-        <ThemeToggle />
       </div>
     </ThemeProvider>
   );
