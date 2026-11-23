@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { BirthInput, ChartModel } from './lib/chart';
-import { SAMPLE_INPUT, buildChart } from './lib/chart';
+import { buildChart } from './lib/chart';
 import type { WesternModel } from './lib/western';
 import { buildWestern } from './lib/western';
 import { PRODUCTS, findProduct, type Product, type ProductId } from './lib/products';
@@ -36,6 +36,10 @@ export default function App() {
   const [theme, setThemeState] = useState<ThemeId>(() => readThemeFromUrl());
   const [system, setSystemState] = useState<SystemId>(() => readSystemFromUrl());
   const [view, setView] = useState<View>('landing');
+  /** 랜딩 마법사 단계 — 0 인트로 · 1 입력 · 2 별 이야기 */
+  const [landingStep, setLandingStep] = useState(0);
+  /** 결과 마법사 단계 — 0 수호별 · 1 12개 별방 · 2 올해의 흐름 · 3 2027 부적 · 4 별 이야기 */
+  const [chartStep, setChartStep] = useState(0);
   const [chart, setChart] = useState<ChartModel | null>(null);
   /** 결제 후 돌아왔을 때 리포트를 다시 그리기 위한 입력값 (화면 상태로만 보관) */
   const [birthInput, setBirthInput] = useState<BirthInput | null>(null);
@@ -117,6 +121,7 @@ export default function App() {
       setBirthInput(input);
       setChart(built);
       setWestern(west);
+      setChartStep(0);
       setView(wanted === 'western' ? 'western' : 'chart');
       if (pendingProduct) {
         const id = pendingProduct;
@@ -156,10 +161,8 @@ export default function App() {
     }
     if (id === 'compat' && !chart) {
       setPendingProduct('compat');
-      document.getElementById(system === 'western' ? 'western-chart' : 'chart')?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
+      if (system === 'western') document.getElementById('western-chart')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      else setLandingStep(1);
       flash(
         theme === 'character'
           ? '먼저 네 별지도를 그리면 궁합 점수를 바로 볼 수 있어!'
@@ -179,10 +182,8 @@ export default function App() {
       setPendingProduct(null);
       return;
     }
-    document.getElementById(system === 'western' ? 'western-chart' : 'chart')?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-    });
+    if (system === 'western') document.getElementById('western-chart')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    else setLandingStep(1);
     flash(
       theme === 'character'
         ? '먼저 태어난 순간을 알려주면, 바로 이어서 열어줄게!'
@@ -392,7 +393,7 @@ export default function App() {
     }
 
     setFocusNewYear(false);
-    document.getElementById('chart')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setLandingStep(1);
     window.setTimeout(() => {
       const yearSelect = document.getElementById('birth-year') as HTMLSelectElement | null;
       yearSelect?.focus({ preventScroll: true });
@@ -410,12 +411,13 @@ export default function App() {
         {view === 'landing' && (
           <Landing
             onSubmit={openChart}
-            onSample={() => openChart(SAMPLE_INPUT)}
             draftRef={landingDraftRef}
             onProduct={handleProductFromLanding}
             onNewYear={handleNewYearFromLanding}
             system={system}
             onSystemChange={setSystem}
+            step={landingStep}
+            onStep={setLandingStep}
           />
         )}
 
@@ -427,6 +429,8 @@ export default function App() {
             newYearUnlocked={newYearUnlocked}
             focusNewYear={focusNewYear}
             onFocusNewYearHandled={() => setFocusNewYear(false)}
+            step={chartStep}
+            onStep={setChartStep}
             onReset={() => {
               setBirthInput(null);
               setChart(null);
@@ -438,6 +442,8 @@ export default function App() {
               setWesternPaid(false);
               setHasBundle(false);
               setNewYearUnlocked(false);
+              setLandingStep(0);
+              setChartStep(0);
               setView('landing');
             }}
             onUnlock={handleUnlock}

@@ -119,7 +119,9 @@ export default function ChartBoard({ chart, selected, onSelect }: Props) {
             </p>
             <p className="num mt-0.5 truncate text-[12px] t-muted sm:text-[13px]">{chart.solarText}</p>
             <p className="num mt-0.5 hidden truncate text-[12.5px] t-faint sm:block">{chart.lunarText}</p>
-            <p className="num mt-0.5 truncate text-[12px] t-faint sm:hidden">{chart.timeText.split(' ')[0]}</p>
+            <p className="num mt-0.5 truncate text-[12px] t-faint sm:hidden">
+              {chart.timeKnown ? chart.timeText.split(' ')[0] : '시간 모름'}
+            </p>
           </div>
 
           <div className="mt-1 space-y-1 sm:space-y-1.5">

@@ -13,12 +13,15 @@ export type BirthDraft = {
 
 type Props = {
   onSubmit: (input: BirthInput) => void;
-  onSample: () => void;
   /** 최신 입력값을 즉시 읽어 갈 수 있는 참조 — 배너 버튼이 렌더 지연 없이 바로 씁니다. */
   draftRef?: MutableRefObject<BirthDraft | null>;
   variant?: 'hero' | 'inline';
   /** 어느 체계를 계산하는 폼인지 — 제목·버튼 문구가 달라집니다. */
   mode?: 'ziwei' | 'western';
+  /** 마법사 하단 '다음' 버튼이 이 폼을 제출하도록 form id 를 붙입니다. */
+  formId?: string;
+  /** 폼 안의 큰 제출 버튼을 숨기고 바깥(마법사 하단) 버튼으로 제출할 때 */
+  hideSubmit?: boolean;
 };
 
 
@@ -28,7 +31,6 @@ const WESTERN_FORM = {
   titleChar: '태어난 하늘의 좌표를 알려줘',
   desc: '같은 생년월일시로 태양·달·어센던트와 행성의 하우스를 그립니다.',
   submit: '내 천궁도 열기',
-  sample: '예시 천궁도로 먼저 보기',
   timeHint: '시간을 모르면 어센던트와 하우스가 정오 기준으로 계산됩니다.',
   nameLabel: '천궁도에 새길 이름',
 };
@@ -37,7 +39,7 @@ const YEARS = Array.from({ length: 2015 - 1930 + 1 }, (_, i) => 2015 - i);
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
 const daysIn = (y: number, m: number) => new Date(y, m, 0).getDate();
 
-export default function BirthForm({ onSubmit, onSample, draftRef, variant = 'hero', mode = 'ziwei' }: Props) {
+export default function BirthForm({ onSubmit, draftRef, variant = 'hero', mode = 'ziwei', formId, hideSubmit = false }: Props) {
   const { theme, copy } = useTheme();
   const isCharacter = theme === 'character';
   const isWestern = mode === 'western';
@@ -46,7 +48,6 @@ export default function BirthForm({ onSubmit, onSample, draftRef, variant = 'her
     title: isWestern ? (isCharacter ? WESTERN_FORM.titleChar : WESTERN_FORM.title) : copy.form.title,
     desc: isWestern ? WESTERN_FORM.desc : copy.form.desc,
     submit: isWestern ? WESTERN_FORM.submit : copy.form.submit,
-    sample: isWestern ? WESTERN_FORM.sample : copy.form.sample,
     timeHint: isWestern ? WESTERN_FORM.timeHint : copy.form.timeHint,
     nameLabel: isWestern ? WESTERN_FORM.nameLabel : isCharacter ? '별지도에 새길 이름' : '이름',
   };
@@ -101,6 +102,7 @@ export default function BirthForm({ onSubmit, onSample, draftRef, variant = 'her
 
   return (
     <form
+      id={formId}
       onSubmit={submit}
       className={`${variant === 'hero' ? 't-card p-6 sm:p-8' : 't-card p-6 sm:p-7'} relative overflow-hidden`}
     >
@@ -272,21 +274,14 @@ export default function BirthForm({ onSubmit, onSample, draftRef, variant = 'her
 
       {error && <p className="relative mt-4 text-[14px] text-[#d98a7a]">{error}</p>}
 
-      <button type="submit" className="t-btn t-btn-primary relative mt-6 w-full py-3.5 text-[16px]">
-        {label.submit}
-        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M5 12h13M13 6.5L18.5 12 13 17.5" />
-        </svg>
-      </button>
-
-      <button
-        type="button"
-        onClick={onSample}
-        className="relative mt-3 w-full text-center text-[14px] underline decoration-1 underline-offset-4 transition t-muted"
-        style={{ textDecorationColor: 'var(--line-strong)' }}
-      >
-        {label.sample}
-      </button>
+      {!hideSubmit && (
+        <button type="submit" className="t-btn t-btn-primary relative mt-6 w-full py-3.5 text-[16px]">
+          {label.submit}
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <path d="M5 12h13M13 6.5L18.5 12 13 17.5" />
+          </svg>
+        </button>
+      )}
     </form>
   );
 }

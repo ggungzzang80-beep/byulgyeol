@@ -1,7 +1,4 @@
-import { useEffect, useState } from 'react';
 import type { BirthInput } from '../lib/chart';
-import { SAMPLE_INPUT } from '../lib/chart';
-import { buildWestern, type WesternModel } from '../lib/western';
 import {
   WESTERN_PRODUCTS,
   productBadge,
@@ -20,27 +17,13 @@ import { SectionLabel, StarMark } from './ui';
 
 type Props = {
   onSubmit: (input: BirthInput) => void;
-  onSample: () => void;
   onProduct: (id: ProductId) => void;
 };
 
 /** 서양 점성술 랜딩 — 두 테마가 같은 화면을 쓰되 말투만 달라집니다. */
-export default function WesternLanding({ onSubmit, onSample, onProduct }: Props) {
+export default function WesternLanding({ onSubmit, onProduct }: Props) {
   const { theme } = useTheme();
   const isCharacter = theme === 'character';
-  const [sample, setSample] = useState<WesternModel | null>(null);
-
-  useEffect(() => {
-    let alive = true;
-    buildWestern(SAMPLE_INPUT)
-      .then((m) => {
-        if (alive) setSample(m);
-      })
-      .catch(() => undefined);
-    return () => {
-      alive = false;
-    };
-  }, []);
 
   const t = {
     eyebrow: 'WESTERN · 出生天宮圖',
@@ -50,7 +33,6 @@ export default function WesternLanding({ onSubmit, onSample, onProduct }: Props)
       ? '생년월일시로 태양·달·어센던트, 그리고 행성 7개의 하우스를 그려. 자미두수와는 다른 체계야 — 12개 별방이 아니라 출생 천궁도 하나로 읽어.'
       : '생년월일시로 태양·달·어센던트와 행성 7개의 하우스를 계산합니다. 자미두수와는 다른 체계 — 12궁 명반이 아니라 출생 천궁도(네이탈 차트)로 읽습니다.',
     cta: isCharacter ? '내 천궁도 열기' : '무료로 천궁도 보기',
-    sampleCta: isCharacter ? '예시 천궁도 먼저 보기' : '예시 천궁도로 먼저 보기',
   };
 
   return (
@@ -79,9 +61,6 @@ export default function WesternLanding({ onSubmit, onSample, onProduct }: Props)
                   {t.cta}
                   <span aria-hidden="true">→</span>
                 </a>
-                <button onClick={onSample} className="t-btn t-btn-ghost px-4 py-3 text-[13.5px]">
-                  {t.sampleCta}
-                </button>
               </div>
 
               <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-[13px] t-faint">
@@ -96,13 +75,8 @@ export default function WesternLanding({ onSubmit, onSample, onProduct }: Props)
                 className="rounded-[28px] p-3"
                 style={{ background: 'var(--field-bg)', border: '1px solid var(--line)' }}
               >
-                <NatalWheel model={sample ?? undefined} size={236} />
+                <NatalWheel size={236} />
               </div>
-              {sample && (
-                <p className="mt-2 text-center text-[12.5px] t-faint">
-                  예시 · 태양 {sample.sun.signName} · 어센던트 {sample.rising.name}
-                </p>
-              )}
             </div>
           </div>
         </div>
@@ -123,7 +97,6 @@ export default function WesternLanding({ onSubmit, onSample, onProduct }: Props)
               body: isCharacter
                 ? '겉으로 보이는 성격이 아니라, 네가 결국 어떤 사람이 되려는지.'
                 : '겉으로 드러난 성격이 아니라, 결국 어떤 사람이 되려는지.',
-              value: sample ? sample.sun.signName : null,
             },
             {
               glyph: '☾',
@@ -132,7 +105,6 @@ export default function WesternLanding({ onSubmit, onSample, onProduct }: Props)
               body: isCharacter
                 ? '혼자 있을 때의 기분, 위로받고 싶은 방식이 여기에 있어.'
                 : '혼자 있을 때의 기분과 위로받는 방식이 여기에 있습니다.',
-              value: sample ? sample.moon.signName : null,
             },
             {
               glyph: 'ASC',
@@ -141,7 +113,6 @@ export default function WesternLanding({ onSubmit, onSample, onProduct }: Props)
               body: isCharacter
                 ? '처음 만난 사람이 느끼는 너의 온도. 태어난 시간까지 알아야 정확해져.'
                 : '처음 만난 사람이 느끼는 인상. 태어난 시간까지 알아야 정확해집니다.',
-              value: sample ? sample.rising.name : null,
             },
           ].map((c) => (
             <div key={c.label} className="t-card p-5">
@@ -149,7 +120,6 @@ export default function WesternLanding({ onSubmit, onSample, onProduct }: Props)
                 <span className="text-[22px]" style={{ color: 'var(--accent)' }} aria-hidden="true">
                   {c.glyph}
                 </span>
-                {c.value && <span className="t-chip !text-[12.5px]">{c.value}</span>}
               </div>
               <p className="t-title mt-3 text-[17px]">{c.label}</p>
               <p className="mt-0.5 text-[12.5px] tracking-[0.12em] t-faint">{c.means}</p>
@@ -203,7 +173,7 @@ export default function WesternLanding({ onSubmit, onSample, onProduct }: Props)
             </div>
           </div>
           <div className="order-1 lg:order-2">
-            <BirthForm onSubmit={onSubmit} onSample={onSample} mode="western" />
+            <BirthForm onSubmit={onSubmit} mode="western" />
           </div>
         </div>
       </section>

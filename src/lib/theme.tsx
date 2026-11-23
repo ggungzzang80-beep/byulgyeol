@@ -21,7 +21,6 @@ export type ThemeCopy = {
     desc: string;
     namePlaceholder: string;
     submit: string;
-    sample: string;
     timeHint: string;
     solar: string;
     lunar: string;
@@ -36,7 +35,6 @@ export type ThemeCopy = {
     caution: string;
     numbersTitle: string;
     numbersNote: string;
-    yearNote: (decadal: string, palace: string) => string;
     boardSection: string;
     boardTitle: (name: string) => string;
     boardHint: string;
@@ -113,7 +111,6 @@ const MYSTIC: ThemeCopy = {
     desc: '한 번의 입력으로 열두 궁과 열네 주성이 당신의 자리에 놓입니다.',
     namePlaceholder: '리포트에 새길 이름',
     submit: '내 명반 열기',
-    sample: '예시 명반으로 먼저 보기',
     timeHint: '시간을 모르면 명궁이 달라질 수 있습니다. 모르는 경우 정오(오시)로 계산합니다.',
     solar: '양력',
     lunar: '음력',
@@ -128,7 +125,6 @@ const MYSTIC: ThemeCopy = {
     caution: '주의',
     numbersTitle: '이 명반의 세 가지 숫자',
     numbersNote: '각 궁의 주성·보좌성·사화를 점수화한 값입니다. 100점은 없습니다 — 다 좋은 명반은 없으니까요.',
-    yearNote: (decadal, palace) => `올해 대한은 ${decadal}, 유년 명궁은 ${palace}입니다.`,
     boardSection: '12궁 명반',
     boardTitle: (name) => (name ? `${name} 님의 하늘` : '나의 하늘'),
     boardHint: '궁을 누르면 그 자리의 주성·보좌성·사화 해설이 열립니다.',
@@ -207,7 +203,6 @@ const CHARACTER: ThemeCopy = {
     desc: '생년월일시만 있으면, 가디언이 너의 별지도를 그려줄게.',
     namePlaceholder: '별지도에 새길 이름 (선택)',
     submit: '내 별지도 열기',
-    sample: '예시 별지도 먼저 보기',
     timeHint: '시간을 모르면 별의 자리가 조금 달라질 수 있어. 모르면 정오 기준으로 그려줄게!',
     solar: '양력',
     lunar: '음력',
@@ -222,7 +217,6 @@ const CHARACTER: ThemeCopy = {
     caution: '이건 조심',
     numbersTitle: '별빛 지수 3가지',
     numbersNote: '별이 놓인 자리로 계산한 지수야. 높낮이보다 "어디에 힘을 줄지" 보는 지도라고 생각해 줘!',
-    yearNote: (decadal, palace) => `올해의 큰 별은 ${decadal}, 올해 네 별방은 ${palace}이야.`,
     boardSection: '12개의 별방',
     boardTitle: (name) => (name ? `${name}의 별지도` : '나의 별지도'),
     boardHint: '별방을 누르면 그 방에 사는 별 이야기가 열려.',
@@ -336,11 +330,20 @@ export type ThemeArt = {
   greeting: string;
   /** 장면 이미지 — 캐릭터 안내 비주얼 */
   scenes: Array<{ id: string; src: string; alt: string }>;
+  /** 마법사 단계별 장면컷 (캐릭터 테마만) */
+  steps?: {
+    /** 12개 별방(별지도) 단계 */
+    board: { src: string; alt: string };
+    /** 운세 풀이 단계 */
+    reading: { src: string; alt: string };
+    /** 2027 부적 단계 */
+    amulet: { src: string; alt: string };
+  };
 };
 
 /**
  * 캐릭터 테마의 메인 캐릭터 — '하온 + 오드아이 별빛 고양이'
- * (밤하늘 발코니 / 카페 창가 / 서재 — 세 장면은 같은 인물·같은 고양이)
+ * (밤 누각 / 전통 서재 / 마루 — 모든 장면은 같은 인물·같은 고양이, 동양 전통 배경)
  */
 export const THEME_ART: Record<ThemeId, ThemeArt> = {
   mystic: {
@@ -352,13 +355,27 @@ export const THEME_ART: Record<ThemeId, ThemeArt> = {
   },
   character: {
     hero: `${ART}haon-hero.webp`,
-    alt: '별이 쏟아지는 밤 발코니에 기대어 오드아이 흰 고양이와 함께 서 있는 하온',
+    alt: '별이 쏟아지는 밤, 전통 누각 난간에 기대어 오드아이 흰 고양이와 함께 서 있는 하온',
     avatar: `${ART}haon-avatar.webp`,
-    greeting: `${ART}haon-face-cat.webp`,
+    greeting: `${ART}haon-greeting.webp`,
     scenes: [
-      { id: 'cafe', src: `${ART}haon-cafe.webp`, alt: '카페 창가에서 고양이와 마주 보는 하온' },
-      { id: 'night', src: `${ART}haon-night.webp`, alt: '별이 쏟아지는 밤 발코니의 하온과 고양이' },
-      { id: 'study', src: `${ART}haon-study.webp`, alt: '서재에서 안경을 쓰고 책을 읽는 하온과 잠든 고양이' },
+      { id: 'board', src: `${ART}haon-board.webp`, alt: '전통 서재에서 별지도 두루마리를 펼쳐 든 하온과 잠든 오드아이 고양이' },
+      { id: 'reading', src: `${ART}haon-reading.webp`, alt: '누각 마루에서 찻잔과 향로 곁에 앉은 하온과 고양이' },
+      { id: 'amulet', src: `${ART}haon-amulet.webp`, alt: '밤 누각에서 붉은 실을 묶은 부적을 들어 보이는 하온과 고양이' },
     ],
+    steps: {
+      board: {
+        src: `${ART}haon-board.webp`,
+        alt: '촛불 아래 펼친 별지도 두루마리와 하온, 곁에서 잠든 오드아이 고양이',
+      },
+      reading: {
+        src: `${ART}haon-reading.webp`,
+        alt: '해질녘 누각 마루에서 찻잔과 향로를 곁에 두고 별을 읽는 하온과 고양이',
+      },
+      amulet: {
+        src: `${ART}haon-amulet.webp`,
+        alt: '별이 쏟아지는 밤 누각에서 붉은 실 부적을 들어 보이는 하온과 오드아이 고양이',
+      },
+    },
   },
 };

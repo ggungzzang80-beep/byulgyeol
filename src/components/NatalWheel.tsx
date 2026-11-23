@@ -32,7 +32,7 @@ export default function NatalWheel({ model, size = 260, className = '', showPlan
       className={className}
       style={{ width: size, height: size }}
       role="img"
-      aria-label={model ? `${model.name || '나'}의 출생 천궁도` : '출생 천궁도 예시'}
+      aria-label={model ? `${model.name || '나'}의 출생 천궁도` : '출생 천궁도 자리'}
     >
       <circle cx={c} cy={c} r={outer} fill="none" stroke="var(--line-strong)" strokeWidth="1" />
       <circle cx={c} cy={c} r={ring} fill="none" stroke="var(--line)" strokeWidth="0.8" />

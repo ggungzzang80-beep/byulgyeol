@@ -375,16 +375,3 @@ export async function buildChart(input: BirthInput): Promise<ChartModel> {
     seed,
   };
 }
-
-/** 예시 명반 (체험하기) — 1996년 5월 21일 오시, 여성 */
-export const SAMPLE_INPUT: BirthInput = {
-  name: '하늘',
-  year: 1996,
-  month: 5,
-  day: 21,
-  calendar: 'solar',
-  isLeap: false,
-  timeIndex: 6,
-  timeKnown: true,
-  gender: 'female',
-};
