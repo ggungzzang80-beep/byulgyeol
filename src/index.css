@@ -764,6 +764,25 @@
   .theme-character {
     background: #fff !important;
   }
+  /* 어두운 테마(자미원)는 인쇄에서 종이가 흰색이므로 글자·카드 토큰을 밝은 배경용으로 바꿉니다.
+     (t-panel 은 자체 배경을 가지므로 --panel-* 토큰을 그대로 씁니다) */
+  .theme-mystic {
+    --text: #171226;
+    --text-2: #2c2540;
+    --muted: #4a4258;
+    --faint: #5f5770;
+    --card: #ffffff;
+    --card-2: #ffffff;
+    --line: rgba(0, 0, 0, 0.14);
+    --line-soft: rgba(0, 0, 0, 0.08);
+    --line-strong: rgba(0, 0, 0, 0.24);
+    --field-bg: #f7f5fa;
+    --chip-bg: #f4f1f8;
+    --chip-text: #4a3f5e;
+    --accent-deep: #6b5320;
+    --accent: #8a6b2f;
+    --accent-soft: rgba(138, 107, 47, 0.12);
+  }
   .t-card,
   .t-panel,
   .t-chip,
