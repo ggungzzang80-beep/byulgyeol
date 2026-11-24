@@ -23,8 +23,7 @@ export const PRODUCTS: Product[] = [
     system: 'ziwei',
     name: '내 인생 사용설명서',
     hanja: '人生使用說明書',
-    price: 4900,
-    originalPrice: 6900,
+    price: 3900,
     tagline: '명궁 · 배우자상 · 재물 · 진로 핵심만',
     points: ['명궁 주성 심층 해설', '연애 타입 · 배우자상', '직업 적성 3가지', '돈이 새는 구체적 장면', '올해의 주의 한 가지'],
   },
@@ -34,7 +33,6 @@ export const PRODUCTS: Product[] = [
     name: '프리미엄 12궁 & 운세 풀 리포트',
     hanja: '十二宮 全解',
     price: 12900,
-    originalPrice: 19900,
     tagline: '12궁 전체 + 올해·10년 흐름',
     points: [
       '12궁별 상세 풀이 (궁마다 3문단)',
@@ -51,8 +49,7 @@ export const PRODUCTS: Product[] = [
     system: 'ziwei',
     name: '두 사람 자미두수 궁합',
     hanja: '緣分 合婚',
-    price: 9900,
-    originalPrice: 12900,
+    price: 6900,
     tagline: '우리가 오래 가는 조건',
     points: ['두 사람 명반 비교', '감정·생활·장기 궁합 지수', '부딪히는 지점과 넘는 법', '함께할 때의 최적 역할 분담'],
   },
@@ -61,8 +58,7 @@ export const PRODUCTS: Product[] = [
     system: 'western',
     name: '출생 천궁도 리포트',
     hanja: '出生天宮圖',
-    price: 4900,
-    originalPrice: 6900,
+    price: 3900,
     tagline: '태양 · 달 · 어센던트 + 행성 7개의 하우스',
     points: [
       '태양·달·어센던트 심층 해설',
@@ -78,7 +74,6 @@ export const PRODUCTS: Product[] = [
     name: '두 사람 시너스트리 궁합',
     hanja: '合圖 星緣',
     price: 6900,
-    originalPrice: 9900,
     tagline: '두 사람의 행성이 만드는 각',
     points: [
       '두 천궁도의 행성 교차 각 전체',
@@ -94,8 +89,7 @@ export const PRODUCTS: Product[] = [
     system: 'ziwei',
     name: '2027 정미년 신년 정밀 운세',
     hanja: '丁未年 年運',
-    price: 9900,
-    originalPrice: 12900,
+    price: 6900,
     tagline: '2027 열두 달 · 보완 기운 · 수호 원석 처방',
     points: [
       '2027 유년 명궁과 사화 네 개의 자리',
@@ -111,8 +105,7 @@ export const PRODUCTS: Product[] = [
     system: 'both',
     name: '동양 × 서양 통합 리포트',
     hanja: '東西統合',
-    price: 14900,
-    originalPrice: 17800,
+    price: 12900,
     tagline: '자미두수 12궁 + 서양 천궁도를 교차 해석',
     points: [
       '자미두수 12궁 전체 해설',
@@ -132,34 +125,36 @@ export const ZIWEI_PRODUCTS = PRODUCTS.filter((p) => p.system === 'ziwei' && p.i
 export const WESTERN_PRODUCTS = PRODUCTS.filter((p) => p.system === 'western' || p.system === 'both');
 
 /**
- * 테마별 판매가.
- * - 자미원(미스틱): 4,900 / 12,900 / 9,900
- * - 별의 속삭임(캐릭터): 첫 상품을 3,900원(커피 한 잔 값)으로 낮춘 소액결제 라인.
- *   계산 엔진·상품 구성은 두 테마가 동일하고, 가격과 카피만 다릅니다.
+ * 판매가 정본 (2026-11-24 @kooleumi8 확정).
+ * 자미원(미스틱)과 별의 속삭임(캐릭터) 두 테마가 **같은 가격표**를 씁니다.
+ *   - 내 인생 사용설명서(기본·자미두수) 3,900원
+ *   - 프리미엄 12궁 12,900원
+ *   - 궁합 6,900원 · 시너스트리 6,900원
+ *   - 출생 천궁도 3,900원
+ *   - 2027 신년 6,900원
+ *   - 통합 12,900원
+ * 계산 엔진·상품 구성·가격은 두 테마가 동일하고, 카피(말투)만 다릅니다.
+ * 정가(취소선) 표기는 쓰지 않습니다 — 테마마다 다르던 옛 가격(4,900 / 9,900 / 14,900)이
+ * 화면에 숫자로 남지 않도록, 지금 결제할 금액 하나만 보여 줍니다.
  */
-export const CHARACTER_FIRST_PRICE = 3900;
-export const CHARACTER_COMPAT_PRICE = 6900;
-export const CHARACTER_WESTERN_PRICE = 3900;
-export const CHARACTER_BUNDLE_PRICE = 12900;
+export const FIRST_PRICE = 3900;
+export const COMPAT_PRICE = 6900;
+export const WESTERN_PRICE = 3900;
+export const BUNDLE_PRICE = 12900;
+export const NEWYEAR_PRICE = 6900;
 
-export const CHARACTER_NEWYEAR_PRICE = 6900;
+/** 이전 이름 — 캐릭터 테마 전용 가격이던 시절의 상수. 지금은 두 테마 공통 통일가입니다. */
+export const CHARACTER_FIRST_PRICE = FIRST_PRICE;
+export const CHARACTER_COMPAT_PRICE = COMPAT_PRICE;
+export const CHARACTER_WESTERN_PRICE = WESTERN_PRICE;
+export const CHARACTER_BUNDLE_PRICE = BUNDLE_PRICE;
+export const CHARACTER_NEWYEAR_PRICE = NEWYEAR_PRICE;
 
-export function productPrice(product: Product, theme: ThemeId): number {
-  if (theme === 'character') {
-    if (product.id === 'newyear2027') return CHARACTER_NEWYEAR_PRICE;
-    if (product.id === 'basic') return CHARACTER_FIRST_PRICE;
-    if (product.id === 'compat') return CHARACTER_COMPAT_PRICE;
-    if (product.id === 'western') return CHARACTER_WESTERN_PRICE;
-    if (product.id === 'bundle') return CHARACTER_BUNDLE_PRICE;
-  }
+export function productPrice(product: Product, _theme: ThemeId): number {
   return product.price;
 }
 
-export function productOriginalPrice(product: Product, theme: ThemeId): number | undefined {
-  if (theme === 'character' && product.id === 'newyear2027') return 9900;
-  if (theme === 'character' && product.id === 'compat') return 9900;
-  if (theme === 'character' && product.id === 'western') return 6900;
-  if (theme === 'character' && product.id === 'bundle') return 16800;
+export function productOriginalPrice(product: Product, _theme: ThemeId): number | undefined {
   return product.originalPrice;
 }
 
