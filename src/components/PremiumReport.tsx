@@ -272,7 +272,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
         {/* 3. 올해 */}
         <section className="mt-12">
           <SectionLabel index="03">
-            {reportYear}년 · {copy.report.sectionYear}
+            {isCharacter ? `${reportYear}년 · 신년의 흐름` : `${reportYear}년 · 신년 흐름`}
           </SectionLabel>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div className="t-panel p-6">
