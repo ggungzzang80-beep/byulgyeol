@@ -30,10 +30,14 @@ function value(keys: string[], fallback: string): string {
   return fallback;
 }
 
-/** 확인되지 않은 항목에 쓰는 표기 — 빈칸이나 '-' 대신 '무엇이 비어 있는지' 보이게 합니다. */
+/**
+ * 확인되지 않은 항목에 쓰는 표기 — 빈칸이나 '-' 대신 '무엇이 비어 있는지' 보이게 합니다.
+ * QA(2026-11-24 4번): 화면에 환경변수 이름(VITE_BIZ_*)이 그대로 노출되지 않도록
+ * 변수명은 코드 주석에만 남기고, 표기는 사람이 읽는 문장으로 씁니다.
+ */
 export const PENDING = '확인 후 기입';
-export const PENDING_PHONE = '확인 후 기입(환경변수 VITE_BIZ_PHONE)';
-export const PENDING_TELECOM_NO = '확인 후 기입(환경변수 VITE_BIZ_TELECOM_NO)';
+export const PENDING_PHONE = '확인 후 기입';
+export const PENDING_TELECOM_NO = '신고 준비 중';
 export const BUSINESS = {
   company: value(['VITE_BIZ_COMPANY'], '모브릭'),
   registrationNo: value(['VITE_BIZ_REG_NO'], '409-37-46363'),

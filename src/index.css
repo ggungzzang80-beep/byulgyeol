@@ -110,6 +110,8 @@
   --btn-primary-shadow: 0 18px 40px -20px rgba(227, 192, 123, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.55);
 
   --hairline: linear-gradient(90deg, transparent, rgba(227, 192, 123, 0.5), transparent);
+  --page-solid: #090812;
+  --wizard-top: 66px;
   --page-bg:
     radial-gradient(800px 620px at 82% -8%, rgba(118, 78, 186, 0.4), transparent 62%),
     radial-gradient(620px 520px at 4% 18%, rgba(74, 52, 138, 0.3), transparent 62%),
@@ -132,9 +134,10 @@
   --line-soft: rgba(146, 116, 192, 0.1);
   --line-strong: rgba(146, 116, 192, 0.3);
   --text: #493a67;
-  --text-2: #5f4d7d;
-  --muted: #7a6894;
-  --faint: #9a89b3;
+  --text-2: #57446f;
+  --muted: #6f5d89;
+  /* QA(2026-11-24 4번): 회색 보조 텍스트 대비 상향 — 흰 카드 위 4.8:1 이상 */
+  --faint: #756590;
   --accent: #8f6fe0;
   --accent-2: #ffb58c;
   --accent-deep: #7c59cf;
@@ -148,8 +151,8 @@
     linear-gradient(155deg, #6a52a6 0%, #503b82 55%, #3b2b63 100%);
   --panel-line: rgba(255, 255, 255, 0.35);
   --panel-text: #fff9ff;
-  --panel-muted: rgba(255, 249, 255, 0.82);
-  --panel-faint: rgba(255, 249, 255, 0.68);
+  --panel-muted: rgba(255, 249, 255, 0.9);
+  --panel-faint: rgba(255, 249, 255, 0.84);
   --panel-accent: #ffe0b8;
   --panel-rule: rgba(255, 255, 255, 0.18);
 
@@ -170,6 +173,9 @@
   --btn-primary-shadow: 0 18px 34px -16px rgba(124, 89, 207, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
 
   --hairline: linear-gradient(90deg, transparent, rgba(146, 116, 192, 0.35), transparent);
+  /* 단계 탭이 헤더 아래에 붙을 때 뒤를 가리는 단색 — QA(2026-11-24 4번) */
+  --page-solid: #f8f2ff;
+  --wizard-top: 64px;
   --page-bg:
     radial-gradient(760px 620px at 88% -6%, #ffe4cf 0%, transparent 58%),
     radial-gradient(640px 560px at 2% 8%, #e6d8ff 0%, transparent 58%),
@@ -736,17 +742,81 @@
 
 /* ------------------------------------------------------------- 인쇄 */
 @media print {
+  /* QA(2026-11-24 4번): 14p PDF 에서 카드·제목이 페이지 중간에서 잘리던 문제.
+     카드·섹션·표 행을 통째로 다음 페이지로 넘기고, 제목 뒤에서 페이지가 끊기지 않게 합니다. */
+  @page {
+    size: A4;
+    margin: 12mm 10mm 14mm;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
   .no-print {
     display: none !important;
   }
   .theme {
     background: #fff !important;
     color: #111 !important;
+    min-height: auto !important;
+  }
+  .theme-mystic,
+  .theme-character {
+    background: #fff !important;
   }
   .t-card,
-  .t-panel {
+  .t-panel,
+  .t-chip,
+  article,
+  .print-block {
     box-shadow: none !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+  article,
+  section > h1,
+  section > h2,
+  section > h3,
+  header {
     break-inside: avoid;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    break-after: avoid-page;
+    page-break-after: avoid;
+  }
+  /* 섹션 머리(번호 + 제목)가 페이지 맨 아래에 홀로 남지 않게 */
+  section > div:first-child,
+  section > header,
+  .section-head {
+    break-after: avoid-page;
+    page-break-after: avoid;
+  }
+  /* 섹션 제목 바로 뒤 첫 카드도 함께 붙여 둡니다 */
+  section > h2 + p,
+  section > h2 + div {
+    break-before: avoid-page;
+    page-break-before: avoid;
+  }
+  p,
+  li,
+  dt,
+  dd {
+    orphans: 3;
+    widows: 3;
+  }
+  /* 인쇄에서는 그림자·배경 장식을 걷어내 글자가 또렷하게 남도록 */
+  .t-starfield,
+  .t-orbit,
+  .t-glow-purple,
+  .t-glow-gold {
+    display: none !important;
+  }
+  a[href]::after {
+    content: '';
   }
 }
 
@@ -756,10 +826,24 @@
   position: relative;
 }
 
+/**
+ * QA(2026-11-24 4번): 스크롤하면 단계 탭이 고정 헤더(z-30, 62~66px) 뒤로 들어가
+ * 눌리지 않던 문제. 헤더 바로 아래에 탭을 붙이고(sticky), 그 뒤를 단색으로 가립니다.
+ * --wizard-top 은 각 화면 머리말 높이(62/64/66px)에서 오는 값입니다.
+ */
 .wizard-head {
+  position: sticky;
+  top: var(--wizard-top, 62px);
+  z-index: 20;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding: 8px 0 10px;
+  /* 페이지 그라데이션 위에 얹히므로 단색 대신 반투명 + 블러로 뒤를 정리합니다 */
+  background: color-mix(in srgb, var(--page-solid) 94%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 1px 0 var(--line-soft);
 }
 
 .wizard-eyebrow {
@@ -768,6 +852,8 @@
 }
 
 .wizard-steps {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -859,6 +945,7 @@
 
 /* 카드 전환 */
 .wizard-stage {
+  scroll-margin-top: calc(var(--wizard-top, 62px) + 76px);
   margin-top: 18px;
   animation: stepIn 0.42s var(--ease) both;
 }

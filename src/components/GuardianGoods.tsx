@@ -73,7 +73,9 @@ export default function GuardianGoods({ chart }: { chart: ChartModel }) {
 
             <p className="mt-4 text-[13px] leading-[1.85] t-panel-faint">{rec.reason}</p>
             <p className="mt-2 text-[12.5px] leading-[1.7] t-panel-faint">
-              * 원석·굿즈는 효능을 보장하지 않는 자기이해용 소품입니다. 의료·투자 판단의 근거가 아닙니다.
+              {isCharacter
+                ? '* 원석·굿즈는 효능을 보장하지 않는 소장용 소품이야. 의료·투자 판단의 근거가 아니야.'
+                : '* 원석·굿즈는 효능을 보장하지 않는 자기이해용 소품입니다. 의료·투자 판단의 근거가 아닙니다.'}
             </p>
           </div>
         </div>
@@ -106,7 +108,9 @@ export default function GuardianGoods({ chart }: { chart: ChartModel }) {
       {GOODS_CHECKOUT_ENABLED && (
       <div className="mt-3 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
         <p className="text-[13px] leading-relaxed t-faint">
-          스마트스토어·굿즈 판매 연동을 준비 중입니다. 지금은 출시 알림만 등록할 수 있어요.
+          {isCharacter
+            ? '스마트스토어·굿즈 판매 연동을 준비 중이야. 지금은 출시 알림만 등록할 수 있어.'
+            : '스마트스토어·굿즈 판매 연동을 준비 중입니다. 지금은 출시 알림만 등록할 수 있습니다.'}
         </p>
         <button
           onClick={() => setSaved(true)}

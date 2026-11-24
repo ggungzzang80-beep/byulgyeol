@@ -11,7 +11,7 @@ type Props = {
 export default function PalaceDetail({ palace, onUnlock }: Props) {
   const { theme, copy } = useTheme();
   const isCharacter = theme === 'character';
-  const { headline, paragraphs, tip } = palaceReadings(palace);
+  const { headline, paragraphs, tip } = palaceReadings(palace, isCharacter ? 'casual' : 'formal');
   const score = palaceScore(palace);
   const label = isCharacter
     ? score >= 80
@@ -128,9 +128,9 @@ export default function PalaceDetail({ palace, onUnlock }: Props) {
                 </span>
               ))}
             </div>
-            {minorLine(palace) && (
+            {minorLine(palace, isCharacter ? 'casual' : 'formal') && (
               <p className="mt-2.5 rounded-xl p-2.5 text-[13px] leading-relaxed t-muted" style={{ background: 'var(--field-bg)' }}>
-                {minorLine(palace)}
+                {minorLine(palace, isCharacter ? 'casual' : 'formal')}
               </p>
             )}
           </div>
@@ -152,7 +152,9 @@ export default function PalaceDetail({ palace, onUnlock }: Props) {
           <div className="mt-3 select-none space-y-1 blur-[3px]" aria-hidden="true">
             <p className="text-[13.5px] leading-relaxed t-faint">{tip}</p>
             <p className="text-[13.5px] leading-relaxed t-faint">
-              이 궁이 흔들리는 달에는 결정을 미루고, 열리는 달에는 먼저 움직이세요.
+              {isCharacter
+                ? '이 방이 흔들리는 달에는 결정을 미루고, 열리는 달에는 먼저 움직여.'
+                : '이 궁이 흔들리는 달에는 결정을 미루고, 열리는 달에는 먼저 움직이세요.'}
             </p>
           </div>
           <button onClick={onUnlock} className="t-btn t-btn-primary mt-3 w-full py-2.5 text-[14px]">

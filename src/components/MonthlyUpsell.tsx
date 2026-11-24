@@ -1,6 +1,7 @@
 import type { ChartModel } from '../lib/chart';
 import { useState } from 'react';
 import { findProduct, productPrice } from '../lib/products';
+import { ZIWEI_ONLY } from '../config/env';
 import { useTheme } from '../lib/theme';
 import { SectionLabel } from './ui';
 
@@ -26,10 +27,12 @@ export default function MonthlyUpsell({ chart, onBundle }: { chart: ChartModel; 
             )}
           </h2>
         </div>
-        <span className="t-chip !text-[12.5px]">구독 준비 중 · 통합 리포트 판매 중</span>
+        <span className="t-chip !text-[12.5px]">
+          {ZIWEI_ONLY ? '구독 준비 중' : '구독 준비 중 · 통합 리포트 판매 중'}
+        </span>
       </div>
 
-      <div className="mt-4 grid gap-3.5 lg:grid-cols-2">
+      <div className={`mt-4 grid gap-3.5 ${ZIWEI_ONLY ? '' : 'lg:grid-cols-2'}`}>
         {/* 월간 구독 */}
         <div className="t-card flex flex-col p-6">
           <div className="flex items-center justify-between gap-2">
@@ -39,12 +42,13 @@ export default function MonthlyUpsell({ chart, onBundle }: { chart: ChartModel; 
             <span className="t-chip !text-[12.5px]">출시 예정</span>
           </div>
           <h3 className="t-title mt-2.5 text-[20px] leading-snug">
-            월간 별자리 리포트
+            {isCharacter ? '월간 별빛 편지' : '월간 명반 편지'}
             <span className="ml-1.5 text-[12.5px] font-normal t-faint">월 1회</span>
           </h3>
           <p className="mt-2 text-[13.5px] leading-[1.9] t-muted">
-            매달 1일, 이번 달의 흐름을 세 장으로 정리해 보내드립니다. 금전·연애·일의 이번 달 별빛 처방과 조심할
-            날짜, 그리고 딱 하나의 행동을 담습니다.
+            {isCharacter
+              ? '매달 1일, 그달의 흐름을 세 장으로 정리해 보내줄게. 금전·연애·일의 이달 처방과 조심할 날짜, 그리고 딱 하나의 행동을 담아.'
+              : '매달 1일, 그달의 흐름을 세 장으로 정리해 보내드립니다. 금전·연애·일의 이달 처방과 조심할 날짜, 그리고 딱 하나의 행동을 담습니다.'}
           </p>
           <ul className="mt-3 flex-1 space-y-1.5 text-[13px] leading-relaxed t-muted">
             {[
@@ -68,7 +72,8 @@ export default function MonthlyUpsell({ chart, onBundle }: { chart: ChartModel; 
           </button>
         </div>
 
-        {/* 동양 + 서양 통합 */}
+        {/* 동양 + 서양 통합 — 자미두수 단독 빌드에서는 서양 동선을 열지 않습니다. */}
+        {!ZIWEI_ONLY && (
         <div className="t-panel flex flex-col p-6">
           <div className="t-starfield opacity-30" />
           <div className="relative flex flex-1 flex-col">
@@ -79,17 +84,20 @@ export default function MonthlyUpsell({ chart, onBundle }: { chart: ChartModel; 
               </span>
             </div>
             <h3 className="t-panel-title mt-2.5 text-[20px] leading-snug">
-              자미두수 12궁 × 서양 천궁도
+              {isCharacter ? '동양 별지도 × 서양 천궁도' : '자미두수 12궁 × 서양 천궁도'}
               <br />통합 리포트
             </h3>
             <p className="mt-2 text-[13.5px] leading-[1.9] t-panel-body">
-              동양 12궁과 서양 출생 차트를 함께 놓고 교차해서 읽습니다. 두 체계가 같은 지점을 가리킬 때 가장
-              정확한 문장이 나옵니다.
+              {isCharacter
+                ? '동양 12개 별방과 서양 출생 차트를 함께 놓고 교차해서 읽어. 두 체계가 같은 곳을 가리킬 때 가장 정확한 문장이 나와.'
+                : '동양 12궁과 서양 출생 차트를 함께 놓고 교차해서 읽습니다. 두 체계가 같은 지점을 가리킬 때 가장 정확한 문장이 나옵니다.'}
             </p>
 
             <div className="mt-4 rounded-xl p-3" style={{ background: 'rgba(9,8,18,0.28)', border: '1px solid var(--panel-rule)' }}>
               <p className="text-[12.5px] leading-[1.7] t-panel-faint">
-                자미두수 12궁 전체 + 서양 천궁도 전체를 한 번에 엽니다. 이미 결제한 금액은 그대로 사용됩니다.
+                {isCharacter
+                  ? '동양 12개 별방 전체와 서양 천궁도 전체를 한 번에 열어. 이미 결제한 금액은 그대로 쓸 수 있어.'
+                  : '자미두수 12궁 전체 + 서양 천궁도 전체를 한 번에 엽니다. 이미 결제한 금액은 그대로 사용됩니다.'}
               </p>
             </div>
 
@@ -101,6 +109,7 @@ export default function MonthlyUpsell({ chart, onBundle }: { chart: ChartModel; 
             </button>
           </div>
         </div>
+        )}
       </div>
     </section>
   );

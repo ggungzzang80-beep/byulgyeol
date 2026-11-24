@@ -244,8 +244,9 @@ export default function NewYearReport({ chart, onBack }: { chart: ChartModel; on
         </section>
 
         <p className="mt-9 text-center text-[13px] leading-[1.9] t-faint">
-          자미두수는 전통 상담 문화로, 의료·법률·투자 판단의 근거가 아닙니다. 원석·굿즈는 효능을 보장하지 않는 소장용
-          소품입니다. © 2027 자미원 · 별의 속삭임
+          {isCharacter
+            ? '자미두수는 전통 상담 문화야. 의료·법률·투자 판단의 근거가 아니고, 원석·굿즈는 효능을 보장하지 않는 소장용 소품이야. © 2027 별의 속삭임'
+            : '자미두수는 전통 상담 문화로, 의료·법률·투자 판단의 근거가 아닙니다. 원석·굿즈는 효능을 보장하지 않는 소장용 소품입니다. © 2027 자미원'}
         </p>
       </div>
     </div>

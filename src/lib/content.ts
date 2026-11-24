@@ -8,6 +8,13 @@
  *  실시간 생성으로 갈아끼울 수 있도록 인터페이스를 분리해 두었습니다.)
  */
 import type { ChartModel, PalaceView, StarView } from './chart';
+import { DEEP_CASUAL, MINOR_CASUAL, MONTH_CASUAL, PALACE_CASUAL, STAR_CASUAL } from './content-casual';
+
+/**
+ * 말투 — mystic 은 합니다체('formal'), character(별의 속삭임) 는 반말('casual').
+ * 반말 문장은 src/lib/content-casual.ts 에 별도 보관합니다.
+ */
+export type Tone = 'formal' | 'casual';
 
 /* ------------------------------- 주성 14종 ------------------------------- */
 
@@ -236,13 +243,16 @@ export const FALLBACK_PROFILE: StarProfile = {
   work: '어디에 두어도 쓰임이 있으나, 확실한 한 우물을 정할 때 성과가 납니다.',
   body: '체질이 환경에 민감합니다. 생활 리듬을 일정하게 유지하세요.',
   jobs: ['기획', '운영', '연구', '서비스', '프리랜서'],
-  style: '환경에 맞춰 형태를 바꾸는 힘',
+  style: '환경을 받아들이는 유연함',
   teaserMoney: '결정을 미루는 사이 기회가 지나갑니다. 이번 달은 한 번에 정하세요.',
   teaserLove: '상대에게 맞추기만 하면 나를 잃습니다. 원하는 것을 말해 보세요.',
 };
 
-export function profileOf(star: string): StarProfile {
-  return STAR_PROFILE[star] ?? FALLBACK_PROFILE;
+export function profileOf(star: string, tone: Tone = 'formal'): StarProfile {
+  const base = STAR_PROFILE[star] ?? FALLBACK_PROFILE;
+  if (tone === 'formal') return base;
+  const casual = STAR_CASUAL[star] ?? STAR_CASUAL.__fallback__;
+  return { ...base, ...casual };
 }
 
 /* ------------------------------ 보좌성 의미 ------------------------------ */
@@ -298,9 +308,10 @@ export const MINOR_MEANING: Record<string, string> = {
   겁살: '갑작스러운 변화. 준비된 사람에게는 기회가 됩니다.',
 };
 
-export function minorLine(palace: PalaceView): string {
+export function minorLine(palace: PalaceView, tone: Tone = 'formal'): string {
+  const table = tone === 'casual' ? MINOR_CASUAL : MINOR_MEANING;
   const notes = [...palace.minor, ...palace.adj]
-    .map((s) => ({ star: s.name, text: MINOR_MEANING[s.name] }))
+    .map((s) => ({ star: s.name, text: table[s.name] }))
     .filter((x) => x.text)
     .slice(0, 2);
   if (!notes.length) return '';
@@ -337,7 +348,7 @@ export function palaceScore(palace: PalaceView | undefined): number {
 
 /* ------------------------------ 궁별 해설 ------------------------------ */
 
-type PalaceScript = {
+export type PalaceScript = {
   intro: string; // {star} {style} 치환
   reads: [string, string, string];
   tip: string;
@@ -408,7 +419,7 @@ export const PALACE_SCRIPT: Record<string, PalaceScript> = {
     tip: '막힐 때는 자리를 옮기세요. 이 궁의 운은 움직일 때 풀립니다.',
   },
   노복궁: {
-    intro: '노복궁의 {star}은 당신을 둘러싼 사람들의 질에 {style}을 더합니다.',
+    intro: '노복궁의 {star}은 사람을 고르고 곁에 두는 방식에 {style}을 더합니다.',
     reads: [
       '나를 따르는 사람·협력자·팬의 성격과, 조직 안에서의 처세가 이 궁에 드러납니다.',
       '사람을 고르는 눈은 좋은데, 한 번 들인 사람을 정리하는 데는 오래 걸립니다.',
@@ -454,57 +465,91 @@ export const PALACE_SCRIPT: Record<string, PalaceScript> = {
   },
 };
 
-export function palaceReadings(palace: PalaceView): { headline: string; paragraphs: string[]; tip: string } {
-  const script = PALACE_SCRIPT[palace.name] ?? PALACE_SCRIPT['명궁'];
+export function palaceReadings(
+  palace: PalaceView,
+  tone: Tone = 'formal',
+): { headline: string; paragraphs: string[]; tip: string } {
+  const isCasual = tone === 'casual';
+  const script = (isCasual ? PALACE_CASUAL[palace.name] : PALACE_SCRIPT[palace.name]) ?? null;
+  const fallback = isCasual ? PALACE_CASUAL['명궁'] : PALACE_SCRIPT['명궁'];
+  const body = script ?? fallback;
   const star = palace.major[0];
-  const profile = profileOf(star?.name ?? '');
-  const starName = star?.name ? `${star.name}성` : '주성이 없는 자리';
+  const profile = profileOf(star?.name ?? '', tone);
+  const starName = star?.name ? `${star.name}성` : isCasual ? '주성이 없는 방' : '주성이 없는 자리';
 
   const headline = palace.domain;
 
-  const first = script.intro.replace('{star}', starName).replace('{style}', profile.style);
+  /* 주성이 없는 방은 '주성이 없는 방은 …' 대신 문장을 따로 씁니다. */
+  const first = star
+    ? body.intro
+        .replace('{star}은', `${starName}${josa(starName, '은', '는')}`)
+        .replace('{star}이', `${starName}${josa(starName, '이', '가')}`)
+        .replace('{star}', starName)
+        .replace('{style}', profile.style)
+    : isCasual
+      ? `${palace.name}에는 주성이 앉지 않았어. 대신 옆 방의 별이 ${profile.style}으로 이 자리를 채워.`
+      : `${palace.name}에는 주성이 앉지 않았습니다. 대신 옆 궁의 별이 ${profile.style}으로 이 자리를 채웁니다.`;
 
   const second = palace.major.length
-    ? `${profile.identity}의 결이 이 궁에서 특히 또렷합니다. ${script.reads[0]}`
-    : `이 궁에는 주성이 앉지 않았습니다. ${script.reads[0]} 비어 있다는 것은 힘이 없다는 뜻이 아니라, 옆 궁의 영향을 그대로 받는다는 뜻입니다.`;
+    ? isCasual
+      ? `${profile.identity}의 결이 이 방에서 특히 또렷해. ${body.reads[0]}`
+      : `${profile.identity}의 결이 이 궁에서 특히 또렷합니다. ${body.reads[0]}`
+    : isCasual
+      ? `${body.reads[0]} 비어 있다는 건 힘이 없다는 뜻이 아니라, 옆 방의 영향을 그대로 받는다는 뜻이야.`
+      : `${body.reads[0]} 비어 있다는 것은 힘이 없다는 뜻이 아니라, 옆 궁의 영향을 그대로 받는다는 뜻입니다.`;
 
   const thirdParts: string[] = [];
   if (palace.major[0]?.brightness) {
     thirdParts.push(
-      `밝기는 '${palace.major[0].brightness}' — ${brightnessPhrase(palace.major[0].brightness)}.`,
+      isCasual
+        ? `밝기는 '${palace.major[0].brightness}' — ${brightnessPhrase(palace.major[0].brightness, tone)}.`
+        : `밝기는 '${palace.major[0].brightness}' — ${brightnessPhrase(palace.major[0].brightness, tone)}.`,
     );
   }
   if (palace.major.some((s) => s.mutagen)) {
     const m = palace.major.find((s) => s.mutagen)!;
-    thirdParts.push(`${m.name}성에 ${m.mutagen}이 붙어 ${mutagenPhrase(m.mutagen!)}`);
+    thirdParts.push(
+      isCasual
+        ? `${m.name}성에 ${m.mutagen}${josa(m.mutagen!, '이', '가')} 붙어 ${mutagenPhrase(m.mutagen!, tone)}`
+        : `${m.name}성에 ${m.mutagen}${josa(m.mutagen!, '이', '가')} 붙어 ${mutagenPhrase(m.mutagen!, tone)}`,
+    );
   }
-  const minor = minorLine(palace);
+  const minor = minorLine(palace, tone);
   if (minor) thirdParts.push(minor);
 
-  const third = thirdParts.length ? thirdParts.join(' ') : script.reads[1];
+  const third = thirdParts.length ? thirdParts.join(' ') : body.reads[1];
 
   // 핀셋 한 줄: 전공·직업군·배우자상·돈이 새는 장면을 구체적으로 붙입니다.
-  const deep = deepProfileOf(star?.name ?? '');
+  const deep = deepProfileOf(star?.name ?? '', tone);
   const concrete =
     palace.name === '명궁'
-      ? `연애에서 끌리는 타입은 분명합니다. ${deep.loveType}`
+      ? isCasual
+        ? `연애에서 끌리는 타입은 분명해. ${deep.loveType}`
+        : `연애에서 끌리는 타입은 분명합니다. ${deep.loveType}`
       : palace.name === '재백궁'
-        ? `돈이 새는 구체적인 장면 — ${deep.moneyLeak}`
+        ? isCasual
+          ? `돈이 새는 구체적인 장면 — ${deep.moneyLeak}`
+          : `돈이 새는 구체적인 장면 — ${deep.moneyLeak}`
         : palace.name === '관록궁'
-          ? `실제로 맞는 직업군은 ${deep.careers.join(' · ')}. 전공은 ${deep.majors.join('·')} 쪽이 힘을 받습니다.`
+          ? isCasual
+            ? `실제로 맞는 직업군은 ${deep.careers.join(' · ')}. 전공은 ${deep.majors.join('·')} 쪽이 힘을 받아.`
+            : `실제로 맞는 직업군은 ${deep.careers.join(' · ')}. 전공은 ${deep.majors.join('·')} 쪽이 힘을 받습니다.`
           : palace.name === '부처궁'
-            ? `배우자상 — ${deep.spouse}`
+            ? isCasual
+              ? `배우자상 — ${deep.spouse}`
+              : `배우자상 — ${deep.spouse}`
             : '';
 
   return {
     headline,
     paragraphs: concrete ? [first, second, third, concrete] : [first, second, third],
-    tip: script.tip,
+    tip: body.tip,
   };
 }
 
-function brightnessPhrase(b: string): string {
-  const map: Record<string, string> = {
+/** 밝기 문구 — 말투별 */
+function brightnessPhrase(b: string, tone: Tone = 'formal'): string {
+  const formal: Record<string, string> = {
     묘: '힘을 가장 잘 쓰는 자리라 이 궁의 장점이 그대로 드러납니다',
     왕: '기세가 살아 있어 밀어붙일수록 결과가 커집니다',
     득: '무난하게 힘을 받아 큰 무리 없이 굴러갑니다',
@@ -513,23 +558,42 @@ function brightnessPhrase(b: string): string {
     불: '힘이 조금 눌려 있어 다른 별의 도움이 필요합니다',
     함: '힘이 눌린 자리라 서두르기보다 때를 기다리는 편이 낫습니다',
   };
-  return map[b] ?? '무난하게 작동합니다';
+  const casual: Record<string, string> = {
+    묘: '힘을 가장 잘 쓰는 자리라 이 방의 장점이 그대로 드러나',
+    왕: '기세가 살아 있어서 밀어붙일수록 결과가 커져',
+    득: '무난하게 힘을 받아서 큰 무리 없이 굴러가',
+    리: '조건이 맞을 때만 빛나니까 환경을 고르는 게 중요해',
+    평: '평범하게 작동해. 특별한 기대보다 꾸준함이 답이야',
+    불: '힘이 조금 눌려 있어서 다른 별의 도움이 필요해',
+    함: '힘이 눌린 자리라 서두르기보다 때를 기다리는 편이 나아',
+  };
+  const table = tone === 'casual' ? casual : formal;
+  return table[b] ?? (tone === 'casual' ? '무난하게 작동해' : '무난하게 작동합니다');
 }
 
-function mutagenPhrase(m: string): string {
-  const map: Record<string, string> = {
+/** 사화 문구 — 말투별 */
+function mutagenPhrase(m: string, tone: Tone = 'formal'): string {
+  const formal: Record<string, string> = {
     화록: '이 궁의 영역에서 얻는 힘이 붙습니다.',
     화권: '주도권이 붙지만 밀어붙일수록 반발도 커집니다.',
     화과: '평판과 배움으로 풀리는 자리입니다.',
     화기: '집착과 피로가 몰립니다. 정리할 때 길이 열립니다.',
   };
-  return map[m] ?? '';
+  const casual: Record<string, string> = {
+    화록: '이 방의 영역에서 얻는 힘이 붙어.',
+    화권: '주도권이 붙지만 밀어붙일수록 반발도 커져.',
+    화과: '평판과 배움으로 풀리는 자리야.',
+    화기: '집착과 피로가 몰려. 정리할 때 길이 열려.',
+  };
+  const table = tone === 'casual' ? casual : formal;
+  return table[m] ?? '';
 }
 
 /* ------------------------------ 티저 ------------------------------ */
 
-export function buildTeaser(chart: ChartModel): { money: string; love: string; year: number } {
-  const profile = profileOf(chart.primaryStar);
+export function buildTeaser(chart: ChartModel, tone: Tone = 'formal'): { money: string; love: string; year: number } {
+  const isCasual = tone === 'casual';
+  const profile = profileOf(chart.primaryStar, tone);
   const yearMutagen = chart.yearly.mutagen;
   const moneyPalace = chart.palaces.find((p) => p.name === '재백궁');
   const lovePalace = chart.palaces.find((p) => p.name === '부처궁');
@@ -537,15 +601,25 @@ export function buildTeaser(chart: ChartModel): { money: string; love: string; y
   const moneyScore = palaceScore(moneyPalace);
   const loveScore = palaceScore(lovePalace);
 
-  const moneyExtra =
-    moneyScore >= 70
+  const moneyExtra = isCasual
+    ? moneyScore >= 70
+      ? '다만 지금은 들어오는 길이 열려 있는 만큼, 새는 곳을 막지 않으면 손에 남는 게 없어.'
+      : moneyScore <= 45
+        ? '올해는 벌기보다 지키는 해야. 큰 지출은 반드시 하루 두고 결정해.'
+        : '올해는 크게 벌지도 잃지도 않는 해야. 습관을 정리하면 다음 해가 달라져.'
+    : moneyScore >= 70
       ? '다만 지금은 들어오는 길이 열려 있는 만큼, 새는 곳을 막지 않으면 손에 남는 것이 없습니다.'
       : moneyScore <= 45
         ? '올해는 벌기보다 지키는 해입니다. 큰 지출은 반드시 하루를 두고 결정하세요.'
         : '올해는 크게 벌지도 잃지도 않는 해입니다. 습관을 정리하면 다음 해가 달라집니다.';
 
-  const loveExtra =
-    loveScore >= 70
+  const loveExtra = isCasual
+    ? loveScore >= 70
+      ? '다만 확신을 요구할수록 상대는 물러서. 속도를 반씩 나누는 게 관건이야.'
+      : loveScore <= 45
+        ? '올해는 관계의 온도가 낮게 유지돼. 새로 시작하기보다 이미 있는 관계를 돌봐.'
+        : '올해는 관계가 정체되는 해야. 같은 자리에서 반복되는 패턴을 알아차리는 게 먼저야.'
+    : loveScore >= 70
       ? '다만 확신을 요구할수록 상대는 물러섭니다. 속도를 반씩 나누는 것이 관건입니다.'
       : loveScore <= 45
         ? '올해는 관계의 온도가 낮게 유지됩니다. 새로 시작하기보다 이미 있는 관계를 돌보세요.'
@@ -577,8 +651,8 @@ const MONTH_FRAMES = [
 
 export type MonthGuide = { month: number; theme: string; action: string; keyword: string };
 
-export function monthlyGuide(chart: ChartModel): MonthGuide[] {
-  const profile = profileOf(chart.primaryStar);
+export function monthlyGuide(chart: ChartModel, tone: Tone = 'formal'): MonthGuide[] {
+  const profile = profileOf(chart.primaryStar, tone);
   const focus =
     chart.yearly.mutagen.find((m) => m.mutagen === '화록')?.name ??
     chart.primaryStar;
@@ -587,7 +661,7 @@ export function monthlyGuide(chart: ChartModel): MonthGuide[] {
     month: frame.m,
     theme: frame.theme,
     keyword: profile.keywords[i % 3] + (i % 4 === 0 ? ` · ${focus}` : ''),
-    action: frame.act,
+    action: tone === 'casual' ? (MONTH_CASUAL[frame.m] ?? frame.act) : frame.act,
   })).slice(0, 12);
 }
 
@@ -783,6 +857,9 @@ const FALLBACK_DEEP: DeepProfile = {
   decisive: '큰 결정은 하루 미루고 숫자로 확인하세요.',
 };
 
-export function deepProfileOf(star: string): DeepProfile {
-  return STAR_DEEP[star] ?? FALLBACK_DEEP;
+export function deepProfileOf(star: string, tone: Tone = 'formal'): DeepProfile {
+  const base = STAR_DEEP[star] ?? FALLBACK_DEEP;
+  if (tone === 'formal') return base;
+  const casual = DEEP_CASUAL[star] ?? DEEP_CASUAL.__fallback__;
+  return { ...base, ...casual };
 }

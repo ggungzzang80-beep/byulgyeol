@@ -85,10 +85,16 @@ export default function StoneGoods2027({ goods, needLabel, stoneName }: { goods:
       <div className="mt-2.5 flex flex-col gap-1.5 rounded-xl px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between" style={{ background: 'var(--field-bg)', border: '1px dashed var(--line-strong)' }}>
         <p className="text-[13px] leading-[1.7] t-muted">
           {inCart.length === 0
-            ? '출시 전이라 지금은 장바구니에 담아 두는 단계입니다. 결제와 배송은 진행되지 않습니다.'
-            : `장바구니 ${inCart.length}점 · 합계 ${total.toLocaleString('ko-KR')}원 · 지금은 결제가 진행되지 않습니다.`}
+            ? isCharacter
+              ? '출시 전이라 지금은 장바구니에 담아 두는 단계야. 결제와 배송은 진행되지 않아.'
+              : '출시 전이라 지금은 장바구니에 담아 두는 단계입니다. 결제와 배송은 진행되지 않습니다.'
+            : isCharacter
+              ? `장바구니 ${inCart.length}점 · 합계 ${total.toLocaleString('ko-KR')}원 · 지금은 결제가 진행되지 않아.`
+              : `장바구니 ${inCart.length}점 · 합계 ${total.toLocaleString('ko-KR')}원 · 지금은 결제가 진행되지 않습니다.`}
         </p>
-        <p className="text-[12.5px] t-faint">스마트스토어 연동 준비 중 · 출시 알림은 리포트 열 때 안내</p>
+        <p className="text-[12.5px] t-faint">
+          {isCharacter ? '스마트스토어 연동 준비 중 · 출시 알림은 리포트 열 때 알려줄게' : '스마트스토어 연동 준비 중 · 출시 알림은 리포트 열 때 안내'}
+        </p>
       </div>
     </div>
   );

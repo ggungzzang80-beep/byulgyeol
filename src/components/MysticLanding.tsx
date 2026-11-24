@@ -192,7 +192,7 @@ function Hero({ onNext }: { onNext: () => void }) {
 
           <div className="mt-6 flex items-center justify-center gap-3 text-[12.5px] tracking-[0.18em] t-faint">
             <span className="h-px w-8" style={{ background: 'var(--line-strong)' }} />
-            12궁 · 14주성 · 4사화 · 10년 대운
+            12궁 · 14주성 · 4사화 · 10년 대한
             <span className="h-px w-8" style={{ background: 'var(--line-strong)' }} />
           </div>
         </div>

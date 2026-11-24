@@ -12,9 +12,19 @@
  */
 import type { ChartModel, PalaceView } from './chart';
 import { palaceScore, profileOf } from './content';
+import {
+  ELEMENT_KEYWORD,
+  ELEMENT_LABEL,
+  NEED_REASON,
+  STONE,
+  chartElementOf,
+  needElementFor,
+  type ElementKey,
+} from './stones';
+import { stoneGoods, type StoneGood } from './goodsCatalog';
 import type { ThemeId } from './theme';
 
-export type ElementKey = '목' | '화' | '토' | '금' | '수';
+export type { ElementKey };
 export type MonthTone = 'open' | 'push' | 'name' | 'care' | 'steady';
 
 export type Year2027Mutagen = {
@@ -34,16 +44,7 @@ export type Year2027Month = {
   action: string;
 };
 
-export type StoneGood = {
-  id: string;
-  label: string;
-  name: string;
-  material: string;
-  detail: string;
-  care: string;
-  price: number;
-  tag?: string;
-};
+export type { StoneGood };
 
 export type NewYear2027Content = {
   year: 2027;
@@ -87,119 +88,6 @@ const FIELD: Record<string, { field: string; keyword: string }> = {
   부모궁: { field: '배움', keyword: '배움' },
 };
 
-const ELEMENT_LABEL: Record<ElementKey, string> = {
-  목: '목(木) · 성장과 시작',
-  화: '화(火) · 열정과 표현',
-  토: '토(土) · 안정과 신뢰',
-  금: '금(金) · 결단과 재물',
-  수: '수(水) · 회복과 지혜',
-};
-
-const ELEMENT_KEYWORD: Record<ElementKey, string> = {
-  목: '성장',
-  화: '표현',
-  토: '안정',
-  금: '결단',
-  수: '회복',
-};
-
-/** 부족한 기운 → 원석 (시트린·자수정·라피스라줄리·문스톤·호안석 포함) */
-const STONE: Record<
-  ElementKey,
-  { name: string; main: string; detail: { c: string; m: string }; colorHex: string; colorSoft: string }
-> = {
-  목: {
-    name: '그린 아벤투린 · 제이드',
-    main: '그린 아벤투린',
-    detail: {
-      c: '새싹처럼 자라는 초록 원석. 아침 햇살이 드는 자리에 두면 좋아.',
-      m: '새싹처럼 자라는 초록 원석. 아침 햇살이 드는 자리에 두면 좋습니다.',
-    },
-    colorHex: '#6fbf9a',
-    colorSoft: 'rgba(111,191,154,0.16)',
-  },
-  화: {
-    name: '카넬리안 · 로즈 쿼츠',
-    main: '카넬리안',
-    detail: {
-      c: '심장 가까이 두는 붉은 원석. 표정이 먼저 밝아지는 기운이야.',
-      m: '심장 가까이 두는 붉은 원석. 표정이 먼저 밝아지는 기운을 상징합니다.',
-    },
-    colorHex: '#e98d8d',
-    colorSoft: 'rgba(233,141,141,0.16)',
-  },
-  토: {
-    name: '시트린 · 호안석',
-    main: '시트린',
-    detail: {
-      c: '노란 빛으로 중심을 잡아주는 원석. 늘 보는 책상 위에 두면 좋아.',
-      m: '노란 빛으로 중심을 잡아주는 원석. 늘 보는 책상 위에 두면 좋습니다.',
-    },
-    colorHex: '#e3b45f',
-    colorSoft: 'rgba(227,180,95,0.16)',
-  },
-  금: {
-    name: '문스톤 · 백수정',
-    main: '문스톤',
-    detail: {
-      c: '흐린 달빛 같은 흰 원석. 결정을 앞둔 날 손목에 차면 마음이 정리돼.',
-      m: '흐린 달빛 같은 흰 원석. 결정을 앞둔 날 손목에 차면 마음이 정리됩니다.',
-    },
-    colorHex: '#c9c3d6',
-    colorSoft: 'rgba(201,195,214,0.2)',
-  },
-  수: {
-    name: '라피스 라줄리 · 자수정',
-    main: '라피스 라줄리',
-    detail: {
-      c: '깊은 물빛 원석. 잠들기 전 손바닥에 올려두면 생각이 가라앉아.',
-      m: '깊은 물빛 원석. 잠들기 전 손바닥에 올려두면 생각이 가라앉습니다.',
-    },
-    colorHex: '#7f9fd8',
-    colorSoft: 'rgba(127,159,216,0.18)',
-  },
-};
-
-/** 2027의 불(丁)과 명반 오행국이 만날 때 메워야 할 기운 */
-function needElementFor(chartElement: ElementKey): ElementKey {
-  // 수 ↔ 화는 목이 사이를 잇고, 화 → 금은 토가 완충합니다.
-  switch (chartElement) {
-    case '수':
-      return '목';
-    case '목':
-      return '수';
-    case '화':
-      return '수';
-    case '금':
-      return '토';
-    case '토':
-    default:
-      return '수';
-  }
-}
-
-const NEED_REASON: Record<ElementKey, { c: string; m: string }> = {
-  목: {
-    c: '물의 해를 지나오며 불의 기운이 크게 들어와. 물과 불 사이에 나무를 하나 심으면, 부딪히던 기운이 흐름으로 바뀌어.',
-    m: '물의 해를 지나오며 불의 기운이 크게 들어옵니다. 물과 불 사이에 나무를 하나 심으면 부딪히던 기운이 흐름으로 바뀝니다.',
-  },
-  수: {
-    c: '정미년의 불은 오래 타는 불이야. 물을 곁에 두면 열기가 마음까지 번지지 않고, 판단이 차분해져.',
-    m: '정미년의 불은 오래 타는 불입니다. 물을 곁에 두면 열기가 마음까지 번지지 않고 판단이 차분해집니다.',
-  },
-  토: {
-    c: '불이 쇠를 녹이는 해라, 중간에 흙을 하나 놓아야 해. 흙이 열을 받아 안아주면 결과물이 남아.',
-    m: '불이 쇠를 녹이는 해입니다. 그 사이에 흙을 하나 놓아야 합니다. 흙이 열을 받아 안아주면 결과물이 남습니다.',
-  },
-  화: {
-    c: '이미 불이 많은 해라 불을 더할 필요가 없어. 표현할 곳을 하나 정하고, 나머지는 덜어내는 게 좋아.',
-    m: '이미 불이 많은 해입니다. 불을 더할 필요가 없습니다. 표현할 곳을 하나 정하고 나머지는 덜어내는 편이 좋습니다.',
-  },
-  금: {
-    c: '불이 불을 만나는 해라 열이 겹쳐. 결론을 내리는 힘을 아껴두면, 결정적인 순간에 한 번에 쓸 수 있어.',
-    m: '불이 불을 만나는 해라 열기가 겹칩니다. 결론을 내리는 힘을 아껴두면 결정적인 순간에 한 번에 쓸 수 있습니다.',
-  },
-};
 
 const HABITS: Record<ElementKey, { c: string[]; m: string[] }> = {
   목: {
@@ -434,13 +322,6 @@ function josa(word: string, withBatchim: string, withoutBatchim: string) {
   return (code - 0xac00) % 28 > 0 ? withBatchim : withoutBatchim;
 }
 
-function chartElementKey(chart: ChartModel): ElementKey {
-  const first = chart.fiveElements.trim().charAt(0);
-  return (['목', '화', '토', '금', '수'] as ElementKey[]).includes(first as ElementKey)
-    ? (first as ElementKey)
-    : '토';
-}
-
 function findStarPalace(palaces: PalaceView[], cn: string): PalaceView | null {
   for (const p of palaces) {
     if (p.major.some((s) => s.cn === cn) || p.minor.some((s) => s.cn === cn) || p.adj.some((s) => s.cn === cn)) {
@@ -491,7 +372,7 @@ export function build2027(chart: ChartModel, theme: ThemeId): NewYear2027Content
   const roku = mutagen.find((m) => m.mutagen === '화록') ?? mutagen[0];
   const gi = mutagen.find((m) => m.mutagen === '화기') ?? mutagen[mutagen.length - 1];
 
-  const needElement = needElementFor(chartElementKey(chart));
+  const needElement = needElementFor(chartElementOf(chart));
   const stone = STONE[needElement];
 
   /* 열두 달 — 사화 넷이 앉은 궁의 지지(地支)를 달로 바꿔 표시합니다. */
@@ -557,67 +438,8 @@ export function build2027(chart: ChartModel, theme: ThemeId): NewYear2027Content
     ? `사화 네 개가 어느 자리에 앉았는지에 따라 상반기와 하반기의 문이 갈려. 달마다 무엇을 미루고 무엇을 먼저 할지, 어느 달에 큰돈을 쓰지 말아야 하는지가 리포트에 들어 있어.`
     : `사화 네 개가 어느 자리에 앉았는지에 따라 상반기와 하반기의 문이 갈립니다. 달마다 무엇을 미루고 무엇을 먼저 할지, 어느 달에 큰돈을 쓰지 말아야 하는지가 리포트에 담깁니다.`;
 
-  const goods: StoneGood[] = isC
-    ? [
-        {
-          id: 'bracelet',
-          label: '수호 원석 팔찌',
-          name: `${stone.main} 비즈 팔찌`,
-          material: '6mm 내추럴 스톤 · 조절 실',
-          detail: `${stone.detail.c} 2027년에는 왼손에 차면 좋아.`,
-          care: '물에 오래 담그지 말고, 한 달에 한 번 달빛 아래 두세요.',
-          price: 19900,
-          tag: '가장 먼저 나올 굿즈',
-        },
-        {
-          id: 'charm',
-          label: '신년 부적 참',
-          name: '2027 정미년 금박 부적 참',
-          material: '황동 · 금박 압인 · 4cm',
-          detail: '가방이나 파우치에 다는 손바닥 크기 부적. 부적 카드와 같은 문양이 새겨져 있어.',
-          care: '물과 땀에 약합니다. 닦아서 파우치에 넣어 두세요.',
-          price: 12900,
-        },
-        {
-          id: 'keyring',
-          label: '별빛 키링',
-          name: `${stage.palaceName} 성좌 아크릴 키링`,
-          material: '아크릴 3mm · 양면 인쇄',
-          detail: `2027년 문이 열리는 ${stage.palaceName}의 성좌를 그대로 옮긴 키링.`,
-          care: '직사광선을 피해 보관하세요.',
-          price: 9900,
-        },
-      ]
-    : [
-        {
-          id: 'bracelet',
-          label: '수호 원석 팔찌',
-          name: `${stone.main} 수호 원석 팔찌`,
-          material: '8mm 내추럴 스톤 · 실버 조절 고리',
-          detail: `${stone.detail.m} 2027년에는 왼손에 차는 것을 권합니다.`,
-          care: '물에 오래 담그지 말고, 한 달에 한 번 달빛 아래 두십시오.',
-          price: 29000,
-          tag: '가장 먼저 나올 굿즈',
-        },
-        {
-          id: 'amulet',
-          label: '신년 금박 부적',
-          name: '丁未年 금박 부적 카드 3매',
-          material: '금박 압인 · 케이스 포함',
-          detail: '지갑에 넣는 신년 부적. 부적 카드와 같은 문양과 해의 글자가 새겨집니다.',
-          care: '물과 땀에 약합니다. 닦아서 케이스에 넣어 두십시오.',
-          price: 9900,
-        },
-        {
-          id: 'keyring',
-          label: '성좌 키링',
-          name: `${stage.palaceName} 성좌 황동 키링`,
-          material: '황동 · 각인',
-          detail: `2027년 문이 열리는 ${stage.palaceName}의 성좌를 새긴 키링입니다.`,
-          care: '황동은 시간이 지나며 색이 깊어집니다.',
-          price: 15000,
-        },
-      ];
+  /* 굿즈 목록은 lib/goodsCatalog.ts 한 벌만 씁니다 — 리포트와 같은 상품·같은 가격 */
+  const goods: StoneGood[] = stoneGoods(stone, theme);
 
   return {
     year: 2027,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import type { ChartModel, PalaceView } from '../lib/chart';
 import { buildTeaser, deepProfileOf, palaceScore, profileOf } from '../lib/content';
 import {
@@ -92,11 +92,12 @@ export default function ChartView({
   const [saving, setSaving] = useState(false);
   const [teaserPulse, setTeaserPulse] = useState(false);
 
-  const profile = profileOf(chart.primaryStar);
-  const deep = deepProfileOf(chart.primaryStar);
+  const tone = isCharacter ? 'casual' : 'formal';
+  const profile = profileOf(chart.primaryStar, tone);
+  const deep = deepProfileOf(chart.primaryStar, tone);
   const guardian = guardianRecommendation(chart, theme);
   const guardianArt = starGuardian(chart.primaryStar);
-  const teaser = buildTeaser(chart);
+  const teaser = buildTeaser(chart, tone);
 
   const pick = (name: string) => palaceScore(chart.palaces.find((p) => p.name === name));
   const moneyScore = pick('재백궁');
@@ -569,7 +570,7 @@ export default function ChartView({
                 {chart.primaryStar}
                 {isCharacter ? '별' : '성'} 기준으로 <b className="font-semibold" style={{ color: 'var(--panel-accent)' }}>진로·전공·직업군</b>,{' '}
                 <b className="font-semibold" style={{ color: 'var(--panel-accent)' }}>끌리는 연애 타입과 배우자상</b>,{' '}
-                <b className="font-semibold" style={{ color: 'var(--panel-accent)' }}>돈이 새는 구체적 장면</b>을 핀셋으로 짚어드립니다.
+                <b className="font-semibold" style={{ color: 'var(--panel-accent)' }}>돈이 새는 구체적 장면</b>{isCharacter ? '을 핀셋으로 짚어 줄게.' : '을 핀셋으로 짚어드립니다.'}
               </p>
               {!ZIWEI_ONLY && (
                 <p className="mt-2 text-[12.5px] leading-relaxed t-panel-faint">자미두수 12궁 × 서양 네이탈 차트 통합 해석도 확장 준비 중입니다.</p>
@@ -577,7 +578,9 @@ export default function ChartView({
               <div className="mt-4 flex flex-wrap gap-2">
                 <button onClick={onAiReport} className="t-btn t-btn-gold !px-4 !py-2.5 text-[13.5px]">
                   <LockIcon className="h-3.5 w-3.5" />
-                  {isCharacter ? `${CHARACTER_FIRST_PRICE.toLocaleString('ko-KR')}원으로 진로·배우자상 열기` : 'AI 심층 리포트 열기 · 12,900원'}
+                  {isCharacter
+                    ? `${CHARACTER_FIRST_PRICE.toLocaleString('ko-KR')}원으로 진로·배우자상 열기`
+                    : `AI 심층 리포트 열기 · ${productPrice(findProduct('premium'), theme).toLocaleString('ko-KR')}원`}
                 </button>
               </div>
             </div>
@@ -711,7 +714,7 @@ export default function ChartView({
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="sm:max-w-[520px]">
               <h2 className="t-display text-[23px] leading-snug sm:text-[24px]">
-                {isCharacter ? '궁합 점수는 먼저 무료로 봐 ✨' : '궁합 점수는 먼저 무료로'}
+                {isCharacter ? '궁합 점수는 먼저 무료로 봐 ✨' : '궁합 점수는 먼저 무료로 볼 수 있습니다'}
               </h2>
               <p className="mt-2 text-[14.5px] leading-[1.85] t-body">
                 {isCharacter
@@ -787,13 +790,15 @@ export default function ChartView({
       </section>
 
       <p className="mt-8 text-center text-[13px] leading-[1.9] t-faint">
-        자미두수는 전통 상담 문화로, 의료·법률·투자 판단의 근거가 아닙니다. 명반 데이터는 서버에 저장되지 않습니다.
+        {isCharacter
+          ? '자미두수는 전통 상담 문화야. 의료·법률·투자 판단의 근거가 아니고, 별지도 데이터는 서버에 저장되지 않아.'
+          : '자미두수는 전통 상담 문화로, 의료·법률·투자 판단의 근거가 아닙니다. 명반 데이터는 서버에 저장되지 않습니다.'}
       </p>
     </div>
   );
 
   return (
-    <div className="min-h-screen pb-6">
+    <div className="min-h-screen pb-6" style={{ '--wizard-top': '62px' } as CSSProperties}>
       {/* 상단 바 */}
       <div
         className="sticky top-0 z-30 no-print"

@@ -54,12 +54,12 @@ export default function Wizard({
     onIndexChange(clamped);
   };
 
-  /* 단계가 바뀌면 그 단계 상단이 화면에 오도록 (탭·모두 보기 등 어디서 넘어와도) */
+  /* 단계가 바뀌면 그 단계 상단이 화면에 오도록 (탭·모두 보기 등 어디서 넘어와도)
+     QA(2026-11-24 4번): 고정 헤더 + 고정 단계 탭 아래로 들어오게 scroll-margin 을 씁니다. */
   useEffect(() => {
     const el = stageRef.current;
     if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - 84;
-    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [index]);
 
   return (

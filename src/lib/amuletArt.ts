@@ -363,9 +363,14 @@ export function amuletLines(chart: { name: string; primaryStar: string }, conten
     stoneLabel: '보완의 기운 · 수호 원석',
     stoneNote: `보완 · ${content.needLabel}`,
     footerDate: '2027. 1. 1 — 12. 31 · 소장용 부적',
-    disclaimer: '효능을 보장하지 않는 소장용 콘텐츠입니다 · 의료·투자 판단의 근거가 아닙니다',
+    disclaimer:
+      theme === 'character'
+        ? '효능을 보장하지 않는 소장용 콘텐츠야 · 의료·투자 판단의 근거는 아니야'
+        : '효능을 보장하지 않는 소장용 콘텐츠입니다 · 의료·투자 판단의 근거가 아닙니다',
     /** 푸터 면책 문구 — 두 줄로 나눠 크게 읽히도록 */
-    disclaimerLines: ['효능을 보장하지 않는 소장용 콘텐츠입니다', '의료·투자 판단의 근거가 아닙니다'] as string[],
+    disclaimerLines: (theme === 'character'
+      ? ['효능을 보장하지 않는 소장용 콘텐츠야', '의료·투자 판단의 근거는 아니야']
+      : ['효능을 보장하지 않는 소장용 콘텐츠입니다', '의료·투자 판단의 근거가 아닙니다']) as string[],
     seal: '守',
     sideRight: '守護符',
   };
