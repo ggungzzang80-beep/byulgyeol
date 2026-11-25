@@ -437,9 +437,8 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
                         {!isCharacter && <span className="text-[12.5px] t-faint">{p.hanja}</span>}
                       </div>
                       <p className="mt-1 text-[13px] t-faint">
-                        {p.stem}
-                        {p.branch} · {p.domain} · {isCharacter ? '10년 흐름' : '대한'} {p.decadalRange[0]}–
-                        {p.decadalRange[1]}세
+                        {!isCharacter && `${p.stem}${p.branch} · `}
+                        {p.domain} · {isCharacter ? '10년 흐름' : '대한'} {p.decadalRange[0]}–{p.decadalRange[1]}세
                       </p>
                     </div>
                     <div className="shrink-0 text-right">
