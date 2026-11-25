@@ -836,7 +836,12 @@ export default function ChartView({
                       }
                     >
                       <div className="flex items-baseline justify-between gap-2">
-                        <h3 className="t-title min-w-0 text-[17.5px] leading-snug">{productName(p, theme)}</h3>
+                        <h3
+                          className="t-title min-w-0 text-[17.5px] leading-snug"
+                          style={{ color: featured ? '#fff9ff' : undefined }}
+                        >
+                          {productName(p, theme)}
+                        </h3>
                         {productBadge(p, theme) ? (
                           <span
                             className="shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-[12px]"
