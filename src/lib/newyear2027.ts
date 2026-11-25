@@ -428,7 +428,7 @@ export function build2027(chart: ChartModel, theme: ThemeId): NewYear2027Content
     : `2027년은 ${stage.palaceName}에 불이 들어오는 해입니다. ${roku.field}${josa(roku.field, '이', '가')} 먼저 움직이고, 그 뒤로 나머지가 따라옵니다.`;
 
   const advice = isC
-    ? `${roomOf(gi.palace)}${josa(roomOf(gi.palace), '은', '는')} 올해 가장 예민한 자리야. 여기서만큼은 서두르지 말고 한 번 더 확인해.`
+    ? `${roomOf(gi.palace)}${josa(roomOf(gi.palace), '은', '는')} 2027년에 가장 예민한 자리야. 여기서만큼은 서두르지 말고 한 번 더 확인해.`
     : `${gi.palace}${josa(gi.palace, '은', '는')} 올해 가장 예민한 자리입니다. 여기서만큼은 서두르지 말고 한 번 더 확인하세요.`;
 
   const flowFree = isC
