@@ -293,7 +293,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
             </div>
             <p className="mt-5 pt-4 text-[13px] leading-[1.8] t-faint" style={{ borderTop: '1px solid var(--line)' }}>
               {isCharacter
-                ? '지수는 각 방의 주성 밝기·사화·보좌성 배치를 합산한 상대값이야. 모든 화면과 저장 카드에서 같은 세 가지(연애의 별·금전의 별·일의 별)만 보여줘.'
+                ? '지수는 각 방 메인 별의 밝기와 별빛, 보조 별 배치를 합산한 상대값이야. 모든 화면과 저장 카드에서 같은 세 가지(연애의 별·금전의 별·일의 별)만 보여줘.'
                 : '지수는 각 궁의 주성 밝기·사화·보좌성 배치를 합산한 상대값입니다. 모든 화면과 저장 카드에서 같은 세 가지(연애의 별·금전의 별·일의 별)만 보여줍니다.'}
             </p>
           </div>

@@ -122,7 +122,7 @@ export default function CompatPreview({ chart, onUpgrade, onClose }: Props) {
               {isCharacter ? '점수는 무료, 해석은 심층에서' : '점수 무료 · 심층 해석은 유료'}
             </p>
             <h3 className="t-title mt-2 text-[20px] leading-snug">
-              {chart.name ? `${chart.name} 님과 ` : ''}
+              {chart.name ? (isCharacter ? `${chart.name}과 ` : `${chart.name} 님과 `) : ''}
               {isCharacter ? '누구의 궁합을 볼까?' : '두 사람의 궁합'}
             </h3>
           </div>

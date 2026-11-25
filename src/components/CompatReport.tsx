@@ -164,8 +164,17 @@ export default function CompatReport({ chart, partner, onBack, onPremium }: Prop
                 가장 자주 반복될 갈등
               </p>
               <p className="mt-2 text-[14.5px] leading-[1.9] t-body">
-                {nameA} 님은 {pa.caution} {nameB} 님은 {pb.caution} 이 두 가지가 같은 날 겹치면, 사소한 말이 오래
-                남습니다.
+                {isCharacter ? (
+                  <>
+                    {nameA}의 약점은 {pa.caution} {nameB}의 약점은 {pb.caution} 이 두 가지가 같은 날 겹치면, 사소한
+                    말이 오래 남아.
+                  </>
+                ) : (
+                  <>
+                    {nameA} 님은 {pa.caution} {nameB} 님은 {pb.caution} 이 두 가지가 같은 날 겹치면, 사소한 말이 오래
+                    남습니다.
+                  </>
+                )}
               </p>
               <p className="mt-3 text-[13.5px] leading-[1.85] t-muted">
                 해법은 “그때 이야기하지 않기”입니다. 감정이 올라온 자리에서는 결론을 내리지 말고, 하루 뒤에 다시
@@ -177,8 +186,17 @@ export default function CompatReport({ chart, partner, onBack, onPremium }: Prop
                 서로를 살리는 지점
               </p>
               <p className="mt-2 text-[14.5px] leading-[1.9] t-body">
-                {nameA} 님의 무기는 {pa.style}, {nameB} 님의 무기는 {pb.style}입니다. 이 두 힘이 같은 방향을 볼 때
-                관계의 속도가 가장 좋아집니다.
+                {isCharacter ? (
+                  <>
+                    {nameA}의 무기는 {pa.style}, {nameB}의 무기는 {pb.style}이야. 이 두 힘이 같은 방향을 볼 때 관계의
+                    속도가 가장 좋아져.
+                  </>
+                ) : (
+                  <>
+                    {nameA} 님의 무기는 {pa.style}, {nameB} 님의 무기는 {pb.style}입니다. 이 두 힘이 같은 방향을 볼 때
+                    관계의 속도가 가장 좋아집니다.
+                  </>
+                )}
               </p>
               <p className="mt-3 text-[13.5px] leading-[1.85] t-muted">
                 결정은 한 사람이, 실행은 다른 한 사람이 맡는 식으로 역할을 나누면 마찰이 크게 줄어듭니다. 두 사람이
@@ -237,7 +255,7 @@ export default function CompatReport({ chart, partner, onBack, onPremium }: Prop
               <p className="text-[12.5px] tracking-[0.22em] t-panel-accent">BOTTOM LINE</p>
               <p className="t-panel-title mt-4 text-[19px] leading-[1.8] sm:text-[21px]">
                 이 관계의 성패는 “누가 더 맞는가”가 아니라 “언제 말을 멈출 수 있는가”에 달려 있습니다.
-                <br className="hidden sm:block" /> {nameA} 님과 {nameB} 님이 각자의 속도를 인정하는 순간, 궁합 지수는
+                <br className="hidden sm:block" /> {isCharacter ? `${nameA}과 ${nameB}가` : `${nameA} 님과 ${nameB} 님이`} 각자의 속도를 인정하는 순간, 궁합 지수는
                 숫자보다 훨씬 좋아집니다.
               </p>
               <div className="mt-6 flex flex-wrap gap-2.5 no-print">
