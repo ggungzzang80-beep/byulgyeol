@@ -229,8 +229,9 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
                   )}
                 </h2>
                 <span className="text-[13px] t-faint">
-                  {isCharacter ? '수호별이 앉은 방' : '명궁'} · {chart.soulPalace.stem}
-                  {chart.soulPalace.branch}
+                  {isCharacter
+                    ? `${roomOf(chart.soulPalace.name)}에 앉은 수호별`
+                    : `명궁 ${chart.soulPalace.stem}${chart.soulPalace.branch}`}
                 </span>
               </div>
               <div className="mt-4 space-y-2">
