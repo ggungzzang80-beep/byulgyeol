@@ -286,6 +286,8 @@ export function productTagline(product: Product, theme: ThemeId): string {
       : '두 천궁도의 행성 교차 각 — 점수는 무료, 해석은 심층에서';
   }
   if (theme === 'character' && product.id === 'basic') return '수호별·사랑·돈·일 핵심만, 커피 한 잔 값으로';
+  if (theme === 'character' && product.id === 'premium') return '12개 별방 전체 + 올해·10년 흐름';
+  if (theme === 'character' && product.id === 'compat') return '두 사람의 별이 만나는 자리와 오래 가는 조건';
   if (theme === 'character' && product.id === 'western') return '태어난 하늘의 좌표 — 태양·달·어센던트';
   if (theme === 'character' && product.id === 'bundle') return '동양 별지도 + 서양 천궁도, 한 번에';
   return product.tagline;
@@ -495,7 +497,7 @@ export function productShortCta(product: Product, theme: ThemeId): string {
 }
 
 /** 결제 모달 상단에 붙는 체계 표기 — 어떤 체계를 사는지 한 줄로 못 박습니다. */
-export function productSystemLabel(product: Product): { title: string; sub: string } {
+export function productSystemLabel(product: Product, theme: ThemeId = 'mystic'): { title: string; sub: string } {
   if (product.id === 'synastry') {
     return { title: '서양 점성술 · 시너스트리 궁합', sub: 'SYNASTRY · 두 사람의 행성 교차 각' };
   }
@@ -504,6 +506,9 @@ export function productSystemLabel(product: Product): { title: string; sub: stri
   }
   if (product.system === 'both') {
     return { title: '통합 리포트 · 동양 + 서양', sub: 'ZI WEI DOU SHU × WESTERN NATAL · 두 체계 교차 해석' };
+  }
+  if (theme === 'character') {
+    return { title: '동양 별지도 · 12개 별방', sub: '별빛 가디언 · 14개의 별 · 별빛 네 개' };
   }
   return { title: '동양 전통 자미두수 · 12궁 명반', sub: 'ZI WEI DOU SHU · 12궁 · 14주성 · 사화 · 대한' };
 }

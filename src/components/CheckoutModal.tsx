@@ -68,7 +68,7 @@ export default function CheckoutModal({ product, chartName, birthInput, initialP
     () => PRODUCTS.filter((p) => p.system === lane && (!ZIWEI_ONLY || p.system === 'ziwei')),
     [lane],
   );
-  const systemLabel = productSystemLabel(product);
+  const systemLabel = productSystemLabel(product, theme);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -267,7 +267,7 @@ export default function CheckoutModal({ product, chartName, birthInput, initialP
                         {active ? '● ' : '○ '}
                         {productName(p, theme)}
                       </span>
-                      <span className="mt-0.5 block truncate text-[12.5px] t-faint">{p.tagline}</span>
+                      <span className="mt-0.5 block truncate text-[12.5px] t-faint">{productTagline(p, theme)}</span>
                     </span>
                     <span className="shrink-0 text-right">
                       {info.discounted && (
@@ -294,7 +294,7 @@ export default function CheckoutModal({ product, chartName, birthInput, initialP
 
           <div className="mt-4 space-y-2 rounded-2xl p-4 text-[14px]" style={{ background: 'var(--field-bg)' }}>
             <div className="flex justify-between gap-3 t-muted">
-              <span>{lane === 'western' ? '천궁도' : lane === 'both' ? '명반 · 천궁도' : copy.checkout.order}</span>
+              <span>{lane === 'western' ? '천궁도' : lane === 'both' ? (isCharacter ? '별지도 · 천궁도' : '명반 · 천궁도') : copy.checkout.order}</span>
               <span className="truncate t-body">{chartName || '익명'}</span>
             </div>
             <div className="flex justify-between gap-3 t-muted">
