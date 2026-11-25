@@ -266,12 +266,12 @@ export default function ChartView({
                   {isCharacter ? mutagenLight(chart.primaryMutagen) : chart.primaryMutagen}
                 </span>
               )}
-              <span className="opacity-40">·</span>
-              <span>{isCharacter ? elementLight(chart.fiveElements) : chart.fiveElements}</span>
-              <span className="opacity-40">·</span>
-              <span>{chart.zodiac}띠</span>
+              <span className="whitespace-nowrap">
+                · {isCharacter ? elementLight(chart.fiveElements) : chart.fiveElements}
+              </span>
+              <span className="whitespace-nowrap">· {chart.zodiac}띠</span>
               {chart.borrowedFrom && (
-                <span className="opacity-70">
+                <span className="whitespace-nowrap opacity-70">
                   · {isCharacter ? `${roomOf(chart.borrowedFrom)}에서 빌려온 별` : `${chart.borrowedFrom}에서 빌려온 주성`}
                 </span>
               )}
