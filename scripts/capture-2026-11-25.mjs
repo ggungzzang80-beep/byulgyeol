@@ -8,7 +8,11 @@
 import { chromium } from '/workspace/.scratch/pw/node_modules/playwright/index.mjs';
 
 const OUT = process.argv[2] ?? '/workspace/downloads/byulgyeol-renewal-2026-11-25';
-const BASE = process.argv[3] ?? 'http://127.0.0.1:4173/byulgyeol/';
+const RAW_BASE = process.argv[3] ?? 'http://127.0.0.1:4173/byulgyeol/';
+const SEP = RAW_BASE.includes('?') ? '&' : '?';
+const BASE = RAW_BASE;
+/** 쿼리 파라미터를 안전하게 붙입니다 (CDN 캐시 우회용 cb 포함) */
+const url = (params = '') => (params ? `${BASE}${SEP}${params}` : BASE);
 const EXE = '/workspace/.scratch/pw/browsers/chromium-1148/chrome-linux/chrome';
 
 const browser = await chromium.launch({
@@ -115,7 +119,7 @@ await page.waitForTimeout(400);
 await page.screenshot({ path: `${OUT}/13-step5-products-top.png`, fullPage: false });
 
 /* ---------- 6) 유료 리포트 미리보기 ---------- */
-await page.goto(`${BASE}?sample=paid`, { waitUntil: 'networkidle' });
+await page.goto(url('sample=paid'), { waitUntil: 'networkidle' });
 await page.waitForTimeout(2200);
 await shot('14-sample-paid-report-top');
 await page.evaluate(() => window.scrollBy(0, 1400));
@@ -125,14 +129,14 @@ await page.evaluate(() => window.scrollBy(0, 3200));
 await page.waitForTimeout(600);
 await shot('16-sample-paid-report-3');
 
-await page.goto(`${BASE}?sample=paid2027`, { waitUntil: 'networkidle' });
+await page.goto(url('sample=paid2027'), { waitUntil: 'networkidle' });
 await page.waitForTimeout(2200);
 await shot('17-sample-paid-2027-top');
 await page.evaluate(() => window.scrollBy(0, 1600));
 await page.waitForTimeout(600);
 await shot('18-sample-paid-2027-2');
 
-await page.goto(`${BASE}?sample=paid2026`, { waitUntil: 'networkidle' });
+await page.goto(url('sample=paid2026'), { waitUntil: 'networkidle' });
 await page.waitForTimeout(2200);
 await shot('19-sample-paid-2026-top');
 await page.evaluate(() => window.scrollBy(0, 1500));
@@ -140,7 +144,7 @@ await page.waitForTimeout(600);
 await shot('20-sample-paid-2026-2');
 
 /* ---------- 7) 미스틱 테마 그대로인지 확인 ---------- */
-await page.goto(`${BASE}?theme=mystic`, { waitUntil: 'networkidle' });
+await page.goto(url('theme=mystic'), { waitUntil: 'networkidle' });
 await page.waitForTimeout(1200);
 await shot('21-mystic-landing');
 await page.getByRole('button', { name: /무료로 명반 보기|명반 열기/ }).first().click().catch(() => {});

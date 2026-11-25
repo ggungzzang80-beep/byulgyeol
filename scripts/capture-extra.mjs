@@ -5,7 +5,11 @@
 import { chromium } from '/workspace/.scratch/pw/node_modules/playwright/index.mjs';
 
 const OUT = process.argv[2] ?? '/workspace/downloads/byulgyeol-renewal-2026-11-25';
-const BASE = process.argv[3] ?? 'https://ggungzzang80-beep.github.io/byulgyeol/';
+const RAW_BASE = process.argv[3] ?? 'https://ggungzzang80-beep.github.io/byulgyeol/';
+const SEP = RAW_BASE.includes('?') ? '&' : '?';
+const BASE = RAW_BASE;
+/** 쿼리 파라미터를 안전하게 붙입니다 (CDN 캐시 우회용 cb 포함) */
+const url = (params = '') => (params ? `${BASE}${SEP}${params}` : BASE);
 const EXE = '/workspace/.scratch/pw/browsers/chromium-1148/chrome-linux/chrome';
 
 const browser = await chromium.launch({ executablePath: EXE, args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'] });

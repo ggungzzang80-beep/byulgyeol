@@ -305,7 +305,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
           <SectionLabel index="03">
             {isCharacter ? `${reportYear}년 · 신년의 흐름` : `${reportYear}년 · 신년 흐름`}
           </SectionLabel>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="mt-4 grid items-start gap-4 sm:grid-cols-2">
             <div className="t-panel p-6">
               <div className="t-starfield opacity-40" />
               <div className="relative">
@@ -361,9 +361,9 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
               </p>
               <div className="mt-4 space-y-2.5">
                 {year2027.mutagen.map((m) => (
-                  <div key={m.mutagen + m.star + m.palace} className="flex gap-2 text-[14px] leading-relaxed">
+                  <div key={m.mutagen + m.star + m.palace} className="flex items-start gap-2 text-[14px] leading-relaxed">
                     <span
-                      className="mt-0.5 shrink-0 rounded-full px-2 py-0.5 text-[12.5px]"
+                      className="mt-0.5 shrink-0 self-start whitespace-nowrap rounded-full px-2 py-0.5 text-[12.5px]"
                       style={
                         m.mutagen === '화기'
                           ? { background: 'rgba(217,138,122,0.14)', color: isCharacter ? '#d97d9a' : '#d98a7a' }
