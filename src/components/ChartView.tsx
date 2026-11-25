@@ -2,11 +2,14 @@ import { useEffect, useState, type CSSProperties } from 'react';
 import type { ChartModel, PalaceView } from '../lib/chart';
 import { buildTeaser, deepProfileOf, palaceScore, profileOf } from '../lib/content';
 import {
+  CHARACTER_BOOKS,
   CHARACTER_FIRST_PRICE,
   WESTERN_PRODUCTS,
   ZIWEI_PRODUCTS,
   findProduct,
+  productPriceInfo,
   productBadge,
+  productName,
   productPoints,
   productPrice,
   productScopeShort,
@@ -21,6 +24,7 @@ import { THEME_ART, useTheme } from '../lib/theme';
 import { guardianRecommendation } from '../lib/guardianGoods';
 import { downloadDataUrl, renderShareCard } from '../lib/shareCard';
 import { starGlowStyle, starGuardian, starVisual } from '../lib/starPalette';
+import { brightLight, elementLight, mutagenLight, possessiveName, roomOf } from '../lib/friendly';
 import StarEmblem from './StarEmblem';
 import ChartBoard from './ChartBoard';
 import PalaceDetail from './PalaceDetail';
@@ -51,13 +55,27 @@ type Props = {
   onStep: (step: number) => void;
 };
 
-/** 단계 머리의 장면 일러스트 — 좁은 화면은 장면을 채우고, 넓은 화면은 좌우를 흐리게 깔아 잘리지 않게 */
+/**
+ * 단계 머리 — 하온의 작은 초상 + 그 단계에서 건네는 한마디.
+ * (2026-11-25: 세로 일러스트를 넓은 띠에 잘라 넣으면 얼굴만 크게 확대돼서,
+ *  액자처럼 작게 앉히고 옆에 말풍선을 두는 형태로 바꿨습니다.)
+ */
 function StepArt({ src, alt, caption, position }: { src: string; alt: string; caption: string; position: string }) {
   return (
-    <div className="wizard-art mb-4" style={{ height: 176 }}>
-      <div className="wizard-art__blur" style={{ backgroundImage: `url(${src})` }} aria-hidden="true" />
-      <img src={src} alt={alt} style={{ objectPosition: position }} loading="lazy" />
-      <p className="wizard-art__caption">{caption}</p>
+    <div className="mb-5 flex items-center gap-3">
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className="h-[112px] w-[92px] shrink-0 rounded-[20px] object-cover"
+        style={{ objectPosition: position, boxShadow: '0 18px 30px -22px rgba(72,48,120,0.7)' }}
+      />
+      <p
+        className="flex-1 rounded-2xl rounded-bl-md px-4 py-3 text-[14px] leading-[1.8] t-body"
+        style={{ background: 'var(--field-bg)', border: '1px solid var(--line)', borderLeft: '3px solid var(--accent)' }}
+      >
+        {caption}
+      </p>
     </div>
   );
 }
@@ -146,7 +164,9 @@ export default function ChartView({
   };
 
   const share = async () => {
-    const text = `${chart.name ? chart.name + ' 님의 ' : ''}명궁은 ${chart.primaryStar}성 — "${profile.identity}"\n#${profile.keywords.join(' #')}\n\n${copy.chart.shareTagline}`;
+    const text = isCharacter
+      ? `${possessiveName(chart.name)} 수호별은 ${chart.primaryStar}별 — \"${profile.identity}\"\n#${profile.keywords.join(' #')}\n\n${copy.chart.shareTagline}`
+      : `${chart.name ? chart.name + ' 님의 ' : ''}명궁은 ${chart.primaryStar}성 — \"${profile.identity}\"\n#${profile.keywords.join(' #')}\n\n${copy.chart.shareTagline}`;
     try {
       if (navigator.share) {
         await navigator.share({ title: copy.chart.shareTitle, text });
@@ -170,7 +190,7 @@ export default function ChartView({
             src={THEME_ART.character.greeting}
             alt="하온과 오드아이 별빛 고양이"
             position="center 68%"
-            caption="하온과 별빛 고양이가 네 명궁의 별을 읽었어. 먼저 수호별부터."
+            caption="하온과 별빛 고양이가 네 수호별을 읽었어. 먼저 수호별부터."
           />
         </div>
       )}
@@ -199,13 +219,17 @@ export default function ChartView({
           )}
 
           <div className="relative">
-            <p className="text-[13.5px] tracking-[0.2em] t-panel-accent">동양 전통 자미두수 · 12궁 명반</p>
+            <p className="text-[13.5px] tracking-[0.2em] t-panel-accent">
+              {isCharacter ? '너의 별지도 · 열두 개의 방' : '동양 전통 자미두수 · 12궁 명반'}
+            </p>
             <div className="mt-3 flex items-start justify-between gap-3">
               <div className="flex items-center gap-2">
                 <StarMark className="h-3 w-3" />
                 <span className="text-[12.5px] tracking-[0.24em] t-panel-accent">{copy.chart.soulLabel}</span>
               </div>
-              <span className="t-panel-accent font-[inherit] text-[14px] opacity-70">{STAR_HANJA[chart.primaryStar] ?? ''}</span>
+              {!isCharacter && (
+                <span className="t-panel-accent font-[inherit] text-[14px] opacity-70">{STAR_HANJA[chart.primaryStar] ?? ''}</span>
+              )}
             </div>
 
             {isCharacter && (
@@ -231,18 +255,26 @@ export default function ChartView({
               </p>
             )}
 
-            <div className="mt-3 flex flex-wrap items-center gap-2 text-[13px] t-panel-body">
-              {chart.primaryBrightness && <span>밝기 {chart.primaryBrightness}</span>}
+            <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[13.5px] leading-[1.6] t-panel-body">
+              {chart.primaryBrightness && (
+                <span>
+                  {isCharacter ? `빛의 세기 · ${brightLight(chart.primaryBrightness)}` : `밝기 ${chart.primaryBrightness}`}
+                </span>
+              )}
               {chart.primaryMutagen && (
-                <span className="rounded-full px-2 py-0.5" style={{ background: 'rgba(255,255,255,0.14)', color: 'var(--panel-accent)' }}>
-                  {chart.primaryMutagen}
+                <span className="rounded-full px-2.5 py-0.5" style={{ background: 'rgba(255,255,255,0.16)', color: 'var(--panel-accent)' }}>
+                  {isCharacter ? mutagenLight(chart.primaryMutagen) : chart.primaryMutagen}
                 </span>
               )}
               <span className="opacity-40">·</span>
-              <span>{chart.fiveElements}</span>
+              <span>{isCharacter ? elementLight(chart.fiveElements) : chart.fiveElements}</span>
               <span className="opacity-40">·</span>
               <span>{chart.zodiac}띠</span>
-              {chart.borrowedFrom && <span className="opacity-60">· {chart.borrowedFrom}에서 빌려온 주성</span>}
+              {chart.borrowedFrom && (
+                <span className="opacity-70">
+                  · {isCharacter ? `${roomOf(chart.borrowedFrom)}에서 빌려온 별` : `${chart.borrowedFrom}에서 빌려온 주성`}
+                </span>
+              )}
             </div>
             <p className="num mt-1.5 text-[13px] t-panel-faint">
               {chart.solarText} {chart.timeText}
@@ -254,7 +286,7 @@ export default function ChartView({
               </p>
             )}
 
-            <p className="t-panel-title mt-6 text-[23px] leading-snug sm:text-[24px]">“{profile.identity}”</p>
+            <p className="t-panel-title mt-6 text-[25px] leading-snug sm:text-[27px]">“{profile.identity}”</p>
 
             <div className="mt-5 flex flex-wrap gap-1.5">
               {profile.keywords.map((k) => (
@@ -291,11 +323,11 @@ export default function ChartView({
             <div className="mt-6 grid gap-4 pt-5 sm:grid-cols-2" style={{ borderTop: '1px solid var(--panel-rule)' }}>
               <div>
                 <p className="text-[12.5px] tracking-[0.18em] t-panel-accent">{copy.chart.strength}</p>
-                <p className="mt-1.5 text-[14px] leading-[1.8] t-panel-body">{profile.strength}</p>
+                <p className="mt-1.5 text-[15px] leading-[1.9] t-panel-body">{profile.strength}</p>
               </div>
               <div>
                 <p className="text-[12.5px] tracking-[0.18em] t-panel-accent">{copy.chart.caution}</p>
-                <p className="mt-1.5 text-[14px] leading-[1.8] t-panel-faint">{profile.caution}</p>
+                <p className="mt-1.5 text-[15px] leading-[1.9] t-panel-faint">{profile.caution}</p>
               </div>
             </div>
 
@@ -386,10 +418,12 @@ export default function ChartView({
             </div>
           )}
 
-          {/* 수호 원석 티저 — 리포트 하단 굿즈 추천으로 연결 */}
+          {/* 수호 원석 티저 — 자미원(미스틱)에서만 보여 줍니다.
+              2026-11-25 @kooleumi8 피드백 2번: 별의 속삭임에서는 '준비 중' 굿즈·원석 UI를 모두 감춥니다. */}
+          {!isCharacter && (
           <div className="t-card p-5">
             <div className="flex items-center justify-between gap-2">
-              <p className="text-[12.5px] tracking-[0.18em] t-faint">{isCharacter ? 'GUARDIAN STONE · 수호 원석' : 'GUARDIAN STONE'}</p>
+              <p className="text-[12.5px] tracking-[0.18em] t-faint">GUARDIAN STONE</p>
               <span className="t-chip !text-[12px]">준비 중</span>
             </div>
             <div className="mt-2.5 flex items-center gap-3">
@@ -409,12 +443,13 @@ export default function ChartView({
               </div>
             </div>
             <p className="mt-2.5 text-[13px] leading-relaxed t-faint">
-              {isCharacter ? '부족한 별빛을 채우는 원석·부적을 리포트 하단에서 추천해 줄게.' : '부족한 기운을 채우는 원석과 소품을 리포트 하단에서 추천합니다.'}
+              부족한 기운을 채우는 원석과 소품을 리포트 하단에서 추천합니다.
             </p>
-            <button onClick={() => onUnlock(isCharacter ? 'basic' : 'premium')} className="t-btn t-btn-soft mt-3 w-full py-2 text-[13px]">
-              {isCharacter ? '리포트에서 굿즈 추천 보기' : '리포트에서 추천 보기'}
+            <button onClick={() => onUnlock('premium')} className="t-btn t-btn-soft mt-3 w-full py-2 text-[13px]">
+              리포트에서 추천 보기
             </button>
           </div>
+          )}
 
           <button onClick={() => onStep(1)} className="t-btn t-btn-ghost w-full py-2.5 text-[13.5px]">
             12개 별방 보기
@@ -442,7 +477,7 @@ export default function ChartView({
           <h2 className="t-display mt-3 text-[24px] sm:text-[28px]">{copy.chart.boardTitle(chart.name)}</h2>
         </div>
         <p
-          className="rounded-2xl py-2.5 pl-3.5 pr-4 text-[15px] font-medium leading-[1.8] t-body sm:max-w-[360px]"
+          className="rounded-2xl py-3 pl-4 pr-4 text-[15px] font-medium leading-[1.85] t-body sm:max-w-[380px]"
           style={{ background: 'var(--field-bg)', border: '1px solid var(--line)', borderLeft: '3px solid var(--accent)' }}
         >
           {copy.chart.boardHint}
@@ -466,7 +501,7 @@ export default function ChartView({
           src={THEME_ART.character.steps!.reading.src}
           alt={THEME_ART.character.steps!.reading.alt}
           position="center 26%"
-          caption="찻잔 곁에서 올해의 별을 읽는 중 — 대한과 유년, 그리고 조심할 방 하나."
+          caption="찻잔 곁에서 올해의 별을 읽는 중 — 10년 큰 흐름과 올해 흐름, 그리고 조심할 방 하나."
         />
       )}
 
@@ -476,7 +511,9 @@ export default function ChartView({
         <div id="year-flow" className="t-card mt-3 p-5 sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
             <p className="text-[12.5px] tracking-[0.18em]" style={{ color: 'var(--accent-deep)' }}>
-              {chart.yearly.year}년 · {isCharacter ? '올해의 별' : '유년'} {chart.yearly.stemBranch}
+              {isCharacter
+                ? `${chart.yearly.year}년 · 올해의 별`
+                : `${chart.yearly.year}년 · 유년 ${chart.yearly.stemBranch}`}
             </p>
             <span className="t-chip !text-[12.5px]">{isCharacter ? '가디언의 지도' : '무료 공개'}</span>
           </div>
@@ -484,16 +521,18 @@ export default function ChartView({
           {/* 문장 겹침 수정 — 긴 문장 한 줄 대신 항목별 두 줄로 나눠 어떤 화면 폭에서도 겹치지 않습니다. */}
           <dl className="mt-3 space-y-2">
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 rounded-xl px-3 py-2" style={{ background: 'var(--field-bg)' }}>
-              <dt className="text-[14px] leading-[1.7] t-muted">{isCharacter ? '올해의 큰 별 · 대한' : '올해 대한'}</dt>
+              <dt className="text-[14px] leading-[1.7] t-muted">{isCharacter ? '10년 큰 흐름' : '올해 대한'}</dt>
               <dd className="num text-[15px] font-semibold leading-[1.7] t-body">
                 {chart.decadal.range[0]}–{chart.decadal.range[1]}세
               </dd>
             </div>
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 rounded-xl px-3 py-2" style={{ background: 'var(--field-bg)' }}>
               <dt className="text-[14px] leading-[1.7] t-muted">
-                {chart.yearly.stemBranch}년 {isCharacter ? '네 별방' : '유년 명궁'}
+                {isCharacter ? `${chart.yearly.year}년 올해 흐름` : `${chart.yearly.stemBranch}년 유년 명궁`}
               </dt>
-              <dd className="text-[15px] font-semibold leading-[1.7] t-body">{chart.yearly.palaceName}</dd>
+              <dd className="text-[15px] font-semibold leading-[1.7] t-body">
+                {isCharacter ? roomOf(chart.yearly.palaceName) : chart.yearly.palaceName}
+              </dd>
             </div>
           </dl>
 
@@ -505,7 +544,7 @@ export default function ChartView({
                 title={m.mutagen ? MUTAGEN_HINT[m.mutagen] : undefined}
                 style={m.mutagen === '화기' ? { color: theme === 'character' ? '#d97d9a' : '#d98a7a', borderColor: 'rgba(217,138,122,0.3)' } : undefined}
               >
-                {m.name} {m.mutagen}
+                {isCharacter ? `${m.name} · ${mutagenLight(m.mutagen)}` : `${m.name} ${m.mutagen}`}
               </span>
             ))}
           </div>
@@ -517,7 +556,7 @@ export default function ChartView({
                   className="shrink-0 font-semibold"
                   style={{ color: m.mutagen === '화기' ? (theme === 'character' ? '#c9688a' : '#cf7f6d') : 'var(--accent-deep)' }}
                 >
-                  {m.mutagen}
+                  {isCharacter ? mutagenLight(m.mutagen) : m.mutagen}
                 </span>
                 <span>— {m.mutagen ? MUTAGEN_HINT[m.mutagen] : ''}</span>
               </li>
@@ -697,7 +736,7 @@ export default function ChartView({
           src={THEME_ART.character.steps!.amulet.src}
           alt={THEME_ART.character.steps!.amulet.alt}
           position="center 34%"
-          caption="붉은 실을 묶은 부적 한 장 — 하온이 네 명궁의 별로 그려 줬어."
+          caption="붉은 실을 묶은 부적 한 장 — 하온이 네 수호별로 그려 줬어."
         />
       )}
       <NewYear2027 chart={chart} unlocked={newYearUnlocked} onUnlock={() => onUnlock('newyear2027')} />
@@ -737,14 +776,24 @@ export default function ChartView({
 
       {/* 상품 */}
       <section className="mt-10">
-        <SectionLabel index="05">{ZIWEI_ONLY ? '별 이야기 3종' : copy.chart.productsSection}</SectionLabel>
+        <SectionLabel index="05">
+          {isCharacter ? '별 이야기 5권' : ZIWEI_ONLY ? '별 이야기 3종' : copy.chart.productsSection}
+        </SectionLabel>
+        {isCharacter && (
+          <p className="mt-2 max-w-[520px] text-[14px] leading-[1.9] t-muted">
+            2027 신년 운세가 지금의 메인 이야기야. 2026년은 거의 끝나서 마감 할인으로 내렸어 — 남은 두 달만
+            정리해도 2027이 훨씬 편해져.
+          </p>
+        )}
         <div className="mt-4 space-y-7">
-          {(ZIWEI_ONLY
-            ? [{ label: '', items: ZIWEI_PRODUCTS }]
-            : [
-                { label: '① 동양 전통 자미두수 · 12궁 명반', items: ZIWEI_PRODUCTS },
-                { label: '② 서양 점성술 · 출생 천궁도', items: WESTERN_PRODUCTS },
-              ]
+          {(isCharacter
+            ? [{ label: '', items: CHARACTER_BOOKS }]
+            : ZIWEI_ONLY
+              ? [{ label: '', items: ZIWEI_PRODUCTS }]
+              : [
+                  { label: '① 동양 전통 자미두수 · 12궁 명반', items: ZIWEI_PRODUCTS },
+                  { label: '② 서양 점성술 · 출생 천궁도', items: WESTERN_PRODUCTS },
+                ]
           ).map((group) => (
             <div key={group.label || 'all'}>
               {group.label && (
@@ -754,35 +803,92 @@ export default function ChartView({
                 </div>
               )}
               <div className="mt-3 grid gap-3.5 lg:grid-cols-3">
-                {group.items.map((p) => (
-                  <div key={p.id} className="t-card flex flex-col p-5">
-                    <div className="flex items-baseline justify-between gap-2">
-                      <h3 className="t-title text-[18px]">{p.name}</h3>
-                      {productBadge(p, theme) ? (
-                        <span className="rounded-full px-2 py-0.5 text-[12px]" style={{ background: 'var(--accent-soft)', color: 'var(--accent-deep)' }}>
-                          {productBadge(p, theme)}
-                        </span>
-                      ) : null}
+                {group.items.map((p) => {
+                  /* 2027 신년 운세 = 메인(강조), 2026 마무리 = 마감 할인 카드 */
+                  const featured = isCharacter && p.id === 'newyear2027';
+                  const closing = isCharacter && p.id === 'year2026';
+                  const info = productPriceInfo(p, theme);
+                  return (
+                    <div
+                      key={p.id}
+                      className="flex flex-col p-5"
+                      style={
+                        featured
+                          ? {
+                              borderRadius: '26px',
+                              background: 'linear-gradient(160deg,#6a52a6,#4a3578)',
+                              color: '#fff9ff',
+                              border: '1px solid rgba(255,255,255,0.3)',
+                              boxShadow: '0 24px 44px -30px rgba(78,54,120,0.7)',
+                            }
+                          : closing
+                            ? {
+                                borderRadius: '26px',
+                                background: 'linear-gradient(160deg,#fff6ea,#ffeada)',
+                                border: '1px solid rgba(224,150,96,0.4)',
+                                boxShadow: '0 18px 34px -28px rgba(168,112,70,0.5)',
+                              }
+                            : {
+                                borderRadius: '26px',
+                                background: 'var(--card)',
+                                border: '1px solid var(--line)',
+                              }
+                      }
+                    >
+                      <div className="flex items-baseline justify-between gap-2">
+                        <h3 className="t-title min-w-0 text-[17.5px] leading-snug">{productName(p, theme)}</h3>
+                        {productBadge(p, theme) ? (
+                          <span
+                            className="shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-[12px]"
+                            style={
+                              featured
+                                ? { background: 'rgba(255,217,184,0.95)', color: '#4a3468' }
+                                : closing
+                                  ? { background: '#ffd9c7', color: '#7a3c1d' }
+                                  : { background: 'var(--accent-soft)', color: 'var(--accent-deep)' }
+                            }
+                          >
+                            {productBadge(p, theme)}
+                          </span>
+                        ) : null}
+                      </div>
+                      <p className="mt-1 text-[13.5px]" style={{ color: featured ? 'rgba(255,249,255,0.88)' : 'var(--muted)' }}>
+                        {productTagline(p, theme)}
+                      </p>
+                      <ul
+                        className="mt-3 flex-1 space-y-1.5 text-[13.5px] leading-relaxed"
+                        style={{ color: featured ? 'rgba(255,249,255,0.84)' : 'var(--muted)' }}
+                      >
+                        {productPoints(p, theme).slice(0, 3).map((pt) => (
+                          <li key={pt} className="flex gap-1.5">
+                            <span style={{ color: featured ? '#ffd9b8' : 'var(--accent)' }}>·</span>
+                            {pt}
+                          </li>
+                        ))}
+                      </ul>
+                      {productScopeShort(p, theme) && (
+                        <p className="mt-2 text-[12.5px] leading-[1.65]" style={{ color: featured ? 'rgba(255,249,255,0.72)' : 'var(--faint)' }}>
+                          {productScopeShort(p, theme)}
+                        </p>
+                      )}
+                      <div className="mt-4 flex items-end justify-between gap-2">
+                        <PriceTag product={p} variant="compact" onDark={featured} showSave={!featured} />
+                        <button
+                          onClick={() => onUnlock(p.id)}
+                          className={`t-btn whitespace-nowrap !px-3 !py-2 text-[13px] ${featured ? 't-btn-gold' : 't-btn-soft'}`}
+                        >
+                          {productShortCta(p, theme)}
+                          <ArrowIcon className="h-3 w-3" />
+                        </button>
+                      </div>
+                      {closing && info.discounted && (
+                        <p className="mt-2 text-[12.5px] leading-[1.65] text-[#8a4f2a]">
+                          2026년이 {new Date().getFullYear() === 2026 ? '한 달 남았어' : '거의 끝났어'} — 지금만 이 가격이야.
+                        </p>
+                      )}
                     </div>
-                    <p className="mt-1 text-[13.5px] t-muted">{productTagline(p, theme)}</p>
-                    <ul className="mt-3 flex-1 space-y-1.5 text-[13.5px] leading-relaxed t-muted">
-                      {productPoints(p, theme).slice(0, 3).map((pt) => (
-                        <li key={pt} className="flex gap-1.5">
-                          <span style={{ color: 'var(--accent)' }}>·</span>
-                          {pt}
-                        </li>
-                      ))}
-                    </ul>
-                    {productScopeShort(p, theme) && <p className="mt-2 text-[12.5px] leading-[1.65] t-faint">{productScopeShort(p, theme)}</p>}
-                    <div className="mt-4 flex items-end justify-between gap-2">
-                      <PriceTag product={p} variant="compact" />
-                      <button onClick={() => onUnlock(p.id)} className="t-btn t-btn-soft !px-3.5 !py-2 text-[13.5px]">
-                        {productShortCta(p, theme)}
-                        <ArrowIcon className="h-3 w-3" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -835,7 +941,7 @@ export default function ChartView({
             </button>
             <span className="hidden h-3 w-px sm:block" style={{ background: 'var(--line-strong)' }} />
             <span className="hidden truncate text-[13.5px] t-muted sm:inline">
-              {chart.name ? `${chart.name} 님의 ` : ''}
+              {isCharacter ? possessiveName(chart.name) + ' ' : chart.name ? `${chart.name} 님의 ` : ''}
               {isCharacter ? '별지도' : '명반'} · {chart.solarText} · {chart.timeText.replace(' (정오 기준)', '')}
             </span>
           </div>
@@ -855,7 +961,11 @@ export default function ChartView({
           <SystemTabs
             system={system}
             onChange={onSystemChange}
-            note="지금 보고 있는 체계: 동양 전통 자미두수 · 12궁 명반 — 탭을 누르면 서양 점성술로 바뀝니다."
+            note={
+              isCharacter
+                ? '지금 보고 있는 건 동양 별지도 — 탭을 누르면 서양 별자리로 바뀌어.'
+                : '지금 보고 있는 체계: 동양 전통 자미두수 · 12궁 명반 — 탭을 누르면 서양 점성술로 바뀝니다.'
+            }
           />
         </div>
       )}

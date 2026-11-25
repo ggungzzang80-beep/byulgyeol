@@ -23,6 +23,7 @@ import {
 } from './stones';
 import { stoneGoods, type StoneGood } from './goodsCatalog';
 import type { ThemeId } from './theme';
+import { roomOf } from './friendly';
 
 export type { ElementKey };
 export type MonthTone = 'open' | 'push' | 'name' | 'care' | 'steady';
@@ -423,19 +424,19 @@ export function build2027(chart: ChartModel, theme: ThemeId): NewYear2027Content
   })();
 
   const headline = isC
-    ? `2027년은 ${stage.palaceName}에 불이 들어오는 해. ${roku.field}${josa(roku.field, '이', '가')} 먼저 움직이고, 그 뒤로 나머지가 따라와.`
+    ? `2027년은 ${roomOf(stage.palaceName)}에 불이 들어오는 해. ${roku.field}${josa(roku.field, '이', '가')} 먼저 움직이고, 그 뒤로 나머지가 따라와.`
     : `2027년은 ${stage.palaceName}에 불이 들어오는 해입니다. ${roku.field}${josa(roku.field, '이', '가')} 먼저 움직이고, 그 뒤로 나머지가 따라옵니다.`;
 
   const advice = isC
-    ? `${gi.palace}${josa(gi.palace, '은', '는')} 올해 가장 예민한 자리야. 여기서만큼은 서두르지 말고 한 번 더 확인해.`
+    ? `${roomOf(gi.palace)}${josa(roomOf(gi.palace), '은', '는')} 올해 가장 예민한 자리야. 여기서만큼은 서두르지 말고 한 번 더 확인해.`
     : `${gi.palace}${josa(gi.palace, '은', '는')} 올해 가장 예민한 자리입니다. 여기서만큼은 서두르지 말고 한 번 더 확인하세요.`;
 
   const flowFree = isC
-    ? `한 해의 중심은 ${stage.palaceName}(${stage.palaceDomain})으로 옮겨가. 정미년의 불은 크게 타오르기보다 오래 타는 불이라, 한 번에 벌이기보다 열두 달에 나눠 쌓는 쪽이 남아.`
+    ? `한 해의 중심은 ${roomOf(stage.palaceName)}(${stage.palaceDomain})으로 옮겨가. 정미년의 불은 크게 타오르기보다 오래 타는 불이라, 한 번에 벌이기보다 열두 달에 나눠 쌓는 쪽이 남아.`
     : `한 해의 중심은 ${stage.palaceName}(${stage.palaceDomain})으로 옮겨갑니다. 정미년의 불은 크게 타오르기보다 오래 타는 불이라, 한 번에 벌이기보다 열두 달에 나눠 쌓는 쪽이 남습니다.`;
 
   const flowLocked = isC
-    ? `사화 네 개가 어느 자리에 앉았는지에 따라 상반기와 하반기의 문이 갈려. 달마다 무엇을 미루고 무엇을 먼저 할지, 어느 달에 큰돈을 쓰지 말아야 하는지가 리포트에 들어 있어.`
+    ? `별빛 네 개가 어느 자리에 앉았는지에 따라 상반기와 하반기의 문이 갈려. 달마다 무엇을 미루고 무엇을 먼저 할지, 어느 달에 큰돈을 쓰지 말아야 하는지가 리포트에 들어 있어.`
     : `사화 네 개가 어느 자리에 앉았는지에 따라 상반기와 하반기의 문이 갈립니다. 달마다 무엇을 미루고 무엇을 먼저 할지, 어느 달에 큰돈을 쓰지 말아야 하는지가 리포트에 담깁니다.`;
 
   /* 굿즈 목록은 lib/goodsCatalog.ts 한 벌만 씁니다 — 리포트와 같은 상품·같은 가격 */

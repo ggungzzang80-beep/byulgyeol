@@ -18,6 +18,7 @@ import WesternReport from './components/WesternReport';
 import SynastryPreview from './components/SynastryPreview';
 import SynastryReport from './components/SynastryReport';
 import NewYearReport from './components/NewYearReport';
+import Year2026Report from './components/Year2026Report';
 import LegalFooter from './components/LegalFooter';
 import { PAYMENTS_LIVE, ZIWEI_ONLY } from './config/env';
 import {
@@ -29,7 +30,44 @@ import {
   verifyUnlockToken,
 } from './lib/payments';
 
-type View = 'landing' | 'chart' | 'report' | 'compat' | 'western' | 'westernReport' | 'synastry' | 'newyear2027';
+type View =
+  | 'landing'
+  | 'chart'
+  | 'report'
+  | 'compat'
+  | 'western'
+  | 'westernReport'
+  | 'synastry'
+  | 'newyear2027'
+  | 'year2026';
+
+/**
+ * 유료 리포트 미리보기(검수용) — `?sample=paid` 로 열면 결제 없이
+ * 유료 리포트 전체를 그대로 볼 수 있습니다. (2026-11-25 @kooleumi8 피드백 8번)
+ *   ?sample=paid        → 12개 별방 전체 리포트(PremiumReport)
+ *   ?sample=paid2027    → 2027 신년 정밀 리포트
+ *   ?sample=paid2026    → 2026 마무리 리포트
+ */
+function readSampleFromUrl(): 'off' | 'paid' | 'paid2027' | 'paid2026' {
+  const v = new URLSearchParams(window.location.search).get('sample');
+  if (v === 'paid') return 'paid';
+  if (v === 'paid2027') return 'paid2027';
+  if (v === 'paid2026') return 'paid2026';
+  return 'off';
+}
+
+/** 미리보기용 예시 생년월일시 (저장되지 않는 화면용 값) */
+const SAMPLE_INPUT: BirthInput = {
+  name: '별지기',
+  year: 1994,
+  month: 5,
+  day: 17,
+  calendar: 'solar',
+  isLeap: false,
+  timeIndex: 6,
+  timeKnown: true,
+  gender: 'female',
+};
 
 export default function App() {
   const [theme, setThemeState] = useState<ThemeId>(() => readThemeFromUrl());
@@ -61,6 +99,12 @@ export default function App() {
   const [hasBundle, setHasBundle] = useState(false);
   /** 2027 정미년 신년 정밀 리포트 열람 여부 (결제 후 열림) */
   const [newYearUnlocked, setNewYearUnlocked] = useState(false);
+  /** 2026 병오년 마무리 리포트 열람 여부 (마감 할인 상품) */
+  const [year2026Unlocked, setYear2026Unlocked] = useState(false);
+  /** 유료 리포트 미리보기 모드 (?sample=paid) */
+  const [sampleMode, setSampleMode] = useState<'off' | 'paid' | 'paid2027' | 'paid2026'>(() =>
+    typeof window === 'undefined' ? 'off' : readSampleFromUrl(),
+  );
   /** 랜딩의 2027 부적 버튼으로 들어왔을 때 결과 화면에서 부적 섹션으로 이동 */
   const [focusNewYear, setFocusNewYear] = useState(false);
   const [focusAi, setFocusAi] = useState(false);
@@ -192,6 +236,16 @@ export default function App() {
 
   const handleUnlock = (id: ProductId) => {
     setFocusAi(false);
+    // 2026 마무리 운세 — 마감 할인 상품, 전용 화면으로 이어집니다.
+    if (id === 'year2026') {
+      if (year2026Unlocked) {
+        setCheckout(null);
+        setView('year2026');
+        return;
+      }
+      setCheckout(findProduct('year2026'));
+      return;
+    }
     // 2027 신년 리포트는 전용 화면으로 이어집니다 (결제 확인 후 바로 열림).
     if (id === 'newyear2027') {
       if (newYearUnlocked) {
@@ -282,6 +336,12 @@ export default function App() {
         return;
       }
 
+      if (id === 'year2026') {
+        setYear2026Unlocked(true);
+        setView('year2026');
+        return;
+      }
+
       if (id === 'bundle') {
         setHasBundle(true);
         setWesternPaid(true);
@@ -367,6 +427,28 @@ export default function App() {
     // 결제 복원은 앱이 처음 뜰 때 한 번만 시도합니다.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /**
+   * 유료 리포트 미리보기(?sample=paid) — 결제 없이 유료 화면 전체를 열어 봅니다.
+   * 화면 상태로만 동작하고 서버·저장소에는 아무것도 남기지 않습니다.
+   */
+  useEffect(() => {
+    if (sampleMode === 'off') return;
+    let cancelled = false;
+    void (async () => {
+      const built = await buildChart(SAMPLE_INPUT);
+      if (cancelled) return;
+      setBirthInput(SAMPLE_INPUT);
+      setChart(built);
+      setZiweiTier('premium');
+      setNewYearUnlocked(true);
+      setYear2026Unlocked(true);
+      setView(sampleMode === 'paid2027' ? 'newyear2027' : sampleMode === 'paid2026' ? 'year2026' : 'report');
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [sampleMode]);
 
   /**
    * 랜딩의 2027 신년 부적 배너.
@@ -456,6 +538,14 @@ export default function App() {
 
         {view === 'newyear2027' && chart && (
           <NewYearReport chart={chart} onBack={() => setView('chart')} />
+        )}
+
+        {view === 'year2026' && chart && (
+          <Year2026Report
+            chart={chart}
+            onBack={() => setView('chart')}
+            onOpen2027={() => handleUnlock('newyear2027')}
+          />
         )}
 
         {view === 'western' && western && (
@@ -563,6 +653,46 @@ export default function App() {
             onPaid={handlePaid}
             onSelect={(id) => setCheckout(findProduct(id))}
           />
+        )}
+
+        {sampleMode !== 'off' && (
+          <div className="fixed bottom-3 left-1/2 z-[55] w-[min(94vw,560px)] -translate-x-1/2 rounded-2xl px-3.5 py-2.5 text-[12.5px] shadow-lg no-print"
+            style={{ background: 'rgba(74,52,104,0.94)', color: '#fff9ff', border: '1px solid rgba(255,255,255,0.24)' }}>
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-semibold">미리보기 · ?sample={sampleMode}</span>
+              <button
+                onClick={() => {
+                  const url = new URL(window.location.href);
+                  url.searchParams.delete('sample');
+                  window.location.href = url.toString();
+                }}
+                className="rounded-full px-2 py-0.5 text-[12px]"
+                style={{ background: 'rgba(255,255,255,0.16)' }}
+              >
+                닫기
+              </button>
+            </div>
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
+              {[
+                { key: 'paid', label: '12개 별방 전체' },
+                { key: 'paid2027', label: '2027 신년' },
+                { key: 'paid2026', label: '2026 마무리' },
+              ].map((s) => (
+                <button
+                  key={s.key}
+                  onClick={() => setSampleMode(s.key as typeof sampleMode)}
+                  className="rounded-full px-2.5 py-1 text-[12px]"
+                  style={{
+                    background: sampleMode === s.key ? 'rgba(255,217,184,0.95)' : 'rgba(255,255,255,0.14)',
+                    color: sampleMode === s.key ? '#4a3468' : '#fff9ff',
+                  }}
+                >
+                  {s.label}
+                </button>
+              ))}
+              <span className="self-center text-[11.5px] opacity-80">예시 생년월일로 그린 검수용 화면</span>
+            </div>
+          </div>
         )}
 
         {toast && (

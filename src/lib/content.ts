@@ -9,6 +9,7 @@
  */
 import type { ChartModel, PalaceView, StarView } from './chart';
 import { DEEP_CASUAL, MINOR_CASUAL, MONTH_CASUAL, PALACE_CASUAL, STAR_CASUAL } from './content-casual';
+import { brightLight, mutagenLight, roomOf } from './friendly';
 
 /**
  * 말투 — mystic 은 합니다체('formal'), character(별의 속삭임) 는 반말('casual').
@@ -315,7 +316,9 @@ export function minorLine(palace: PalaceView, tone: Tone = 'formal'): string {
     .filter((x) => x.text)
     .slice(0, 2);
   if (!notes.length) return '';
-  return notes.map((n) => `${n.star} — ${n.text}`).join(' ');
+  /* 2026-11-25 @kooleumi8 피드백 3번: 여러 별을 한 문단에 이어 붙이지 않고
+     별마다 한 줄(줄바꿈)로 끊습니다. 화면은 '\n' 을 기준으로 줄을 나눠 그립니다. */
+  return notes.map((n) => `${n.star} — ${n.text}`).join('\n');
 }
 
 /* --------------------------- 지수(指數) 계산 --------------------------- */
@@ -475,7 +478,13 @@ export function palaceReadings(
   const body = script ?? fallback;
   const star = palace.major[0];
   const profile = profileOf(star?.name ?? '', tone);
-  const starName = star?.name ? `${star.name}성` : isCasual ? '주성이 없는 방' : '주성이 없는 자리';
+  const starName = star?.name
+    ? isCasual
+      ? `${star.name}별`
+      : `${star.name}성`
+    : isCasual
+      ? '메인 별이 없는 방'
+      : '주성이 없는 자리';
 
   const headline = palace.domain;
 
@@ -485,9 +494,10 @@ export function palaceReadings(
         .replace('{star}은', `${starName}${josa(starName, '은', '는')}`)
         .replace('{star}이', `${starName}${josa(starName, '이', '가')}`)
         .replace('{star}', starName)
+        .replace('{room}', isCasual ? roomOf(palace.name) : palace.name)
         .replace('{style}', profile.style)
     : isCasual
-      ? `${palace.name}에는 주성이 앉지 않았어. 대신 옆 방의 별이 ${profile.style}으로 이 자리를 채워.`
+      ? `${roomOf(palace.name)}에는 메인 별이 앉지 않았어. 대신 옆 방의 별이 ${profile.style}으로 이 자리를 채워.`
       : `${palace.name}에는 주성이 앉지 않았습니다. 대신 옆 궁의 별이 ${profile.style}으로 이 자리를 채웁니다.`;
 
   const second = palace.major.length
@@ -502,7 +512,7 @@ export function palaceReadings(
   if (palace.major[0]?.brightness) {
     thirdParts.push(
       isCasual
-        ? `밝기는 '${palace.major[0].brightness}' — ${brightnessPhrase(palace.major[0].brightness, tone)}.`
+        ? `이 방의 빛은 ${brightLight(palace.major[0].brightness)} — ${brightnessPhrase(palace.major[0].brightness, tone)}.`
         : `밝기는 '${palace.major[0].brightness}' — ${brightnessPhrase(palace.major[0].brightness, tone)}.`,
     );
   }
@@ -510,14 +520,15 @@ export function palaceReadings(
     const m = palace.major.find((s) => s.mutagen)!;
     thirdParts.push(
       isCasual
-        ? `${m.name}성에 ${m.mutagen}${josa(m.mutagen!, '이', '가')} 붙어 ${mutagenPhrase(m.mutagen!, tone)}`
+        ? `${m.name}별에 ${mutagenLight(m.mutagen)}이 붙었어. ${mutagenPhrase(m.mutagen!, tone)}`
         : `${m.name}성에 ${m.mutagen}${josa(m.mutagen!, '이', '가')} 붙어 ${mutagenPhrase(m.mutagen!, tone)}`,
     );
   }
   const minor = minorLine(palace, tone);
   if (minor) thirdParts.push(minor);
 
-  const third = thirdParts.length ? thirdParts.join(' ') : body.reads[1];
+  /* 2026-11-25 피드백 3번: 별·사화 설명은 각각 한 줄씩 — 한 문단으로 붙이지 않습니다. */
+  const third = thirdParts.length ? thirdParts.join('\n') : body.reads[1];
 
   // 핀셋 한 줄: 전공·직업군·배우자상·돈이 새는 장면을 구체적으로 붙입니다.
   const deep = deepProfileOf(star?.name ?? '', tone);
@@ -580,10 +591,10 @@ function mutagenPhrase(m: string, tone: Tone = 'formal'): string {
     화기: '집착과 피로가 몰립니다. 정리할 때 길이 열립니다.',
   };
   const casual: Record<string, string> = {
-    화록: '이 방의 영역에서 얻는 힘이 붙어.',
-    화권: '주도권이 붙지만 밀어붙일수록 반발도 커져.',
-    화과: '평판과 배움으로 풀리는 자리야.',
-    화기: '집착과 피로가 몰려. 정리할 때 길이 열려.',
+    화록: '먼저 손을 뻗을수록 남는 게 커.',
+    화권: '다만 밀어붙일수록 반발도 커져.',
+    화과: '기록하고 알린 만큼 돌아와.',
+    화기: '미련을 정리할 때 길이 열려.',
   };
   const table = tone === 'casual' ? casual : formal;
   return table[m] ?? '';

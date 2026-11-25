@@ -1,4 +1,5 @@
 import { SYSTEM_ORDER, SYSTEMS, type SystemId } from '../lib/systems';
+import { useTheme } from '../lib/theme';
 
 type Props = {
   system: SystemId;
@@ -14,8 +15,17 @@ type Props = {
  * 화면마다 같은 자리에서 확인할 수 있게 합니다.
  */
 export default function SystemTabs({ system, onChange, note, compact = false }: Props) {
+  const { theme } = useTheme();
   /* 자미두수 단독 오픈 빌드 — 체계가 하나라 탭을 그리지 않습니다(코드는 그대로 두고 숨김). */
   if (SYSTEM_ORDER.length < 2) return null;
+
+  /* 캐릭터(별의 속삭임) 테마는 탭 이름도 일상어로 보여 줍니다. */
+  const label = (id: SystemId) => {
+    const s = SYSTEMS[id];
+    if (theme !== 'character') return { tab: s.tab, basis: s.basis };
+    if (id === 'ziwei') return { tab: '동양 별지도', basis: '열두 개의 방 · 열네 개의 별' };
+    return { tab: '서양 별자리', basis: '태어난 하늘의 좌표' };
+  };
 
   return (
     <div className={compact ? '' : 'mx-auto max-w-5xl px-5 pt-5 sm:px-8'}>
@@ -61,10 +71,10 @@ export default function SystemTabs({ system, onChange, note, compact = false }: 
                   className="block text-[13px] font-semibold leading-[1.35]"
                   style={{ color: active ? 'var(--accent-deep)' : 'var(--text-2, var(--muted))' }}
                 >
-                  {s.tab}
+                  {label(id).tab}
                 </span>
                 <span className="mt-1 block text-[12px] leading-[1.4]" style={{ color: 'var(--faint)' }}>
-                  {s.basis}
+                  {label(id).basis}
                 </span>
               </span>
             </button>

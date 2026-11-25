@@ -1,4 +1,5 @@
 import type { ChartModel } from '../lib/chart';
+import AmuletLockscreen2027 from './AmuletLockscreen2027';
 import type { NewYear2027Content } from '../lib/newyear2027';
 import { STAR_HANJA } from '../lib/terms';
 import { starVisual } from '../lib/starPalette';
@@ -84,6 +85,11 @@ function CatPortrait({ uid }: { uid: string }) {
  * 모바일에서 확대 없이 읽히도록 한글 본문을 크게 잡았습니다.
  */
 export default function AmuletCard2027({ chart, content, theme, className }: Props) {
+  /* 별의 속삭임(캐릭터)은 9:16 잠금화면 카드로 그립니다 (2026-11-25 피드백 6번).
+     자미원(미스틱) 카드는 기존 그대로입니다. */
+  if (theme === 'character') {
+    return <AmuletLockscreen2027 chart={chart} content={content} className={className} />;
+  }
   const p = amuletPalette(theme, chart.primaryStar);
   const v = starVisual(chart.primaryStar);
   const L = amuletLines(chart, content, theme);
@@ -124,7 +130,7 @@ export default function AmuletCard2027({ chart, content, theme, className }: Pro
       viewBox={`0 0 ${CARD.w} ${CARD.h}`}
       className={className}
       role="img"
-      aria-label={`2027 정미년 신년 부적 카드 — ${chart.primaryStar}${theme === 'character' ? '별' : '성'}`}
+      aria-label={`2027 정미년 신년 부적 카드 — ${chart.primaryStar}성`}
       style={{ display: 'block', width: '100%', height: 'auto' }}
     >
       <defs>

@@ -5,6 +5,7 @@ import { amuletShareText, build2027 } from '../lib/newyear2027';
 import { downloadAmulet, renderAmulet2027 } from '../lib/amuletCard';
 import { findProduct, productPrice, productUnlockCta } from '../lib/products';
 import { useTheme, THEME_ART } from '../lib/theme';
+import { mutagenLight, roomOf } from '../lib/friendly';
 import { amuletPalette } from '../lib/amuletArt';
 import AmuletCard2027 from './AmuletCard2027';
 import FreeOpenMeter from './FreeOpenMeter';
@@ -40,7 +41,11 @@ export default function NewYear2027({ chart, unlocked, onUnlock }: Props) {
         url,
         `${isCharacter ? '별의속삭임' : '자미원'}_2027정미년_부적_${chart.primaryStar}.png`,
       );
-      flash(isCharacter ? '2027 부적 카드를 저장했어! (1080×1620)' : '2027 부적 카드를 저장했습니다. (1080×1620)');
+      flash(
+        isCharacter
+          ? '2027 부적 카드를 저장했어! (1080×1920 · 폰 잠금화면 비율)'
+          : '2027 부적 카드를 저장했습니다. (1080×1620)',
+      );
     } catch {
       flash(isCharacter ? '카드를 저장하지 못했어. 한 번만 다시 해볼게!' : '카드 저장에 실패했습니다. 다시 시도해 주세요.');
     } finally {
@@ -83,7 +88,7 @@ export default function NewYear2027({ chart, unlocked, onUnlock }: Props) {
       </h2>
       <p className="mt-2 max-w-[440px] text-[13.5px] leading-[1.85] t-muted">
         {isCharacter
-          ? '명궁의 별과 2027년 사화로 그린 소장용 부적이야. 저장해서 두고 봐도 되고, 핵심 흐름만 먼저 볼 수도 있어.'
+          ? '수호별과 2027년의 별빛으로 그린 소장용 부적이야. 저장해서 두고 봐도 되고, 핵심 흐름만 먼저 볼 수도 있어.'
           : '명궁의 주성과 2027년 유년 사화로 그린 소장용 부적입니다. 저장해 두고 보시거나, 핵심 흐름만 먼저 확인하실 수 있습니다.'}
       </p>
 
@@ -96,7 +101,7 @@ export default function NewYear2027({ chart, unlocked, onUnlock }: Props) {
                 <img src={THEME_ART.character.greeting} alt="" className="h-full w-full object-cover" />
               </span>
               <p className="text-[13px] leading-[1.7] t-muted">
-                <b style={{ color: 'var(--accent-deep)' }}>하온</b>이 네 명궁의 별로 그린 부적이야. 저장은 무료야.
+                <b style={{ color: 'var(--accent-deep)' }}>하온</b>이 네 수호별로 그린 부적이야. 저장은 무료야.
               </p>
             </div>
           )}
@@ -138,8 +143,12 @@ export default function NewYear2027({ chart, unlocked, onUnlock }: Props) {
             <div className="mt-3">
               <FreeOpenMeter
                 freePercent={30}
-                openItems={['2027 유년 명궁과 사화', '연애·금전·일 별빛 지수', '1~3월 흐름', '무료 신년 부적 카드']}
-                lockedItems={['4~12월 아홉 달의 문', '부족한 기운과 보완 습관 셋', '수호 원석 처방', '월별로 할 일 한 줄']}
+                openItems={['2027 네 별방과 별빛 네 개', '연애·금전·일 별빛 지수', '1~3월 흐름', '무료 신년 부적 카드']}
+                lockedItems={
+                  isCharacter
+                    ? ['4~12월 아홉 달의 문', '부족한 기운과 보완 습관 셋', '달마다 먼저 할 일', '2027 지수 상세']
+                    : ['4~12월 아홉 달의 문', '부족한 기운과 보완 습관 셋', '수호 원석 처방', '월별로 할 일 한 줄']
+                }
                 volume="한 번 결제로 열두 달 전체가 열려"
                 product={findProduct('newyear2027')}
               />
@@ -149,14 +158,14 @@ export default function NewYear2027({ chart, unlocked, onUnlock }: Props) {
 
             <div className="mt-3 flex flex-wrap gap-1.5">
               <span className="rounded-full px-2.5 py-1 text-[12.5px]" style={{ border: '1px solid var(--panel-rule)', color: 'var(--panel-muted)' }}>
-                유년 명궁 {content.stage.palace}
+                {isCharacter ? '올해 흐름' : '유년 명궁'} {isCharacter ? roomOf(content.stage.palace) : content.stage.palace}
               </span>
               <span className="rounded-full px-2.5 py-1 text-[12.5px]" style={{ border: '1px solid var(--panel-rule)', color: 'var(--panel-muted)' }}>
-                {content.age}세 · {content.yearElement}의 해
+                {isCharacter ? `${content.age}세` : `${content.age}세 · ${content.yearElement}의 해`}
               </span>
               {content.mutagen.slice(0, 2).map((m) => (
                 <span key={m.mutagen} className="rounded-full px-2.5 py-1 text-[12.5px]" style={{ border: '1px solid var(--panel-line)', color: 'var(--panel-accent)' }}>
-                  {m.mutagen} {m.star}
+                  {isCharacter ? `${m.star} · ${mutagenLight(m.mutagen)}` : `${m.mutagen} ${m.star}`}
                 </span>
               ))}
             </div>
@@ -222,14 +231,16 @@ export default function NewYear2027({ chart, unlocked, onUnlock }: Props) {
             </button>
             <p className="mt-2 text-[12.5px] leading-[1.7] t-panel-faint">
               {isCharacter
-                ? '열두 달 흐름, 달마다 할 일, 부족한 기운의 보완 처방까지 한 번에 이어져.'
+                ? '열두 달 흐름과 달마다 할 일, 부족한 기운을 채우는 습관까지 한 번에 이어져.'
                 : '열두 달 흐름, 달마다 할 일, 부족한 기운의 보완 처방까지 이어집니다.'}
             </p>
           </div>
         </div>
       </div>
 
-      {GOODS_CHECKOUT_ENABLED && (
+      {/* 2026-11-25 @kooleumi8 피드백 2번: 별의 속삭임에서는 '준비 중' 굿즈·원석 진열을 감춥니다.
+          (자미원 미스틱 테마는 그대로 유지) */}
+      {GOODS_CHECKOUT_ENABLED && !isCharacter && (
         <div className="mt-8">
           <StoneGoods2027 goods={content.goods} needLabel={content.needLabel} stoneName={content.stone.name} />
         </div>

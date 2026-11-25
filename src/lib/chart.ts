@@ -80,9 +80,9 @@ export type PalaceView = {
   stage: string; // 십이신
 };
 
-/** 2027 정미년(丁未) 신년 운세용 값 — 유년 명궁·사화·나이 */
-export type Year2027 = {
-  year: 2027;
+/** 한 해 운세용 값 — 그해의 유년 명궁·사화·나이 (2026·2027 공통) */
+export type YearStage = {
+  year: number;
   stemBranch: string; // 정미
   hanja: string; // 丁未
   /** 2027년 유년 명궁이 되는 명반 궁 이름 (예: 재백궁) */
@@ -91,9 +91,12 @@ export type Year2027 = {
   palaceIndex: number;
   mutagen: StarView[]; // 2027 유년 사화 4개
   age: number; // 2027년 한국식 나이
-  /** 명반 궁 index → 2027년에 그 궁이 맡는 이름(중국어, 내부 계산용) */
+  /** 명반 궁 index → 그해에 그 궁이 맡는 이름(중국어, 내부 계산용) */
   palaceRoles: string[];
 };
+
+/** 2027 정미년(丁未) 신년 운세용 값 */
+export type Year2027 = YearStage & { year: 2027 };
 
 export type ChartModel = {
   name: string;
@@ -129,6 +132,8 @@ export type ChartModel = {
   };
   /** 2027 정미년 신년 운세 (유년 명궁·사화) */
   year2027: Year2027;
+  /** 2026 병오년 — 마감 할인 상품(2026 마무리 운세)이 쓰는 값 */
+  year2026: YearStage;
   /** 같은 입력이면 항상 같은 값이 나오는 결정적 시드 */
   seed: number;
 };
@@ -291,6 +296,37 @@ export async function buildChart(input: BirthInput): Promise<ChartModel> {
   const palace2027 = palaces[idx2027] ?? soulPalace;
   const age2027 = 2027 - input.year + 1;
 
+  /* 2026 병오년(丙午) — 2026 마무리 운세 상품용. 2027과 같은 방식으로 계산합니다. */
+  let horoscope2026: HoroscopeLike | null = null;
+  try {
+    horoscope2026 = astrolabe.horoscope('2026-06-01') as unknown as HoroscopeLike;
+  } catch {
+    horoscope2026 = null;
+  }
+
+  const mutagen2026: StarView[] = (horoscope2026?.yearly?.mutagen ?? []).map((cn: string, i: number) => ({
+    name: krStar(cn),
+    cn,
+    mutagen: ['화록', '화권', '화과', '화기'][i],
+  }));
+
+  const palaceRoles2026: string[] = (() => {
+    const names = horoscope2026?.yearly?.palaceNames as unknown;
+    if (!names) return [];
+    if (Array.isArray(names)) return names.map((n) => String(n));
+    const arr: string[] = [];
+    Object.entries(names as Record<string, string | number>).forEach(([key, value]) => {
+      const idx = typeof value === 'number' ? value : Number(key);
+      if (Number.isFinite(idx)) arr[idx] = String(typeof value === 'number' ? key : value);
+    });
+    return arr;
+  })();
+
+  const idx2026 =
+    typeof horoscope2026?.yearly?.index === 'number' ? horoscope2026.yearly.index : soulPalace.index;
+  const palace2026 = palaces[idx2026] ?? soulPalace;
+  const age2026 = 2026 - input.year + 1;
+
   const currentDecadal =
     palaces.find((p) => nominalAge >= p.decadalRange[0] && nominalAge <= p.decadalRange[1]) ??
     soulPalace;
@@ -357,6 +393,19 @@ export async function buildChart(input: BirthInput): Promise<ChartModel> {
       mutagen: mutagen2027,
       age: age2027 > 0 ? age2027 : 0,
       palaceRoles,
+    },
+    year2026: {
+      year: 2026,
+      stemBranch: horoscope2026
+        ? CN_STEM_BRANCH([horoscope2026.yearly!.heavenlyStem, horoscope2026.yearly!.earthlyBranch])
+        : '병오',
+      hanja: '丙午',
+      palaceName: palace2026.name,
+      palaceDomain: palace2026.domain,
+      palaceIndex: idx2026,
+      mutagen: mutagen2026,
+      age: age2026 > 0 ? age2026 : 0,
+      palaceRoles: palaceRoles2026,
     },
     decadal: {
       range: currentDecadal.decadalRange,

@@ -1,7 +1,15 @@
 import type { ThemeId } from './theme';
 import type { ProductSystem } from './systems';
 
-export type ProductId = 'basic' | 'premium' | 'compat' | 'western' | 'synastry' | 'bundle' | 'newyear2027';
+export type ProductId =
+  | 'basic'
+  | 'premium'
+  | 'compat'
+  | 'western'
+  | 'synastry'
+  | 'bundle'
+  | 'newyear2027'
+  | 'year2026';
 
 export type Product = {
   id: ProductId;
@@ -101,6 +109,25 @@ export const PRODUCTS: Product[] = [
     badge: '2027 신년',
   },
   {
+    /* 2026 마감 할인 상품 (2026-11-25 @kooleumi8 피드백 7번).
+       2026년이 거의 끝나서 정가 6,900원 → 1,900원(72% 할인)으로 내렸습니다.
+       무료로 보던 '올해의 흐름'을 남은 두 달 중심으로 정리해 주는 짧은 리포트입니다. */
+    id: 'year2026',
+    system: 'ziwei',
+    name: '2026년 마무리 운세',
+    hanja: '丙午年 年運',
+    price: 1900,
+    originalPrice: 6900,
+    tagline: '2026 남은 두 달 + 한 해 정리 (마감 할인)',
+    points: [
+      '2026년 네 별방과 별빛 네 개',
+      '11·12월, 남은 두 달에 할 일',
+      '2026년 연애·금전·일 지수',
+      '2027로 넘어가기 전 정리 체크리스트',
+    ],
+    badge: '2026 마감 72% 할인',
+  },
+  {
     id: 'bundle',
     system: 'both',
     name: '동양 × 서양 통합 리포트',
@@ -121,7 +148,26 @@ export const PRODUCTS: Product[] = [
 /** 2027 신년 상품 — 신년 부적 섹션에서만 따로 진입합니다(랜딩 5상품 그리드에는 넣지 않음). */
 export const NEWYEAR_PRODUCT = PRODUCTS.find((p) => p.id === 'newyear2027')!;
 
-export const ZIWEI_PRODUCTS = PRODUCTS.filter((p) => p.system === 'ziwei' && p.id !== 'newyear2027');
+export const ZIWEI_PRODUCTS = PRODUCTS.filter(
+  (p) => p.system === 'ziwei' && p.id !== 'newyear2027' && p.id !== 'year2026',
+);
+
+/**
+ * 별의 속삭임(캐릭터) 테마의 '별 이야기' 진열 순서 (2026-11-25 @kooleumi8 피드백 7번).
+ * 2027 신년 운세가 메인 상품이고, 곧 끝나는 2026년 운세는 마감 할인으로 뒤에 붙입니다.
+ */
+export const CHARACTER_BOOKS: Product[] = [
+  PRODUCTS.find((p) => p.id === 'newyear2027')!,
+  PRODUCTS.find((p) => p.id === 'year2026')!,
+  PRODUCTS.find((p) => p.id === 'basic')!,
+  PRODUCTS.find((p) => p.id === 'premium')!,
+  PRODUCTS.find((p) => p.id === 'compat')!,
+];
+
+/** 2027 신년 운세 — 지금의 메인 상품 */
+export const MAIN_YEAR_PRODUCT = PRODUCTS.find((p) => p.id === 'newyear2027')!;
+/** 2026 마감 할인 상품 */
+export const CLOSING_YEAR_PRODUCT = PRODUCTS.find((p) => p.id === 'year2026')!;
 export const WESTERN_PRODUCTS = PRODUCTS.filter((p) => p.system === 'western' || p.system === 'both');
 
 /**
@@ -198,10 +244,40 @@ export function productUnlockCta(product: Product, theme: ThemeId, freePercent =
   return `${won(price)}원으로 나머지 ${100 - freePercent}% 열기`;
 }
 
+/** 상품 이름 — 별의 속삭임 테마는 한자·명리 용어 없이 부릅니다. */
+export function productName(product: Product, theme: ThemeId): string {
+  if (theme !== 'character') return product.name;
+  switch (product.id) {
+    case 'newyear2027':
+      return '2027년 신년 운세';
+    case 'year2026':
+      return '2026년 마무리 운세';
+    case 'basic':
+      return '내 별 이야기 · 핵심';
+    case 'premium':
+      return '전체 별 이야기 · 12개 별방';
+    case 'compat':
+      return '두 사람의 별 궁합';
+    case 'western':
+      return '내 서양 별자리';
+    case 'synastry':
+      return '두 사람의 별자리 궁합';
+    case 'bundle':
+      return '동양 별지도 × 서양 별자리';
+    default:
+      return product.name;
+  }
+}
+
 export function productTagline(product: Product, theme: ThemeId): string {
+  if (product.id === 'year2026') {
+    return theme === 'character'
+      ? '2026년 남은 두 달, 지금 정리하면 2027이 편해져'
+      : '2026년 남은 두 달과 한 해 정리 — 마감 할인';
+  }
   if (product.id === 'newyear2027') {
     return theme === 'character'
-      ? '열두 달 흐름 · 보완 기운 · 수호 원석까지'
+      ? '열두 달 흐름 · 달마다 할 일 · 보완 습관까지'
       : '2027년 열두 달의 흐름과 보완 기운, 수호 원석 처방';
   }
   if (product.id === 'synastry') {
@@ -209,21 +285,26 @@ export function productTagline(product: Product, theme: ThemeId): string {
       ? '두 사람 행성이 만드는 각 — 점수는 무료, 해석은 심층에서'
       : '두 천궁도의 행성 교차 각 — 점수는 무료, 해석은 심층에서';
   }
-  if (theme === 'character' && product.id === 'basic') return '명궁·연애·재물·진로·배우자상 핵심만, 커피 한 잔 값으로';
+  if (theme === 'character' && product.id === 'basic') return '수호별·사랑·돈·일 핵심만, 커피 한 잔 값으로';
   if (theme === 'character' && product.id === 'western') return '네가 태어난 하늘의 좌표 — 태양·달·어센던트';
   if (theme === 'character' && product.id === 'bundle') return '동양 별지도 + 서양 천궁도, 한 번에';
   return product.tagline;
 }
 
 export function productPoints(product: Product, theme: ThemeId): string[] {
+  if (product.id === 'year2026') {
+    return theme === 'character'
+      ? ['2026년 네 별방과 별빛 네 개', '11·12월에 먼저 할 일', '2026년 연애·금전·일 지수', '2027로 넘어가기 전 정리 세 가지']
+      : product.points;
+  }
   if (product.id === 'newyear2027') {
     return theme === 'character'
       ? [
-          '2027년 네 명궁과 사화 네 개의 자리',
+          '2027년 네 별방과 별빛 네 개',
           '열두 달마다 뭘 먼저 할지',
-          '2027년 연애·금전·일 3지수',
+          '2027년 연애·금전·일 지수',
           '부족한 기운과 보완 습관 세 가지',
-          '수호 원석 처방 — 기운을 곁에 두는 법',
+          '달마다 먼저 할 일 한 줄',
         ]
       : [
           '2027 유년 명궁과 사화 네 개의 자리',
@@ -235,7 +316,7 @@ export function productPoints(product: Product, theme: ThemeId): string[] {
   }
   if (theme === 'character' && product.id === 'basic') {
     return [
-      '내 수호별과 성격의 결 (명궁)',
+      '내 수호별과 성격의 결',
       '끌리는 연애 타입 · 배우자상',
       '어울리는 진로 · 전공 3가지',
       '돈이 새는 장면 · 들어오는 경로',
@@ -286,14 +367,23 @@ export function productPoints(product: Product, theme: ThemeId): string[] {
  */
 export function productScopeShort(product: Product, theme: ThemeId): string | null {
   const premiumPrice = productPrice(findProduct('premium'), theme).toLocaleString('ko-KR');
+  if (product.id === 'year2026') {
+    return '2026년 한 해 한정 · 2027 신년 리포트는 따로';
+  }
   if (product.id === 'newyear2027') {
-    return '2027년 한 해 한정 · 12궁 전체 해설은 포함되지 않음';
+    return theme === 'character'
+      ? '2027년 한 해 한정 · 12개 별방 전체 해설은 따로'
+      : '2027년 한 해 한정 · 12궁 전체 해설은 포함되지 않음';
   }
   if (product.id === 'basic') {
-    return `핀셋 리포트 · 12궁 전체·월별 가이드 미포함 (프리미엄 ${premiumPrice}원)`;
+    return theme === 'character'
+      ? `핵심만 짚은 리포트 · 12개 별방 전체와 달마다 처방은 따로 (전체 별 이야기 ${premiumPrice}원)`
+      : `핀셋 리포트 · 12궁 전체·월별 가이드 미포함 (프리미엄 ${premiumPrice}원)`;
   }
   if (product.id === 'premium') {
-    return '12궁 전체 + 월별 액션 가이드 12개 포함';
+    return theme === 'character'
+      ? '12개 별방 전체 + 달마다 처방 12개 포함'
+      : '12궁 전체 + 월별 액션 가이드 12개 포함';
   }
   if (product.id === 'western') {
     return '서양 점성술 단독 · 자미두수 12궁은 포함되지 않음';
@@ -313,6 +403,11 @@ export function productScopeShort(product: Product, theme: ThemeId): string | nu
 /** 결제창에 쓰는 포함 범위 설명 (테마별 말투) */
 export function productScopeNote(product: Product, theme: ThemeId): string | null {
   const premiumPrice = productPrice(findProduct('premium'), theme).toLocaleString('ko-KR');
+  if (product.id === 'year2026') {
+    return theme === 'character'
+      ? '2026년 한 해만 짚는 마감 리포트야. 유년 별방과 별빛 네 개, 남은 두 달에 할 일, 정리 체크리스트가 들어 있어. 2027 신년 운세와 12개 별방 전체 해설은 따로야.'
+      : '2026년 한 해만 짚는 마감 리포트입니다. 유년 궁과 사화 네 개, 남은 두 달의 할 일, 정리 체크리스트가 포함됩니다. 2027 신년 운세와 12궁 전체 해설은 별도입니다.';
+  }
   if (product.id === 'newyear2027') {
     return theme === 'character'
       ? '2027년 한 해만 짚는 신년 리포트야. 유년 명궁과 사화 네 개, 열두 달 처방, 보완 원석까지 들어 있어. 명궁·12개 별방 전체 해설은 담기지 않아.'
@@ -347,7 +442,8 @@ export function productScopeNote(product: Product, theme: ThemeId): string | nul
 }
 
 export function productBadge(product: Product, theme: ThemeId): string | undefined {
-  if (product.id === 'newyear2027') return '✦ 2027 신년';
+  if (product.id === 'newyear2027') return theme === 'character' ? '✦ 2027 메인 운세' : '✦ 2027 신년';
+  if (product.id === 'year2026') return '2026 마감';
   if (theme === 'character' && product.id === 'basic') return '☕ 커피 한 잔 값';
   if (theme === 'character' && product.id === 'western') return '✶ 서양 점성술';
   if (product.id === 'synastry') return '✶ 시너스트리';
@@ -356,6 +452,7 @@ export function productBadge(product: Product, theme: ThemeId): string | undefin
 }
 
 export function productCta(product: Product, theme: ThemeId): string {
+  if (product.id === 'year2026') return theme === 'character' ? '2026 마무리 열기' : '2026 마무리 리포트 열기';
   if (product.id === 'newyear2027') return '2027 리포트 열기';
   if (product.id === 'synastry') return theme === 'character' ? '두 사람 궁합 점수 보기' : '시너스트리 점수 보기';
   if (theme === 'character') {
@@ -372,6 +469,7 @@ export function productCta(product: Product, theme: ThemeId): string {
 }
 
 export function productShortCta(product: Product, theme: ThemeId): string {
+  if (product.id === 'year2026') return '2026 보기';
   if (product.id === 'newyear2027') return '2027 열기';
   if (product.id === 'synastry') return '궁합 보기';
   if (theme === 'character') {

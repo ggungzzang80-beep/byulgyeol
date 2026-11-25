@@ -5,6 +5,7 @@ import { build2027 } from '../lib/newyear2027';
 import { PALACES, STAR_HANJA } from '../lib/terms';
 import { generateAiReport, isAiConfigured } from '../services/aiReport';
 import { useTheme } from '../lib/theme';
+import { brightLight, elementLight, mutagenLight, roomOf } from '../lib/friendly';
 import { starGuardian } from '../lib/starPalette';
 import { findProduct, productPrice } from '../lib/products';
 import GuardianGoods from './GuardianGoods';
@@ -20,6 +21,23 @@ type Props = {
   onUpgrade: () => void;
   onBundle: () => void;
 };
+
+/** 문단 안의 '\n' 은 별·사화 하나씩의 줄입니다 (2026-11-25 피드백 3번) */
+function Lines({ text, className }: { text: string; className: string }) {
+  return (
+    <>
+      {text
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .map((line) => (
+          <p key={line} className={className}>
+            {line}
+          </p>
+        ))}
+    </>
+  );
+}
 
 function MarkdownLite({ text }: { text: string }) {
   const blocks = text.split('\n').filter((l) => l.trim().length > 0);
@@ -148,7 +166,13 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
               {copy.report.unlocked}
             </span>
             <span className="t-chip !text-[12.5px]">
-              {tier === 'premium' ? '프리미엄 12궁 & 운세 풀 리포트' : '내 인생 사용설명서'}
+              {isCharacter
+                ? tier === 'premium'
+                  ? '전체 별 이야기 · 12개 별방'
+                  : '내 별 이야기 핵심'
+                : tier === 'premium'
+                  ? '프리미엄 12궁 & 운세 풀 리포트'
+                  : '내 인생 사용설명서'}
             </span>
             <span className="t-chip !text-[12.5px]">정밀 엔진 분석</span>
           </div>
@@ -174,8 +198,8 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
             {[
               ['양력', chart.solarText],
               [chart.calendar === 'lunar' ? '음력(입력)' : '음력', chart.lunarText.replace('음력 ', '')],
-              ['시진', chart.timeText],
-              ['오행국', chart.fiveElements],
+              [isCharacter ? '태어난 시각' : '시진', chart.timeText],
+              [isCharacter ? '몸의 결' : '오행국', isCharacter ? elementLight(chart.fiveElements) : chart.fiveElements],
             ].map(([k, v]) => (
               <div key={k} className="px-4 py-3" style={{ background: 'var(--card-2)' }}>
                 <p className="text-[12px] tracking-[0.16em] t-faint">{k}</p>
@@ -198,29 +222,35 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
                 <h2 className="t-title text-[23px]">
                   {chart.primaryStar}
                   {isCharacter ? '별' : '성'}
-                  <span className="ml-2 text-[14px] font-normal" style={{ color: 'var(--accent-deep)' }}>
-                    {STAR_HANJA[chart.primaryStar] ?? ''}
-                  </span>
+                  {!isCharacter && (
+                    <span className="ml-2 text-[14px] font-normal" style={{ color: 'var(--accent-deep)' }}>
+                      {STAR_HANJA[chart.primaryStar] ?? ''}
+                    </span>
+                  )}
                 </h2>
                 <span className="text-[13px] t-faint">
-                  명궁 {chart.soulPalace.stem}
+                  {isCharacter ? '수호별이 앉은 방' : '명궁'} · {chart.soulPalace.stem}
                   {chart.soulPalace.branch}
                 </span>
               </div>
-              <p className="mt-4 text-[15.5px] leading-[1.9] t-body">{palaceReadings(chart.soulPalace, tone).paragraphs[0]}</p>
-              <p className="mt-3 text-[15.5px] leading-[1.9] t-body">{palaceReadings(chart.soulPalace, tone).paragraphs[1]}</p>
+              <div className="mt-4 space-y-2">
+                <Lines text={palaceReadings(chart.soulPalace, tone).paragraphs[0]} className="text-[16px] leading-[1.95] t-body" />
+              </div>
+              <div className="mt-3 space-y-2">
+                <Lines text={palaceReadings(chart.soulPalace, tone).paragraphs[1]} className="text-[16px] leading-[1.95] t-body" />
+              </div>
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
                 <div className="rounded-2xl p-4" style={{ background: 'var(--field-bg)' }}>
                   <p className="text-[12.5px] tracking-[0.16em]" style={{ color: 'var(--accent-deep)' }}>
                     {copy.chart.strength}
                   </p>
-                  <p className="mt-1.5 text-[14px] leading-[1.8] t-muted">{profile.strength}</p>
+                  <p className="mt-2 text-[15px] leading-[1.9] t-muted">{profile.strength}</p>
                 </div>
                 <div className="rounded-2xl p-4" style={{ background: 'var(--field-bg)' }}>
                   <p className="text-[12.5px] tracking-[0.16em]" style={{ color: isCharacter ? '#d97d9a' : '#d98a7a' }}>
                     {copy.chart.caution}
                   </p>
-                  <p className="mt-1.5 text-[14px] leading-[1.8] t-muted">{profile.caution}</p>
+                  <p className="mt-2 text-[15px] leading-[1.9] t-muted">{profile.caution}</p>
                 </div>
               </div>
               <div className="mt-4 flex flex-wrap gap-1.5">
@@ -278,14 +308,18 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
             <div className="t-panel p-6">
               <div className="t-starfield opacity-40" />
               <div className="relative">
-                <p className="text-[12.5px] tracking-[0.2em] t-panel-accent">대한 · 10년의 큰 흐름</p>
+                <p className="text-[12.5px] tracking-[0.2em] t-panel-accent">
+                  {isCharacter ? '10년 큰 흐름' : '대한 · 10년의 큰 흐름'}
+                </p>
                 <p className="t-panel-title mt-3 text-[23px] leading-snug">
                   {chart.decadal.range[0]}–{chart.decadal.range[1]}세{' '}
                   <span className="ml-2 text-[14px] font-normal opacity-60">
-                    {chart.decadal.name} · {decadalPalace.name}
+                    {chart.decadal.name} · {isCharacter ? roomOf(decadalPalace.name) : decadalPalace.name}
                   </span>
                 </p>
-                <p className="mt-3 text-[14px] leading-[1.9] t-panel-body">{palaceReadings(decadalPalace, tone).paragraphs[1]}</p>
+                <div className="mt-3 space-y-2">
+                  <Lines text={palaceReadings(decadalPalace, tone).paragraphs[1]} className="text-[15px] leading-[1.95] t-panel-body" />
+                </div>
                 <div className="mt-4 flex flex-wrap gap-1.5">
                   {decadalList.map((p) => {
                     const active = chart.decadal.range[0] === p.decadalRange[0];
@@ -309,14 +343,13 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
 
             <div className="t-card p-6">
               <p className="text-[12.5px] tracking-[0.2em]" style={{ color: 'var(--accent-deep)' }}>
-                유년 · {reportYear} {year2027.stemBranch}
+                {isCharacter ? '올해 흐름' : '유년'} · {reportYear} {year2027.stemBranch}
               </p>
               <p className="mt-3 text-[14.5px] leading-[1.9] t-body">
                 {isCharacter ? (
                   <>
-                    {reportYear}년 네 별방은 <b className="font-semibold">{year2027.stage.palace}</b>
-                    {year2027.stage.palace.endsWith('궁') ? '이야' : '야'}. 이 해에는 그 방의 주제가 가장 크게
-                    움직여.
+                    {reportYear}년 네 별방은 <b className="font-semibold">{roomOf(year2027.stage.palace)}</b>
+                    야. 이 해에는 그 방의 주제가 가장 크게 움직여.
                   </>
                 ) : (
                   <>
@@ -336,7 +369,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
                           : { background: 'var(--accent-soft)', color: 'var(--accent-deep)' }
                       }
                     >
-                      {m.star} {m.mutagen}
+                      {isCharacter ? `${m.star} · ${mutagenLight(m.mutagen)}` : `${m.star} ${m.mutagen}`}
                     </span>
                     <span className="t-muted">{m.line}</span>
                   </div>
@@ -344,11 +377,11 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
               </div>
               <div className="mt-4 space-y-2 pt-4" style={{ borderTop: '1px solid var(--line)' }}>
                 <p className="text-[13px] font-semibold t-muted">재물</p>
-                <p className="text-[14px] leading-[1.85] t-body">{teaser.money}</p>
+                <p className="text-[15px] leading-[1.9] t-body">{teaser.money}</p>
                 <p className="mt-2 text-[13px] font-semibold t-muted">연애</p>
-                <p className="text-[14px] leading-[1.85] t-body">{teaser.love}</p>
+                <p className="text-[15px] leading-[1.9] t-body">{teaser.love}</p>
                 <p className="mt-2 text-[13px] font-semibold t-muted">{reportYear}년의 중심</p>
-                <p className="text-[14px] leading-[1.85] t-body">{year2027.flow.free}</p>
+                <p className="text-[15px] leading-[1.9] t-body">{year2027.flow.free}</p>
               </div>
             </div>
           </div>
@@ -365,7 +398,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
                 </h3>
                 <p className="mt-3 max-w-[540px] text-[14.5px] leading-[1.9] t-panel-body">
                   {isCharacter
-                    ? '이 리포트에는 명궁(성격)과 재물·연애·직업의 핵심만 담았어. 전체 별 이야기에서는 나머지 11개 별방(부처·자녀·질액·천이·노복·관록·전택·복덕·부모·형제)의 풀이와 지금의 대한·2027년 별방 흐름, 열두 달 처방까지 이어져.'
+                    ? '이 리포트에는 수호별(성격)과 돈·사랑·일의 핵심만 담았어. 전체 별 이야기에서는 나머지 11개 별방(사랑·인연, 창작·즐거움, 몸·건강, 바깥 활동, 함께하는 사람, 일·커리어, 집·터전, 마음, 윗사람·배움, 가까운 사람)의 풀이와 10년 큰 흐름·2027년 흐름, 열두 달 처방까지 이어져.'
                     : '이 리포트에는 명궁(성격)과 재물·연애·직업의 핵심만 담았습니다. 프리미엄에서는 나머지 11개 궁(부처·자녀·질액·천이·노복·관록·전택·복덕·부모·형제)의 풀이와 지금의 대한·2027년 유년 흐름, 12개월 액션 가이드까지 이어집니다.'}
                 </p>
                 <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -399,12 +432,13 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
                         <span className="num text-[12.5px]" style={{ color: 'var(--accent)' }}>
                           {String(idx + 1).padStart(2, '0')}
                         </span>
-                        <h3 className="t-title text-[19px]">{p.name}</h3>
-                        <span className="text-[12.5px] t-faint">{p.hanja}</span>
+                        <h3 className="t-title text-[20px]">{isCharacter ? roomOf(p.name) : p.name}</h3>
+                        {!isCharacter && <span className="text-[12.5px] t-faint">{p.hanja}</span>}
                       </div>
                       <p className="mt-1 text-[13px] t-faint">
                         {p.stem}
-                        {p.branch} · {p.domain} · 대한 {p.decadalRange[0]}–{p.decadalRange[1]}세
+                        {p.branch} · {p.domain} · {isCharacter ? '10년 흐름' : '대한'} {p.decadalRange[0]}–
+                        {p.decadalRange[1]}세
                       </p>
                     </div>
                     <div className="shrink-0 text-right">
@@ -423,19 +457,23 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
                         >
                           {s.name}
                           {/* QA 2026-11-24: '천량묘화권' 처럼 붙어 읽히지 않도록 별·밝기·사화 사이를 띄웁니다 */}
-                          {s.brightness ? <span className="ml-1 text-[12px] font-normal t-faint">{s.brightness}</span> : null}
+                          {s.brightness ? (
+                            <span className="ml-1 text-[12px] font-normal t-faint">
+                              {isCharacter ? brightLight(s.brightness) : s.brightness}
+                            </span>
+                          ) : null}
                           {s.mutagen ? (
                             <span
                               className="ml-1 text-[12px]"
                               style={{ color: s.mutagen === '화기' ? (isCharacter ? '#d97d9a' : '#d98a7a') : 'var(--accent-deep)' }}
                             >
-                              {s.mutagen}
+                              {isCharacter ? mutagenLight(s.mutagen) : s.mutagen}
                             </span>
                           ) : null}
                         </span>
                       ))
                     ) : (
-                      <span className="text-[13px] t-faint">주성 없음</span>
+                      <span className="text-[13px] t-faint">{isCharacter ? '메인 별 없음' : '주성 없음'}</span>
                     )}
                     {p.minor.slice(0, 3).map((s) => (
                       <span key={s.cn} className="text-[12.5px] t-faint">
@@ -446,9 +484,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
 
                   <div className="mt-4 space-y-2.5">
                     {r.paragraphs.map((para, i) => (
-                      <p key={i} className="text-[14px] leading-[1.9] t-muted">
-                        {para}
-                      </p>
+                      <Lines key={i} text={para} className="text-[14.5px] leading-[1.95] t-muted" />
                     ))}
                   </div>
 
@@ -579,7 +615,8 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
           </div>
         </section>
 
-        <GuardianGoods chart={chart} />
+        {/* 2026-11-25 @kooleumi8 피드백 2번: 별의 속삭임(캐릭터)에서는 굿즈·원석 코너를 감춥니다. */}
+        {!isCharacter && <GuardianGoods chart={chart} />}
 
         <MonthlyUpsell chart={chart} onBundle={onBundle} />
 
@@ -616,7 +653,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
                   두 사람 궁합 보기 · {productPrice(findProduct('compat'), theme).toLocaleString('ko-KR')}원
                 </button>
                 <button onClick={onBack} className="t-btn !px-4 !py-2.5 text-[13.5px] t-panel-faint">
-                  명반으로 돌아가기
+                  {isCharacter ? '별지도로 돌아가기' : '명반으로 돌아가기'}
                 </button>
               </div>
             </div>

@@ -1,10 +1,12 @@
 import type { BirthInput } from '../lib/chart';
 import {
+  CHARACTER_BOOKS,
   CHARACTER_FIRST_PRICE,
   WESTERN_PRODUCTS,
   ZIWEI_PRODUCTS,
   productBadge,
   productCta,
+  productName,
   productPoints,
   productPriceInfo,
   productScopeShort,
@@ -304,16 +306,17 @@ function BirthStep({
 
 /** 별 이야기 — 2027 부적 입구 + 상품 + 자주 묻는 질문 */
 function BooksStep({ onProduct, onNewYear }: { onProduct: (id: ProductId) => void; onNewYear: () => void }) {
-  const shownBooks = ZIWEI_ONLY ? ZIWEI_PRODUCTS : [...ZIWEI_PRODUCTS, ...WESTERN_PRODUCTS];
+  const { theme } = useTheme();
+  const shownBooks = ZIWEI_ONLY ? CHARACTER_BOOKS : [...CHARACTER_BOOKS, ...WESTERN_PRODUCTS];
   const shownRates = shownBooks
     .map((p) => productPriceInfo(p, 'character'))
     .filter((info) => info.discounted)
     .map((info) => info.rate);
   /* 자미두수 단독 프리뷰(VITE_ZIWEI_ONLY)에서는 상품을 한 묶음으로만 보여 줍니다. */
   const reportGroups = ZIWEI_ONLY
-    ? [{ label: '', items: ZIWEI_PRODUCTS }]
+    ? [{ label: '', items: CHARACTER_BOOKS }]
     : [
-        { label: '① 동양 전통 자미두수 · 12궁 명반', items: ZIWEI_PRODUCTS },
+        { label: '① 동양 전통 자미두수 · 12개 별방', items: CHARACTER_BOOKS },
         { label: '② 서양 점성술 · 출생 천궁도', items: WESTERN_PRODUCTS },
       ];
 
@@ -326,10 +329,13 @@ function BooksStep({ onProduct, onNewYear }: { onProduct: (id: ProductId) => voi
       <section className="mt-10">
         <SectionLabel index="✧">STORY BOOKS</SectionLabel>
         <h2 className="t-display mt-3 text-[23px] text-[#4d3a6d]">
-          {ZIWEI_ONLY ? '별 이야기 세 권' : '별 이야기 다섯 권'}
+          {ZIWEI_ONLY ? '별 이야기 다섯 권' : '별 이야기 일곱 권'}
         </h2>
         <p className="mt-2 max-w-[360px] text-[14px] leading-[1.9] text-[#6a5788]">
-          {ZIWEI_ONLY ? '동양 전통 자미두수 세 권. ' : '동양 자미두수 세 권, 서양 점성술 두 권. '}첫 이야기는{' '}
+          {ZIWEI_ONLY
+            ? '2027 신년 운세가 메인, 2026년은 마감 할인. '
+            : '동양 자미두수 다섯 권, 서양 점성술 두 권. '}
+          첫 이야기는{' '}
           <b className="font-semibold text-[#7c59cf]">커피 한 잔 값({CHARACTER_FIRST_PRICE.toLocaleString('ko-KR')}원)</b>이야.
           가볍게 시작하고, 더 궁금할 때만 다음 책을 펼쳐.
         </p>
@@ -357,12 +363,16 @@ function BooksStep({ onProduct, onNewYear }: { onProduct: (id: ProductId) => voi
                 </div>
               )}
               <div className="mt-2.5 grid gap-3.5 sm:grid-cols-3">
-                {group.items.map((p) => (
+                {group.items.map((p) => {
+                  /* 2027 신년 운세가 메인, 2026년 운세는 마감 할인 카드로 보여 줍니다. */
+                  const featured = p.id === 'newyear2027';
+                  const closing = p.id === 'year2026';
+                  return (
                   <div
                     key={p.id}
                     className="relative flex flex-col p-5"
                     style={
-                      p.recommended
+                      featured
                         ? {
                             borderRadius: '26px',
                             background: 'linear-gradient(160deg,#6a52a6,#4a3578)',
@@ -370,47 +380,57 @@ function BooksStep({ onProduct, onNewYear }: { onProduct: (id: ProductId) => voi
                             border: '1px solid rgba(255,255,255,0.3)',
                             boxShadow: '0 24px 44px -30px rgba(78,54,120,0.7)',
                           }
-                        : {
-                            borderRadius: '26px',
-                            background: 'rgba(255,255,255,0.88)',
-                            border: '1px solid rgba(146,116,192,0.16)',
-                            boxShadow: '0 18px 34px -28px rgba(112,80,164,0.5)',
-                            color: '#4d3a6d',
-                          }
+                        : closing
+                          ? {
+                              borderRadius: '26px',
+                              background: 'linear-gradient(160deg,#fff6ea,#ffe7d4)',
+                              border: '1px solid rgba(224,150,96,0.42)',
+                              boxShadow: '0 18px 34px -28px rgba(168,112,70,0.5)',
+                              color: '#4d3a6d',
+                            }
+                          : {
+                              borderRadius: '26px',
+                              background: 'rgba(255,255,255,0.88)',
+                              border: '1px solid rgba(146,116,192,0.16)',
+                              boxShadow: '0 18px 34px -28px rgba(112,80,164,0.5)',
+                              color: '#4d3a6d',
+                            }
                     }
                   >
                     {productBadge(p, 'character') && (
                       <span
-                        className="absolute -top-2.5 left-5 rounded-full px-2.5 py-1 text-[12px] font-semibold"
+                        className="absolute -top-2.5 left-5 whitespace-nowrap rounded-full px-2.5 py-1 text-[12px] font-semibold"
                         style={{ background: p.id === 'basic' ? '#ffd9c7' : '#ffe0b8', color: '#5b4382' }}
                       >
                         {productBadge(p, 'character')}
                       </span>
                     )}
                     <div className="flex items-baseline justify-between gap-2">
-                      <h3 className="t-display text-[16.5px] leading-snug" style={{ color: p.recommended ? '#ffffff' : undefined }}>
-                        {p.name}
+                      <h3 className="t-display min-w-0 text-[16.5px] leading-snug" style={{ color: featured ? '#ffffff' : undefined }}>
+                        {productName(p, theme)}
                       </h3>
-                      <span className="text-[12px]" style={{ color: p.recommended ? 'rgba(255,249,255,0.72)' : '#8f81a8' }}>
-                        {p.hanja}
-                      </span>
+                      {!ZIWEI_ONLY && (
+                        <span className="text-[12px]" style={{ color: featured ? 'rgba(255,249,255,0.72)' : '#8f81a8' }}>
+                          {p.hanja}
+                        </span>
+                      )}
                     </div>
-                    <p className="mt-1.5 text-[13px]" style={{ color: p.recommended ? 'rgba(255,249,255,0.88)' : '#6a5788' }}>
+                    <p className="mt-1.5 text-[13px]" style={{ color: featured ? 'rgba(255,249,255,0.88)' : '#6a5788' }}>
                       {productTagline(p, 'character')}
                     </p>
                     <div className="mt-4">
-                      <PriceTag product={p} variant="card" onDark={!!p.recommended} />
+                      <PriceTag product={p} variant="card" onDark={featured} />
                     </div>
                     {p.id === 'basic' && !ZIWEI_ONLY && (
                       <p className="mt-1 text-[12.5px] text-[#b07ac9]">☕ 커피 한 잔 값, 부담 없이 시작해</p>
                     )}
                     <ul
                       className="mt-3 flex-1 space-y-1.5 text-[13px] leading-relaxed"
-                      style={{ color: p.recommended ? 'rgba(255,249,255,0.82)' : '#7c6a99' }}
+                      style={{ color: featured ? 'rgba(255,249,255,0.82)' : '#7c6a99' }}
                     >
                       {productPoints(p, 'character').slice(0, 3).map((pt) => (
                         <li key={pt} className="flex gap-1.5">
-                          <span style={{ color: p.recommended ? '#ffd9b8' : '#b395f5' }}>✧</span>
+                          <span style={{ color: featured ? '#ffd9b8' : '#b395f5' }}>✧</span>
                           {pt}
                         </li>
                       ))}
@@ -418,19 +438,20 @@ function BooksStep({ onProduct, onNewYear }: { onProduct: (id: ProductId) => voi
                     {productScopeShort(p, 'character') && (
                       <p
                         className="mt-2 text-[12.5px] leading-[1.65]"
-                        style={{ color: p.recommended ? 'rgba(255,249,255,0.8)' : '#75628f' }}
+                        style={{ color: featured ? 'rgba(255,249,255,0.8)' : '#75628f' }}
                       >
                         {productScopeShort(p, 'character')}
                       </p>
                     )}
                     <button
                       onClick={() => onProduct(p.id)}
-                      className={`t-btn mt-4 w-full py-2.5 text-[13.5px] ${p.recommended ? 't-btn-gold' : 't-btn-soft'}`}
+                      className={`t-btn mt-4 w-full whitespace-nowrap py-2.5 text-[13.5px] ${featured ? 't-btn-gold' : 't-btn-soft'}`}
                     >
                       {productCta(p, 'character')}
                     </button>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}

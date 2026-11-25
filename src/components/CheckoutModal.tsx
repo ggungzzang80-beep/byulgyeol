@@ -4,6 +4,7 @@ import type { Product, ProductId } from '../lib/products';
 import {
   PRODUCTS,
   productPoints,
+  productName,
   productPrice,
   productPriceInfo,
   productScopeNote,
@@ -188,7 +189,7 @@ export default function CheckoutModal({ product, chartName, birthInput, initialP
               <span aria-hidden="true">{lane === 'western' ? '✶' : lane === 'both' ? '✦' : '☯'}</span>
               {systemLabel.title}
             </p>
-            <h3 className="t-title mt-2 text-[20px] leading-snug">{product.name}</h3>
+            <h3 className="t-title mt-2 text-[20px] leading-snug">{productName(product, theme)}</h3>
             <p className="mt-0.5 text-[13.5px] t-muted">{productTagline(product, theme)}</p>
             {isCharacter && product.id === 'basic' && (
               <p className="mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[12.5px]" style={{ background: 'rgba(255,214,190,0.5)', color: '#a8648a' }}>
@@ -264,7 +265,7 @@ export default function CheckoutModal({ product, chartName, birthInput, initialP
                     <span className="min-w-0">
                       <span className="block truncate text-[13.5px] font-medium" style={{ color: active ? 'var(--text)' : 'var(--muted)' }}>
                         {active ? '● ' : '○ '}
-                        {p.name}
+                        {productName(p, theme)}
                       </span>
                       <span className="mt-0.5 block truncate text-[12.5px] t-faint">{p.tagline}</span>
                     </span>
@@ -298,7 +299,7 @@ export default function CheckoutModal({ product, chartName, birthInput, initialP
             </div>
             <div className="flex justify-between gap-3 t-muted">
               <span>상품</span>
-              <span className="truncate t-body">{product.name}</span>
+              <span className="truncate t-body">{productName(product, theme)}</span>
             </div>
             <div className="flex justify-between gap-3 t-muted">
               <span>체계</span>

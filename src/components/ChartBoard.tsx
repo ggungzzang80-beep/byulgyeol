@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { ChartModel, PalaceView } from '../lib/chart';
 import { useTheme } from '../lib/theme';
+import { MUTAGEN_SHORT, elementShort, roomCell } from '../lib/friendly';
 import { StarMark } from './ui';
 
 /** 전통 명반 배치: 인(寅)이 좌하단에서 시계방향으로 12궁이 돌아갑니다. */
@@ -48,13 +49,19 @@ export default function ChartBoard({ chart, selected, onSelect }: Props) {
               className={`pcell ${active ? 'is-active' : ''}`}
             >
               <div className="flex min-w-0 items-start justify-between gap-0.5">
-                <span className="pcell__stem num shrink-0">
-                  {p.stem}
-                  {p.branch}
-                </span>
+                {theme !== 'character' && (
+                  <span className="pcell__stem num shrink-0">
+                    {p.stem}
+                    {p.branch}
+                  </span>
+                )}
                 <span className="flex min-w-0 flex-col items-end gap-0.5">
-                  <span className={`pcell__name ${p.name === '명궁' ? 'is-soul' : ''}`}>{p.name}</span>
-                  {p.isBodyPalace && <span className="pcell__meta">신궁</span>}
+                  <span className={`pcell__name ${p.name === '명궁' ? 'is-soul' : ''}`}>
+                    {theme === 'character' ? roomCell(p.name) : p.name}
+                  </span>
+                  {p.isBodyPalace && (
+                    <span className="pcell__meta">{theme === 'character' ? '몸의 방' : '신궁'}</span>
+                  )}
                 </span>
               </div>
 
@@ -64,7 +71,9 @@ export default function ChartBoard({ chart, selected, onSelect }: Props) {
                     {p.major.map((s) => (
                       <span key={s.cn} className="flex min-w-0 flex-wrap items-baseline gap-x-1">
                         <span className="pcell__star">{s.name}</span>
-                        {s.brightness && <span className="pcell__meta">{s.brightness}</span>}
+                        {s.brightness && theme !== 'character' && (
+                          <span className="pcell__meta">{s.brightness}</span>
+                        )}
                         {s.mutagen && (
                           <span
                             className="pcell__tiny"
@@ -73,14 +82,14 @@ export default function ChartBoard({ chart, selected, onSelect }: Props) {
                               color: s.mutagen === '화기' ? warn : 'var(--accent-deep)',
                             }}
                           >
-                            {s.mutagen.replace('화', '')}
+                            {theme === 'character' ? MUTAGEN_SHORT[s.mutagen] : s.mutagen.replace('화', '')}
                           </span>
                         )}
                       </span>
                     ))}
                   </div>
                 ) : (
-                  <span className="pcell__meta">주성 없음</span>
+                  <span className="pcell__meta">{theme === 'character' ? '메인 별 없음' : '주성 없음'}</span>
                 )}
 
                 <div className="pcell__minor mt-1 hidden flex-wrap gap-x-1 sm:flex">
@@ -110,12 +119,20 @@ export default function ChartBoard({ chart, selected, onSelect }: Props) {
           <div className="min-w-0">
             <div className="flex items-baseline justify-between gap-1">
               <span className="text-[12px] tracking-[0.24em] sm:text-[12.5px]" style={{ color: 'var(--accent-deep)' }}>
-                命盤
+                {theme === 'character' ? '별지도' : '命盤'}
               </span>
-              <span className="num text-[12px] t-faint sm:text-[12.5px]">{chart.fiveElements}</span>
+              <span className="num text-[12px] t-faint sm:text-[12.5px]">
+                {theme === 'character' ? elementShort(chart.fiveElements) : chart.fiveElements}
+              </span>
             </div>
             <p className="t-title mt-1 truncate text-[15px] leading-tight sm:text-[21px]">
-              {chart.name ? `${chart.name} 님` : theme === 'character' ? '나의 별지도' : '나의 명반'}
+              {chart.name
+                ? theme === 'character'
+                  ? chart.name
+                  : `${chart.name} 님`
+                : theme === 'character'
+                  ? '나의 별지도'
+                  : '나의 명반'}
             </p>
             <p className="num mt-0.5 truncate text-[12px] t-muted sm:text-[13px]">{chart.solarText}</p>
             <p className="num mt-0.5 hidden truncate text-[12.5px] t-faint sm:block">{chart.lunarText}</p>
@@ -126,27 +143,34 @@ export default function ChartBoard({ chart, selected, onSelect }: Props) {
 
           <div className="mt-1 space-y-1 sm:space-y-1.5">
             <div className="flex items-center gap-1.5">
-              <span className="shrink-0 text-[12px] tracking-[0.1em] t-faint sm:text-[12.5px]">명궁</span>
+              <span className="shrink-0 text-[12px] tracking-[0.1em] t-faint sm:text-[12.5px]">
+                {theme === 'character' ? '수호별' : '명궁'}
+              </span>
               <span className="h-px flex-1" style={{ background: 'var(--line)' }} />
               <span className="truncate text-[12.5px] font-semibold t-body sm:text-[15px]">
-                {chart.primaryStar}성
+                {chart.primaryStar}
+                {theme === 'character' ? '별' : '성'}
                 {chart.primaryBrightness && (
                   <span className="ml-0.5 text-[10.5px] font-normal t-faint sm:text-[12px]">{chart.primaryBrightness}</span>
                 )}
               </span>
             </div>
             <div className="hidden items-center gap-1.5 sm:flex">
-              <span className="shrink-0 text-[12.5px] tracking-[0.1em] t-faint">신궁</span>
+              <span className="shrink-0 text-[12.5px] tracking-[0.1em] t-faint">
+                {theme === 'character' ? '몸의 방' : '신궁'}
+              </span>
               <span className="h-px flex-1" style={{ background: 'var(--line)' }} />
               <span className="truncate text-[13.5px] t-muted">
                 {chart.bodyPalace.name} · {chart.bodyStar}
               </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="shrink-0 text-[12px] tracking-[0.1em] t-faint sm:text-[12.5px]">유년</span>
+              <span className="shrink-0 text-[12px] tracking-[0.1em] t-faint sm:text-[12.5px]">
+                {theme === 'character' ? '올해 흐름' : '유년'}
+              </span>
               <span className="h-px flex-1" style={{ background: 'var(--line)' }} />
               <span className="num truncate text-[12.5px] t-muted sm:text-[14px]">
-                {chart.yearly.year} {chart.yearly.stemBranch}
+                {chart.yearly.year} {theme === 'character' ? '년' : chart.yearly.stemBranch}
               </span>
             </div>
           </div>
@@ -158,11 +182,18 @@ export default function ChartBoard({ chart, selected, onSelect }: Props) {
         className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3 py-2.5 text-[12.5px] sm:gap-x-4 sm:px-4 sm:py-2.5 sm:text-[13px]"
         style={{ borderTop: '1px solid var(--line)', background: 'var(--field-bg)' }}
       >
-        {[
-          { k: '록', label: '화록' },
-          { k: '권', label: '화권' },
-          { k: '과', label: '화과' },
-        ].map((m) => (
+        {(theme === 'character'
+          ? [
+              { k: '복', label: '복이 들어오는 별빛' },
+              { k: '주도', label: '주도권의 별빛' },
+              { k: '이름', label: '이름이 남는 별빛' },
+            ]
+          : [
+              { k: '록', label: '화록' },
+              { k: '권', label: '화권' },
+              { k: '과', label: '화과' },
+            ]
+        ).map((m) => (
           <span key={m.k} className="flex items-center gap-1 t-muted">
             <span className="rounded-[3px] px-1 text-[12px] leading-[14px]" style={{ background: 'var(--accent-soft)', color: 'var(--accent-deep)' }}>
               {m.k}
@@ -172,9 +203,9 @@ export default function ChartBoard({ chart, selected, onSelect }: Props) {
         ))}
         <span className="flex items-center gap-1 t-muted">
           <span className="rounded-[3px] px-1 text-[12px] leading-[14px]" style={{ background: 'rgba(217,138,122,0.16)', color: warn }}>
-            기
+            {theme === 'character' ? '조심' : '기'}
           </span>
-          화기
+          {theme === 'character' ? '조심해서 다스릴 별빛' : '화기'}
         </span>
         <span className="mt-1 w-full text-[13px] leading-[1.6] t-muted sm:ml-auto sm:mt-0 sm:w-auto sm:text-[13px]">
           {copy.chart.boardNote}

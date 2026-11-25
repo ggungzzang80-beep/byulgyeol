@@ -29,7 +29,7 @@ export default function NewYearBanner({ onStart }: { onStart: () => void }) {
           }}
           aria-hidden="true"
         >
-          丁未
+          {isCharacter ? '2027' : '丁未'}
         </span>
         <div>
           <p className="text-[15.5px]" style={{ color: 'rgba(248,241,228,0.96)', fontFamily: 'var(--font-display)' }}>
@@ -37,7 +37,7 @@ export default function NewYearBanner({ onStart }: { onStart: () => void }) {
           </p>
           <p className="mt-1 text-[13px] leading-[1.7]" style={{ color: 'rgba(246,238,224,0.66)' }}>
             {isCharacter
-              ? '생년월일만 알면 끝. 명궁의 별로 그린 소장용 부적 한 장.'
+              ? '생년월일만 알면 끝. 수호별로 그린 소장용 부적 한 장.'
               : '생년월일만 있으면 됩니다. 명궁의 주성으로 그린 소장용 부적 한 장.'}
           </p>
         </div>

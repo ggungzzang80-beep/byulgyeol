@@ -1,6 +1,7 @@
 import type { ChartModel } from '../lib/chart';
 import { build2027, type MonthTone } from '../lib/newyear2027';
 import { useTheme } from '../lib/theme';
+import { mutagenLight, roomOf } from '../lib/friendly';
 import StoneGoods2027 from './StoneGoods2027';
 import { GOODS_CHECKOUT_ENABLED } from '../config/env';
 import { ScoreBar, SectionLabel } from './ui';
@@ -56,7 +57,9 @@ export default function NewYearReport({ chart, onBack }: { chart: ChartModel; on
           <div className="t-starfield opacity-40" />
           <div className="relative">
             <div className="flex items-center justify-between gap-3">
-              <p className="text-[12.5px] tracking-[0.24em] t-panel-accent">2027 丁未 · 신년 정밀 운세</p>
+              <p className="text-[12.5px] tracking-[0.24em] t-panel-accent">
+                {isCharacter ? '2027 · 신년 정밀 운세' : '2027 丁未 · 신년 정밀 운세'}
+              </p>
               <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[12.5px]" style={{ border: '1px solid var(--panel-line)', color: 'var(--panel-accent)' }}>
                 열림
               </span>
@@ -66,7 +69,7 @@ export default function NewYearReport({ chart, onBack }: { chart: ChartModel; on
               {isCharacter ? '2027년, 네 별이 오래 타는 해' : '2027년, 오래 타는 불의 해'}
             </h1>
             <p className="mt-2 text-[13.5px] t-panel-faint">
-              {chart.name ? `${chart.name} 님` : '나'} · {chart.primaryStar}
+              {chart.name ? (isCharacter ? chart.name : `${chart.name} 님`) : '나'} · {chart.primaryStar}
               {isCharacter ? '별' : '성'} · {content.age}세 · {content.stemBranch}년({content.animal}의 해)
             </p>
 
@@ -79,7 +82,7 @@ export default function NewYearReport({ chart, onBack }: { chart: ChartModel; on
                 </span>
               ))}
               <span className="rounded-full px-2.5 py-1 text-[13px]" style={{ border: '1px solid var(--panel-rule)', color: 'var(--panel-muted)' }}>
-                유년 명궁 {content.stage.palace} · {content.stage.domain}
+                {isCharacter ? '올해 흐름' : '유년 명궁'} {isCharacter ? roomOf(content.stage.palace) : content.stage.palace} · {content.stage.domain}
               </span>
             </div>
 
@@ -102,14 +105,14 @@ export default function NewYearReport({ chart, onBack }: { chart: ChartModel; on
           </div>
           <p className="mt-2 text-[13px] leading-[1.75] t-faint">
             {isCharacter
-              ? '2027년에 유년 재백·부처·관록 별방이 되는 자리의 지수야. 해마다 자리가 옮겨가.'
+              ? '2027년에 돈·사랑·일의 방이 되는 자리의 지수야. 해마다 자리가 옮겨가.'
               : '2027년에 유년 재백·부처·관록 궁이 되는 자리의 지수입니다. 해마다 자리가 옮겨갑니다.'}
           </p>
         </section>
 
         {/* 사화 */}
         <section className="mt-10">
-          <SectionLabel index="02">2027 MUTAGEN · 사화 네 개</SectionLabel>
+          <SectionLabel index="02">{isCharacter ? '2027 LIGHT · 별빛 네 개' : '2027 MUTAGEN · 사화 네 개'}</SectionLabel>
           <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
             {content.mutagen.map((m) => (
               <div key={m.mutagen} className="t-card p-5">
@@ -118,9 +121,9 @@ export default function NewYearReport({ chart, onBack }: { chart: ChartModel; on
                     className="rounded-full px-2.5 py-0.5 text-[12.5px] font-semibold"
                     style={{ background: `${MUTAGEN_COLOR[m.mutagen]}22`, color: MUTAGEN_COLOR[m.mutagen], border: `1px solid ${MUTAGEN_COLOR[m.mutagen]}55` }}
                   >
-                    {m.mutagen} · {m.star}
+                    {isCharacter ? `${m.star} · ${mutagenLight(m.mutagen)}` : `${m.mutagen} · ${m.star}`}
                   </span>
-                  <span className="text-[12.5px] t-faint">{m.palace}</span>
+                  <span className="text-[12.5px] t-faint">{isCharacter ? roomOf(m.palace) : m.palace}</span>
                 </div>
                 <p className="mt-2.5 text-[14px] leading-[1.85] t-body">{m.line}</p>
                 <p className="mt-2 text-[13.5px] leading-[1.8] t-muted">
@@ -196,10 +199,14 @@ export default function NewYearReport({ chart, onBack }: { chart: ChartModel; on
                   </div>
                 </div>
                 <p className="mt-3 text-[13.5px] leading-[1.85] t-panel-body">{content.needReason}</p>
-                <p className="mt-2 text-[13.5px] leading-[1.85] t-panel-faint">
-                  수호 원석 · <b style={{ color: 'var(--panel-accent)' }}>{content.stone.name}</b>
-                </p>
-                <p className="mt-1 text-[13px] leading-[1.8] t-panel-faint">{content.stone.detail}</p>
+                {!isCharacter && (
+                  <>
+                    <p className="mt-2 text-[13.5px] leading-[1.85] t-panel-faint">
+                      수호 원석 · <b style={{ color: 'var(--panel-accent)' }}>{content.stone.name}</b>
+                    </p>
+                    <p className="mt-1 text-[13px] leading-[1.8] t-panel-faint">{content.stone.detail}</p>
+                  </>
+                )}
               </div>
 
               <div className="rounded-2xl p-4" style={{ background: 'rgba(9,8,18,0.26)', border: '1px solid var(--panel-rule)' }}>
@@ -218,7 +225,7 @@ export default function NewYearReport({ chart, onBack }: { chart: ChartModel; on
         </section>
 
         {/* 굿즈 — 1차 결제 심사용 빌드에서는 숨깁니다. */}
-        {GOODS_CHECKOUT_ENABLED && (
+        {GOODS_CHECKOUT_ENABLED && !isCharacter && (
           <section className="mt-10">
             <StoneGoods2027 goods={content.goods} needLabel={content.needLabel} stoneName={content.stone.name} />
           </section>
@@ -245,7 +252,7 @@ export default function NewYearReport({ chart, onBack }: { chart: ChartModel; on
 
         <p className="mt-9 text-center text-[13px] leading-[1.9] t-faint">
           {isCharacter
-            ? '자미두수는 전통 상담 문화야. 의료·법률·투자 판단의 근거가 아니고, 원석·굿즈는 효능을 보장하지 않는 소장용 소품이야. © 2027 별의 속삭임'
+            ? '자미두수는 전통 상담 문화야. 의료·법률·투자 판단의 근거가 아니고, 부적은 효능을 보장하지 않는 소장용 콘텐츠야. © 2027 별의 속삭임'
             : '자미두수는 전통 상담 문화로, 의료·법률·투자 판단의 근거가 아닙니다. 원석·굿즈는 효능을 보장하지 않는 소장용 소품입니다. © 2027 자미원'}
         </p>
       </div>
