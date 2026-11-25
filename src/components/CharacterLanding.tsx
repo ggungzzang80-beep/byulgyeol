@@ -180,7 +180,7 @@ function IntroStep({ onNext }: { onNext: () => void }) {
 
               <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-[13px] text-[#9a86b6]">
                 <span>✧ 12개 별방</span>
-                <span>✧ 14주성</span>
+                <span>✧ 14개의 별</span>
                 <span>✧ 커피 한 잔 값 {CHARACTER_FIRST_PRICE.toLocaleString('ko-KR')}원부터</span>
               </div>
             </div>

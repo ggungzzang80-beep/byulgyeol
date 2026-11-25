@@ -629,9 +629,9 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
               <p className="t-panel-title mt-4 text-[20px] leading-[1.7] sm:text-[22px]">
                 {isCharacter ? (
                   <>
-                    {chart.primaryStar}별은 {profile.identity}이야.
+                    {chart.primaryStar}별은 {profile.identity}이에요.
                     <br />
-                    {reportYear}년의 흐름은 믿되, 결정은 한 번 더 미루고 확인하는 편이 좋아.
+                    {reportYear}년의 흐름은 믿되, 결정은 한 번 더 미루고 확인하는 편이 좋아요.
                   </>
                 ) : (
                   <>

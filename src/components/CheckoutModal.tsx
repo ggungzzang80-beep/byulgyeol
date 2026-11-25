@@ -38,10 +38,10 @@ type Props = {
 
 const YEARS = Array.from({ length: 2015 - 1930 + 1 }, (_, i) => 2015 - i);
 
-const LANES: Array<{ key: ProductSystem; label: string; sub: string; glyph: string }> = [
-  { key: 'ziwei', label: '동양 자미두수', sub: '12궁 명반 · 14주성', glyph: '☯' },
-  { key: 'western', label: '서양 점성술', sub: '출생 천궁도 · 행성 하우스', glyph: '✶' },
-  { key: 'both', label: '통합 (둘 다)', sub: '두 리포트 함께', glyph: '✦' },
+const LANES: Array<{ key: ProductSystem; label: string; sub: string; subChar: string; glyph: string }> = [
+  { key: 'ziwei', label: '동양 자미두수', sub: '12궁 명반 · 14주성', subChar: '12개 별방 · 14개의 별', glyph: '☯' },
+  { key: 'western', label: '서양 점성술', sub: '출생 천궁도 · 행성 하우스', subChar: '출생 천궁도 · 행성 하우스', glyph: '✶' },
+  { key: 'both', label: '통합 (둘 다)', sub: '두 리포트 함께', subChar: '두 별지도 함께', glyph: '✦' },
 ];
 
 export default function CheckoutModal({ product, chartName, birthInput, initialPartner, onClose, onPaid, onSelect }: Props) {
@@ -237,7 +237,7 @@ export default function CheckoutModal({ product, chartName, birthInput, initialP
                       {l.glyph}
                     </span>
                     <span className="mt-0.5 block text-[12.5px] font-semibold leading-tight">{l.label}</span>
-                    <span className="mt-0.5 block text-[12px] leading-tight opacity-80">{l.sub}</span>
+                    <span className="mt-0.5 block text-[12px] leading-tight opacity-80">{isCharacter ? l.subChar : l.sub}</span>
                   </button>
                 );
               })}

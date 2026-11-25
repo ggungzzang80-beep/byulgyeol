@@ -292,6 +292,15 @@ export function productTagline(product: Product, theme: ThemeId): string {
 }
 
 export function productPoints(product: Product, theme: ThemeId): string[] {
+  if (theme === 'character' && product.id === 'premium') {
+    return [
+      '12개 별방 상세 풀이 (방마다 3문단)',
+      '연애·금전·일 별빛 지수',
+      '10년 큰 흐름 · 올해 흐름',
+      '달마다 별 처방 12개',
+      '별빛 네 개와 보조 별 총정리',
+    ];
+  }
   if (product.id === 'year2026') {
     return theme === 'character'
       ? ['2026년 나의 별방과 별빛 네 개', '11·12월에 먼저 할 일', '2026년 연애·금전·일 지수', '2027년으로 넘어가기 전 정리 세 가지']
