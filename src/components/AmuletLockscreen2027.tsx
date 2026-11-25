@@ -5,15 +5,20 @@ import {
   LOCK_ART,
   LOCK_CARD,
   LOCK_LAYOUT,
+  amuletLockArtUrl,
+  amuletLockThemeFor,
   lockAdviceLayout,
   lockChipLayout,
   lockLines,
+  type AmuletLockTheme,
 } from '../lib/amuletLockscreen';
 
 type Props = {
   chart: ChartModel;
   content: NewYear2027Content;
   className?: string;
+  /** 부적 배경 장면 — 지정하지 않으면 수호별에 맞는 장면을 자동으로 고릅니다. */
+  artTheme?: AmuletLockTheme;
 };
 
 /**
@@ -22,10 +27,11 @@ type Props = {
  * 저장 이미지(amuletLockscreen.ts, canvas 1080×1920)와 같은 좌표·문구를 씁니다.
  * (2026-11-25 @kooleumi8 피드백 6번 · 굿즈/원석 칸 없음)
  */
-export default function AmuletLockscreen2027({ chart, content, className }: Props) {
+export default function AmuletLockscreen2027({ chart, content, className, artTheme }: Props) {
   const L = LOCK_LAYOUT;
   const T = lockLines(chart, content);
-  const A = LOCK_ART;
+  const theme = artTheme ?? amuletLockThemeFor(chart.primaryStar, chart.fiveElements);
+  const A = { ...LOCK_ART, url: amuletLockArtUrl(theme) };
   const { cx } = LOCK_CARD;
 
   const chips = lockChipLayout(content.keywords);
@@ -47,7 +53,7 @@ export default function AmuletLockscreen2027({ chart, content, className }: Prop
       viewBox={`0 0 ${LOCK_CARD.w} ${LOCK_CARD.h}`}
       className={className}
       role="img"
-      aria-label={`2027 정미년 부적 카드 — ${chart.primaryStar}별, 하온과 별빛 고양이`}
+      aria-label={`2027 정미년 부적 카드 — ${chart.primaryStar}별, ${theme.label} 배경, 하온과 별빛 고양이`}
       style={{ display: 'block', width: '100%', height: 'auto' }}
     >
       <defs>
@@ -70,9 +76,9 @@ export default function AmuletLockscreen2027({ chart, content, className }: Prop
         </linearGradient>
 
         <linearGradient id={`${uid}-top`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgba(12,9,28,0.62)" />
-          <stop offset="60%" stopColor="rgba(12,9,28,0.30)" />
-          <stop offset="100%" stopColor="rgba(12,9,28,0)" />
+          <stop offset="0%" stopColor={`rgba(${theme.scrim.rgb},${theme.scrim.top})`} />
+          <stop offset="62%" stopColor={`rgba(${theme.scrim.rgb},${theme.scrim.mid})`} />
+          <stop offset="100%" stopColor={`rgba(${theme.scrim.rgb},0)`} />
         </linearGradient>
 
         <clipPath id={`${uid}-art`}>
@@ -97,8 +103,8 @@ export default function AmuletLockscreen2027({ chart, content, className }: Prop
           height={A.h}
           preserveAspectRatio="xMidYMid slice"
         />
-        {/* 위쪽 별하늘 살짝 어둡게 — 금박 글자가 읽히도록 */}
-        <rect x={A.x} y={A.y} width={A.w} height={300} fill={`url(#${uid}-top)`} />
+        {/* 위쪽 하늘 — 금박 글자가 읽히도록 장면 밝기에 맞춰 덮습니다 */}
+        <rect x={A.x} y={A.y} width={A.w} height={theme.scrim.height} fill={`url(#${uid}-top)`} />
       </g>
 
       {/* 아래 한지 띠 */}

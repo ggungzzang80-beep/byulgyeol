@@ -22,14 +22,14 @@ export default function PalaceDetail({ palace, onUnlock }: Props) {
   const score = palaceScore(palace);
   const label = isCharacter
     ? score >= 80
-      ? '아주 좋아!'
+      ? '아주 좋아요!'
       : score >= 68
-        ? '좋은 편이야'
+        ? '좋은 편이에요'
         : score >= 55
-          ? '무난해'
+          ? '무난해요'
           : score >= 42
-            ? '조금 노력해 보자'
-            : '살짝 조심!'
+            ? '조금 더 노력해 보세요'
+            : '살짝 조심하세요!'
     : score >= 80
       ? '매우 좋음'
       : score >= 68
@@ -139,7 +139,7 @@ export default function PalaceDetail({ palace, onUnlock }: Props) {
           ) : (
             <p className="text-[14.5px] leading-[1.8] t-muted">
               {isCharacter
-                ? '이 방에는 메인 별이 없어. 맞은편 방의 별이 대신 너를 봐주고 있어.'
+                ? '이 방에는 메인 별이 없어요. 맞은편 방의 별이 대신 나를 봐주고 있어요.'
                 : '이 궁에는 주성이 없습니다. 맞은편 궁의 영향을 받는 자리입니다.'}
             </p>
           )}
@@ -204,7 +204,7 @@ export default function PalaceDetail({ palace, onUnlock }: Props) {
             <p className="text-[13.5px] leading-relaxed t-faint">{tip}</p>
             <p className="text-[13.5px] leading-relaxed t-faint">
               {isCharacter
-                ? '이 방이 흔들리는 달에는 결정을 미루고, 열리는 달에는 먼저 움직여.'
+                ? '이 방이 흔들리는 달에는 결정을 미루고, 열리는 달에는 먼저 움직여 보세요.'
                 : '이 궁이 흔들리는 달에는 결정을 미루고, 열리는 달에는 먼저 움직이세요.'}
             </p>
           </div>

@@ -183,7 +183,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
                 <img src={starGuardian(chart.primaryStar).image} alt={`${chart.primaryStar}별 가디언`} className="h-full w-full object-cover" />
               </span>
               <p className="bubble px-3 py-2 text-[13px] leading-[1.7]">
-                네 별 이야기를 전부 펼쳐봤어. 한 장씩 천천히 읽어봐 ✨
+                별 이야기를 전부 펼쳐 보았어요. 한 장씩 천천히 읽어 보세요 ✨
               </p>
             </div>
           )}
@@ -294,7 +294,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
             </div>
             <p className="mt-5 pt-4 text-[13px] leading-[1.8] t-faint" style={{ borderTop: '1px solid var(--line)' }}>
               {isCharacter
-                ? '지수는 각 방 메인 별의 밝기와 별빛, 보조 별 배치를 합산한 상대값이야. 모든 화면과 저장 카드에서 같은 세 가지(연애의 별·금전의 별·일의 별)만 보여줘.'
+                ? '지수는 각 방 메인 별의 밝기와 별빛, 보조 별 배치를 합산한 상대값이에요. 모든 화면과 저장 카드에서 같은 세 가지(연애의 별·금전의 별·일의 별)만 보여 드려요.'
                 : '지수는 각 궁의 주성 밝기·사화·보좌성 배치를 합산한 상대값입니다. 모든 화면과 저장 카드에서 같은 세 가지(연애의 별·금전의 별·일의 별)만 보여줍니다.'}
             </p>
           </div>
@@ -349,8 +349,8 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
               <p className="mt-3 text-[14.5px] leading-[1.9] t-body">
                 {isCharacter ? (
                   <>
-                    {reportYear}년 네 별방은 <b className="font-semibold">{roomOf(year2027.stage.palace)}</b>이야. 이 해에는
-                    그 방의 주제가 가장 크게 움직여.
+                    {reportYear}년 나의 별방은 <b className="font-semibold">{roomOf(year2027.stage.palace)}</b>이에요. 이 해에는
+                    그 방의 주제가 가장 크게 움직여요.
                   </>
                 ) : (
                   <>
@@ -395,11 +395,11 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
               <div className="relative">
                 <p className="text-[12.5px] tracking-[0.24em] t-panel-accent">NEXT · 12궁 전체</p>
                 <h3 className="t-panel-title mt-3 text-[23px] leading-snug">
-                  {isCharacter ? '지금 읽은 건 12분의 1이야' : '지금 읽은 것은 12분의 1입니다'}
+                  {isCharacter ? '지금 읽은 것은 12분의 1이에요' : '지금 읽은 것은 12분의 1입니다'}
                 </h3>
                 <p className="mt-3 max-w-[540px] text-[14.5px] leading-[1.9] t-panel-body">
                   {isCharacter
-                    ? '이 리포트에는 수호별(성격)과 돈·사랑·일의 핵심만 담았어. 전체 별 이야기에서는 나머지 11개 별방(사랑·인연, 창작·즐거움, 몸·건강, 바깥 활동, 함께하는 사람, 일·커리어, 집·터전, 마음, 윗사람·배움, 가까운 사람)의 풀이와 10년 큰 흐름·2027년 흐름, 열두 달 처방까지 이어져.'
+                    ? '이 리포트에는 수호별(성격)과 돈·사랑·일의 핵심만 담았어요. 전체 별 이야기에서는 나머지 11개 별방(사랑·인연, 창작·즐거움, 몸·건강, 바깥 활동, 함께하는 사람, 일·커리어, 집·터전, 마음, 윗사람·배움, 가까운 사람)의 풀이와 10년 큰 흐름·2027년 흐름, 열두 달 처방까지 이어져요.'
                     : '이 리포트에는 명궁(성격)과 재물·연애·직업의 핵심만 담았습니다. 프리미엄에서는 나머지 11개 궁(부처·자녀·질액·천이·노복·관록·전택·복덕·부모·형제)의 풀이와 지금의 대한·2027년 유년 흐름, 12개월 액션 가이드까지 이어집니다.'}
                 </p>
                 <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -534,7 +534,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
               <h2 className="t-display mt-3 text-[23px] sm:text-[27px]">진로 · 전공 · 배우자 · 재물</h2>
               <p className="mt-2 max-w-[560px] text-[14px] leading-[1.9] t-muted">
                 {isCharacter
-                  ? '“운이 좋다” 대신 실제 학과명과 직함, 배우자의 첫인상, 돈이 새는 장면을 짚었어. 이 리포트 안에서 바로 읽으면 돼.'
+                  ? '“운이 좋다” 대신 실제 학과명과 직함, 배우자의 첫인상, 돈이 새는 장면을 짚었어요. 이 리포트 안에서 바로 읽으시면 돼요.'
                   : '“운이 좋다” 대신 실제 학과명과 직함, 배우자의 첫인상, 돈이 새는 장면을 짚었습니다. 이 리포트 안에서 바로 읽을 수 있습니다.'}
               </p>
             </div>
@@ -591,7 +591,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
             </h3>
             <p className="mt-3 max-w-[620px] text-[13.5px] leading-[1.9] t-muted">
               {isCharacter
-                ? '지금은 가디언 정밀 엔진이 분석한 리포트야. 실시간 AI 대화형 풀이는 곧 연결될 거야.'
+                ? '지금은 가디언 정밀 엔진이 분석한 리포트예요. 실시간 AI 대화형 풀이는 곧 연결될 예정이에요.'
                 : '현재 정밀 엔진으로 분석된 리포트입니다. 실시간 AI 대화형 풀이는 곧 연결될 예정입니다.'}
             </p>
 
@@ -662,7 +662,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
 
         <p className="mt-9 text-center text-[13px] leading-[1.9] t-faint">
           {isCharacter
-            ? '이 리포트는 자미두수 전통 해석을 지금의 언어로 다시 쓴 콘텐츠야. 의료·법률·투자 판단의 근거로는 쓸 수 없어. '
+            ? '이 리포트는 자미두수 전통 해석을 지금의 언어로 다시 쓴 콘텐츠예요. 의료·법률·투자 판단의 근거로는 쓸 수 없어요. '
             : '본 리포트는 자미두수 전통 해석을 현대적 언어로 재구성한 콘텐츠입니다. 의료·법률·투자 판단의 근거로 사용할 수 없습니다. '}
           © {new Date().getFullYear()} {isCharacter ? '별의 속삭임' : '자미원'}
         </p>

@@ -66,7 +66,7 @@ export default function NewYearReport({ chart, onBack }: { chart: ChartModel; on
             </div>
 
             <h1 className="t-panel-title mt-4 text-[26px] leading-[1.4] sm:text-[32px]">
-              {isCharacter ? '2027년, 네 별이 오래 타는 해' : '2027년, 오래 타는 불의 해'}
+              {isCharacter ? '2027년, 나의 별이 오래 타는 해' : '2027년, 오래 타는 불의 해'}
             </h1>
             <p className="mt-2 text-[13.5px] t-panel-faint">
               {chart.name ? (isCharacter ? chart.name : `${chart.name} 님`) : '나'} · {chart.primaryStar}
@@ -105,7 +105,7 @@ export default function NewYearReport({ chart, onBack }: { chart: ChartModel; on
           </div>
           <p className="mt-2 text-[13px] leading-[1.75] t-faint">
             {isCharacter
-              ? '2027년에 돈·사랑·일의 방이 되는 자리의 지수야. 해마다 자리가 옮겨가.'
+              ? '2027년에 돈·사랑·일의 방이 되는 자리의 지수예요. 해마다 자리가 옮겨가요.'
               : '2027년에 유년 재백·부처·관록 궁이 되는 자리의 지수입니다. 해마다 자리가 옮겨갑니다.'}
           </p>
         </section>
@@ -236,7 +236,7 @@ export default function NewYearReport({ chart, onBack }: { chart: ChartModel; on
             <p className="text-[12.5px] tracking-[0.2em] t-faint">NEXT · 이어지는 이야기</p>
             <p className="mt-2 text-[14.5px] leading-[1.9] t-body">
               {isCharacter
-                ? '2027년 흐름은 12개 별방 이야기와 함께 볼 때 가장 선명해. 별방 전체와 달마다 처방은 「전체 별 이야기」에 있어.'
+                ? '2027년 흐름은 12개 별방 이야기와 함께 볼 때 가장 선명해요. 별방 전체와 달마다 처방은 「전체 별 이야기」에 있어요.'
                 : '2027년 흐름은 12궁 전체 해설과 함께 볼 때 가장 선명합니다. 12궁 전체와 월별 가이드는 프리미엄 리포트에 있습니다.'}
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -252,7 +252,7 @@ export default function NewYearReport({ chart, onBack }: { chart: ChartModel; on
 
         <p className="mt-9 text-center text-[13px] leading-[1.9] t-faint">
           {isCharacter
-            ? '자미두수는 전통 상담 문화야. 의료·법률·투자 판단의 근거가 아니고, 부적은 효능을 보장하지 않는 소장용 콘텐츠야. © 2027 별의 속삭임'
+            ? '자미두수는 전통 상담 문화예요. 의료·법률·투자 판단의 근거가 아니며, 부적은 효능을 보장하지 않는 소장용 콘텐츠예요. © 2027 별의 속삭임'
             : '자미두수는 전통 상담 문화로, 의료·법률·투자 판단의 근거가 아닙니다. 원석·굿즈는 효능을 보장하지 않는 소장용 소품입니다. © 2027 자미원'}
         </p>
       </div>

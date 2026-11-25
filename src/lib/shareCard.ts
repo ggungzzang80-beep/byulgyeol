@@ -9,6 +9,7 @@
  */
 import type { ChartModel } from '../lib/chart';
 import { palaceScore, profileOf } from '../lib/content';
+import { elementLight } from '../lib/friendly';
 import { DEFAULT_GUARDIAN_IMAGE, drawStarEmblem, starVisual } from '../lib/starPalette';
 import { STAR_HANJA } from '../lib/terms';
 import type { ThemeId } from '../lib/theme';
@@ -408,7 +409,8 @@ async function renderMystic(chart: ChartModel): Promise<string> {
 
 /* --------------------------------------------------------------- character */
 async function renderCharacter(chart: ChartModel): Promise<string> {
-  const profile = profileOf(chart.primaryStar);
+  /* 캐릭터 테마는 '쉬운 말 + 존댓말' 문장(content-casual)을 씁니다. */
+  const profile = profileOf(chart.primaryStar, 'casual');
   const v = starVisual(chart.primaryStar);
   const scores: Array<[string, number]> = [
     ['연애의 별', palaceScore(chart.palaces.find((p) => p.name === '부처궁'))],
@@ -525,13 +527,13 @@ async function renderCharacter(chart: ChartModel): Promise<string> {
   drawTracked(ctx, '별의 속삭임', 108, 118, 2);
   ctx.fillStyle = hexToRgba(v.light, 0.95);
   ctx.font = `500 24px ${SANS}`;
-  drawTracked(ctx, '동양 전통 자미두수 · 12궁 명반', W - 108, 117, 1.5, 'right');
+  drawTracked(ctx, '별빛 가디언 · 12개 별방', W - 108, 117, 1.5, 'right');
 
   /* 6. 수호별 라벨 + 아치 창 */
   const archX = 300;
   const archW = 480;
   const archY = 148;
-  const archH = 402;
+  const archH = 380;
 
   const halo = ctx.createRadialGradient(W / 2, archY + archH * 0.5, 40, W / 2, archY + archH * 0.5, 320);
   halo.addColorStop(0, v.aura);
@@ -573,7 +575,7 @@ async function renderCharacter(chart: ChartModel): Promise<string> {
     ctx.textAlign = 'center';
     ctx.fillStyle = hexToRgba(v.light, 0.94);
     ctx.font = `400 24px ${ROUND}`;
-    drawTracked(ctx, `수호 가디언 · ${v.guardianName}`, W / 2, archY + archH - 20, 4, 'center');
+    drawTracked(ctx, `수호 가디언 · ${v.guardianName}`, W / 2, archY + archH - 34, 4, 'center');
   }
 
   // 아치 위 작은 문양
@@ -592,17 +594,17 @@ async function renderCharacter(chart: ChartModel): Promise<string> {
   ctx.fillStyle = v.light;
   ctx.font = `700 100px ${SERIF}`;
   const nameText = `${chart.primaryStar}별`;
-  ctx.fillText(nameText, W / 2, 674);
+  ctx.fillText(nameText, W / 2, 652);
 
   ctx.fillStyle = hexToRgba(v.accent, 0.95);
   ctx.font = `500 30px ${SANS}`;
-  drawTracked(ctx, `${STAR_HANJA[chart.primaryStar] ?? ''}  ·  ${v.mood}`, W / 2, 716, 3, 'center');
+  drawTracked(ctx, `${STAR_HANJA[chart.primaryStar] ?? ''}  ·  ${v.mood}`, W / 2, 690, 3, 'center');
 
   /* 8. 한 줄 정체성 */
   ctx.fillStyle = hexToRgba(v.light, 0.94);
   ctx.font = `500 40px ${SERIF}`;
   const idLines = wrapText(ctx, `“${profile.identity}”`, W - 240).slice(0, 2);
-  idLines.forEach((l, i) => ctx.fillText(l, W / 2, 760 + i * 46));
+  idLines.forEach((l, i) => ctx.fillText(l, W / 2, 752 + i * 46));
 
   /* 9. 키워드 칩 */
   ctx.font = `400 28px ${ROUND}`;
@@ -611,7 +613,7 @@ async function renderCharacter(chart: ChartModel): Promise<string> {
   const chipGap = 14;
   const totalChip = chipSizes.reduce((a, b) => a + b, 0) + chipGap * (chipLabels.length - 1);
   let chipX = (W - totalChip) / 2;
-  const chipY = 798 + (idLines.length - 1) * 46;
+  const chipY = 776 + (idLines.length - 1) * 46;
   chipLabels.forEach((label, i) => {
     ctx.fillStyle = hexToRgba(v.light, 0.14);
     ctx.strokeStyle = hexToRgba(v.accent, 0.5);
@@ -661,8 +663,8 @@ async function renderCharacter(chart: ChartModel): Promise<string> {
   ctx.stroke();
 
   const blocks: Array<[string, string, string]> = [
-    ['이런 때 빛나 ✦', profile.strength, hexToRgba(v.light, 0.94)],
-    ['이건 조심 ✧', profile.caution, hexToRgba(v.light, 0.8)],
+    ['이런 때 빛나요 ✦', profile.strength, hexToRgba(v.light, 0.94)],
+    ['이건 조심하세요 ✧', profile.caution, hexToRgba(v.light, 0.8)],
   ];
   blocks.forEach(([label, text, tone], i) => {
     const x = 140 + i * 404;
@@ -671,7 +673,7 @@ async function renderCharacter(chart: ChartModel): Promise<string> {
     ctx.fillStyle = i === 0 ? hexToRgba(v.accent, 0.95) : hexToRgba(v.light, 0.8);
     ctx.font = `500 25px ${SANS}`;
     drawTracked(ctx, label, x, blockY, 2);
-    const fitted = fitText(ctx, text, maxW, i === 0 ? 4 : 3, [28, 26, 24], ROUND);
+    const fitted = fitText(ctx, text, maxW, i === 0 ? 3 : 3, [28, 26, 24], ROUND);
     ctx.fillStyle = tone;
     ctx.font = `400 ${fitted.size}px ${ROUND}`;
     fitted.lines.forEach((l, li) => ctx.fillText(l, x, blockY + 40 + li * 36));
@@ -687,7 +689,7 @@ async function renderCharacter(chart: ChartModel): Promise<string> {
   ctx.textAlign = 'left';
   ctx.fillStyle = hexToRgba(v.light, 0.78);
   ctx.font = `400 26px ${SANS}`;
-  ctx.fillText(`${chart.solarText} · ${chart.timeText.replace(' (정오 기준)', '')} · ${chart.fiveElements}`, 140, H - 74);
+  ctx.fillText(`${chart.solarText} · ${chart.timeText.replace(' (정오 기준)', '')} · ${elementLight(chart.fiveElements)}`, 140, H - 74);
 
   ctx.textAlign = 'right';
   ctx.fillStyle = hexToRgba(v.accent, 0.95);

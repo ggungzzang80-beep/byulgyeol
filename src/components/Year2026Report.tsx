@@ -101,7 +101,7 @@ export default function Year2026Report({
             <ScoreBar label="일의 별" score={content.scores.work} delay={160} />
           </div>
           <p className="mt-2 text-[13px] leading-[1.75] t-faint">
-            2026년에 돈·사랑·일의 방이 되는 자리의 지수야. 2027년에는 자리가 옮겨가.
+            2026년에 돈·사랑·일의 방이 되는 자리의 지수예요. 2027년에는 자리가 옮겨가요.
           </p>
         </section>
 
@@ -185,7 +185,7 @@ export default function Year2026Report({
             <p className="mt-2 text-[15px] leading-[1.9] t-body">{content.note}</p>
             <p className="mt-2 text-[14.5px] leading-[1.9] t-muted">
               2027년 네 별방은 <b className="font-semibold">{roomOf(year2027.stage.palace)}</b>
-              이야. 열두 달에 뭘 먼저 할지까지 이어서 볼 수 있어.
+              이야기예요. 열두 달에 무엇을 먼저 할지까지 이어서 볼 수 있어요.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <button onClick={onOpen2027} className="t-btn t-btn-gold px-4 py-2.5 text-[14px]">
@@ -202,7 +202,7 @@ export default function Year2026Report({
         </section>
 
         <p className="mt-9 text-center text-[13px] leading-[1.9] t-faint">
-          자미두수는 전통 상담 문화야. 의료·법률·투자 판단의 근거가 아니야. © 2026 별의 속삭임
+          자미두수는 전통 상담 문화예요. 의료·법률·투자 판단의 근거가 아니에요. © 2026 별의 속삭임
         </p>
       </div>
     </div>

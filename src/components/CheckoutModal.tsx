@@ -109,11 +109,11 @@ export default function CheckoutModal({ product, chartName, birthInput, initialP
 
   const pay = async () => {
     if (!agree) {
-      setError(isCharacter ? '동의 체크를 먼저 눌러줘!' : '결제 진행에 동의해 주세요.');
+      setError(isCharacter ? '동의 체크를 먼저 눌러 주세요!' : '결제 진행에 동의해 주세요.');
       return;
     }
     if ((product.id === 'compat' || product.id === 'synastry') && (!pYear || !pMonth || !pDay)) {
-      setError(isCharacter ? '상대방의 태어난 날도 알려줘!' : '상대방의 생년월일을 입력해 주세요.');
+      setError(isCharacter ? '상대방의 태어난 날도 알려 주세요!' : '상대방의 생년월일을 입력해 주세요.');
       return;
     }
 
@@ -123,7 +123,7 @@ export default function CheckoutModal({ product, chartName, birthInput, initialP
       if (!normalized) {
         setError(
           isCharacter
-            ? '결제 확인에 쓸 휴대폰 번호를 정확히 적어줘. (예: 010-1234-5678)'
+            ? '결제 확인에 쓸 휴대폰 번호를 정확히 적어 주세요. (예: 010-1234-5678)'
             : '결제 확인에 필요한 휴대폰 번호를 정확히 입력해 주세요. (예: 010-1234-5678)',
         );
         return;

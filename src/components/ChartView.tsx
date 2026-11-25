@@ -190,7 +190,7 @@ export default function ChartView({
             src={THEME_ART.character.greeting}
             alt="하온과 오드아이 별빛 고양이"
             position="center 68%"
-            caption="하온과 별빛 고양이가 네 수호별을 읽었어. 먼저 수호별부터."
+            caption="하온과 별빛 고양이가 수호별을 읽었어요. 먼저 수호별부터 보세요."
           />
         </div>
       )}
@@ -220,7 +220,7 @@ export default function ChartView({
 
           <div className="relative">
             <p className="text-[13.5px] tracking-[0.2em] t-panel-accent">
-              {isCharacter ? '너의 별지도 · 열두 개의 방' : '동양 전통 자미두수 · 12궁 명반'}
+              {isCharacter ? '나의 별지도 · 열두 개의 방' : '동양 전통 자미두수 · 12궁 명반'}
             </p>
             <div className="mt-3 flex items-start justify-between gap-3">
               <div className="flex items-center gap-2">
@@ -245,7 +245,7 @@ export default function ChartView({
 
             <h2 className="t-panel-title mt-4 text-[44px] leading-none sm:text-[56px]">
               {chart.primaryStar}
-              <span className="ml-1 text-[24px] font-light opacity-70 sm:text-[28px]">{isCharacter ? '별' : '성'}</span>
+              <span className="text-[24px] font-light opacity-70 sm:text-[28px]">{isCharacter ? '별' : '성'}</span>
             </h2>
 
             {isCharacter && (
@@ -468,7 +468,7 @@ export default function ChartView({
           src={THEME_ART.character.steps!.board.src}
           alt={THEME_ART.character.steps!.board.alt}
           position="center 45%"
-          caption="촛불 아래 펼친 별지도 — 열두 개의 방에 앉은 별을 하나씩 눌러 봐."
+          caption="촛불 아래 펼친 별지도 — 열두 개의 방에 앉은 별을 하나씩 눌러 보세요."
         />
       )}
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
@@ -501,7 +501,7 @@ export default function ChartView({
           src={THEME_ART.character.steps!.reading.src}
           alt={THEME_ART.character.steps!.reading.alt}
           position="center 26%"
-          caption="찻잔 곁에서 올해의 별을 읽는 중 — 10년 큰 흐름과 올해 흐름, 그리고 조심할 방 하나."
+          caption="찻잔 곁에서 올해의 별을 읽는 중 — 10년 큰 흐름과 올해 흐름, 그리고 조심할 방 하나예요."
         />
       )}
 
@@ -565,7 +565,7 @@ export default function ChartView({
 
           <div className="mt-4 pt-3" style={{ borderTop: '1px solid var(--line)' }}>
             <p className="text-[14px] leading-[1.75] t-muted">
-              {isCharacter ? '올해 조심할 별방 하나는 아래에 이어져.' : '올해 재물·연애에서 조심할 한 가지는 아래에 이어집니다.'}
+              {isCharacter ? '올해 조심할 별방 하나는 아래에 이어져요.' : '올해 재물·연애에서 조심할 한 가지는 아래에 이어집니다.'}
             </p>
             <button
               type="button"
@@ -609,7 +609,7 @@ export default function ChartView({
                 {chart.primaryStar}
                 {isCharacter ? '별' : '성'} 기준으로 <b className="font-semibold" style={{ color: 'var(--panel-accent)' }}>진로·전공·직업군</b>,{' '}
                 <b className="font-semibold" style={{ color: 'var(--panel-accent)' }}>끌리는 연애 타입과 배우자상</b>,{' '}
-                <b className="font-semibold" style={{ color: 'var(--panel-accent)' }}>돈이 새는 구체적 장면</b>{isCharacter ? '을 핀셋으로 짚어 줄게.' : '을 핀셋으로 짚어드립니다.'}
+                <b className="font-semibold" style={{ color: 'var(--panel-accent)' }}>돈이 새는 구체적 장면</b>{isCharacter ? '을 핀셋으로 짚어 드릴게요.' : '을 핀셋으로 짚어드립니다.'}
               </p>
               {!ZIWEI_ONLY && (
                 <p className="mt-2 text-[12.5px] leading-relaxed t-panel-faint">자미두수 12궁 × 서양 네이탈 차트 통합 해석도 확장 준비 중입니다.</p>
@@ -692,7 +692,7 @@ export default function ChartView({
                   isCharacter ? '12개 별방 전체 해설' : '12궁 전체 해설',
                   isCharacter ? '달마다 별 처방 12개' : '월별 액션 가이드 12개',
                 ]}
-                volume={isCharacter ? '한 번 결제로 12개 별방 · 달마다 처방까지 전부 열려' : '한 번 결제로 12궁 전체 · 월별 가이드까지 전부 열립니다'}
+                volume={isCharacter ? '한 번 결제로 12개 별방 · 달마다 처방까지 전부 열려요' : '한 번 결제로 12궁 전체 · 월별 가이드까지 전부 열립니다'}
                 product={findProduct('premium')}
               />
             </div>
@@ -736,7 +736,7 @@ export default function ChartView({
           src={THEME_ART.character.steps!.amulet.src}
           alt={THEME_ART.character.steps!.amulet.alt}
           position="center 34%"
-          caption="붉은 실을 묶은 부적 한 장 — 하온이 네 수호별로 그려 줬어."
+          caption="붉은 실을 묶은 부적 한 장 — 하온이 수호별로 그려 드렸어요."
         />
       )}
       <NewYear2027 chart={chart} unlocked={newYearUnlocked} onUnlock={() => onUnlock('newyear2027')} />
@@ -753,11 +753,11 @@ export default function ChartView({
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="sm:max-w-[520px]">
               <h2 className="t-display text-[23px] leading-snug sm:text-[24px]">
-                {isCharacter ? '궁합 점수는 먼저 무료로 봐 ✨' : '궁합 점수는 먼저 무료로 볼 수 있습니다'}
+                {isCharacter ? '궁합 점수는 먼저 무료로 볼 수 있어요 ✨' : '궁합 점수는 먼저 무료로 볼 수 있습니다'}
               </h2>
               <p className="mt-2 text-[14.5px] leading-[1.85] t-body">
                 {isCharacter
-                  ? '친구·연인의 생년월일만 넣으면 두 사람의 궁합 점수와 한 줄 케미를 바로 보여줄게. 구체적인 관계 해석·끌림 포인트·갈등 주의점은 심층 리포트에서 이어져.'
+                  ? '친구·연인의 생년월일만 넣으면 두 사람의 궁합 점수와 한 줄 케미를 바로 보여 드려요. 구체적인 관계 해석·끌림 포인트·갈등 주의점은 심층 리포트에서 이어져요.'
                   : '상대방의 생년월일만 넣으면 두 사람의 궁합 점수와 한 줄 케미를 바로 보여드립니다. 구체적인 관계 해석·끌림 포인트·갈등 주의점은 심층 리포트에서 이어집니다.'}
               </p>
               <div className="mt-3 flex flex-wrap gap-1.5">
@@ -781,8 +781,8 @@ export default function ChartView({
         </SectionLabel>
         {isCharacter && (
           <p className="mt-2 max-w-[520px] text-[14px] leading-[1.9] t-muted">
-            2027 신년 운세가 지금의 메인 이야기야. 2026년은 거의 끝나서 마감 할인으로 내렸어 — 남은 두 달만
-            정리해도 2027이 훨씬 편해져.
+            2027 신년 운세가 지금의 메인 이야기예요. 2026년은 거의 끝나서 마감 할인으로 내렸어요 — 남은 두 달만
+            정리해도 2027년이 훨씬 편해져요.
           </p>
         )}
         <div className="mt-4 space-y-7">
@@ -888,7 +888,7 @@ export default function ChartView({
                       </div>
                       {closing && info.discounted && (
                         <p className="mt-2 text-[12.5px] leading-[1.65] text-[#8a4f2a]">
-                          2026년이 {new Date().getFullYear() === 2026 ? '한 달 남았어' : '거의 끝났어'} — 지금만 이 가격이야.
+                          2026년이 {new Date().getFullYear() === 2026 ? '한 달 남았어요' : '거의 끝났어요'} — 지금만 이 가격이에요.
                         </p>
                       )}
                     </div>
@@ -902,7 +902,7 @@ export default function ChartView({
 
       <p className="mt-8 text-center text-[13px] leading-[1.9] t-faint">
         {isCharacter
-          ? '자미두수는 전통 상담 문화야. 의료·법률·투자 판단의 근거가 아니고, 별지도 데이터는 서버에 저장되지 않아.'
+          ? '자미두수는 전통 상담 문화예요. 의료·법률·투자 판단의 근거가 아니며, 별지도 데이터는 서버에 저장되지 않아요.'
           : '자미두수는 전통 상담 문화로, 의료·법률·투자 판단의 근거가 아닙니다. 명반 데이터는 서버에 저장되지 않습니다.'}
       </p>
     </div>
@@ -968,7 +968,7 @@ export default function ChartView({
             onChange={onSystemChange}
             note={
               isCharacter
-                ? '지금 보고 있는 건 동양 별지도 — 탭을 누르면 서양 별자리로 바뀌어.'
+                ? '지금 보고 있는 것은 동양 별지도예요 — 탭을 누르면 서양 별자리로 바뀌어요.'
                 : '지금 보고 있는 체계: 동양 전통 자미두수 · 12궁 명반 — 탭을 누르면 서양 점성술로 바뀝니다.'
             }
           />

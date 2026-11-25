@@ -272,7 +272,7 @@ export function productName(product: Product, theme: ThemeId): string {
 export function productTagline(product: Product, theme: ThemeId): string {
   if (product.id === 'year2026') {
     return theme === 'character'
-      ? '2026년 남은 두 달, 지금 정리하면 2027이 편해져'
+      ? '2026년 남은 두 달, 지금 정리하면 2027년이 편해져요'
       : '2026년 남은 두 달과 한 해 정리 — 마감 할인';
   }
   if (product.id === 'newyear2027') {
@@ -286,7 +286,7 @@ export function productTagline(product: Product, theme: ThemeId): string {
       : '두 천궁도의 행성 교차 각 — 점수는 무료, 해석은 심층에서';
   }
   if (theme === 'character' && product.id === 'basic') return '수호별·사랑·돈·일 핵심만, 커피 한 잔 값으로';
-  if (theme === 'character' && product.id === 'western') return '네가 태어난 하늘의 좌표 — 태양·달·어센던트';
+  if (theme === 'character' && product.id === 'western') return '태어난 하늘의 좌표 — 태양·달·어센던트';
   if (theme === 'character' && product.id === 'bundle') return '동양 별지도 + 서양 천궁도, 한 번에';
   return product.tagline;
 }
@@ -294,14 +294,14 @@ export function productTagline(product: Product, theme: ThemeId): string {
 export function productPoints(product: Product, theme: ThemeId): string[] {
   if (product.id === 'year2026') {
     return theme === 'character'
-      ? ['2026년 네 별방과 별빛 네 개', '11·12월에 먼저 할 일', '2026년 연애·금전·일 지수', '2027로 넘어가기 전 정리 세 가지']
+      ? ['2026년 나의 별방과 별빛 네 개', '11·12월에 먼저 할 일', '2026년 연애·금전·일 지수', '2027년으로 넘어가기 전 정리 세 가지']
       : product.points;
   }
   if (product.id === 'newyear2027') {
     return theme === 'character'
       ? [
-          '2027년 네 별방과 별빛 네 개',
-          '열두 달마다 뭘 먼저 할지',
+          '2027년 나의 별방과 별빛 네 개',
+          '열두 달마다 무엇을 먼저 할지',
           '2027년 연애·금전·일 지수',
           '부족한 기운과 보완 습관 세 가지',
           '달마다 먼저 할 일 한 줄',
@@ -405,37 +405,37 @@ export function productScopeNote(product: Product, theme: ThemeId): string | nul
   const premiumPrice = productPrice(findProduct('premium'), theme).toLocaleString('ko-KR');
   if (product.id === 'year2026') {
     return theme === 'character'
-      ? '2026년 한 해만 짚는 마감 리포트야. 유년 별방과 별빛 네 개, 남은 두 달에 할 일, 정리 체크리스트가 들어 있어. 2027 신년 운세와 12개 별방 전체 해설은 따로야.'
+      ? '2026년 한 해만 짚는 마감 리포트예요. 올해 흐름의 별방과 별빛 네 개, 남은 두 달에 할 일, 정리 체크리스트가 들어 있어요. 2027년 신년 운세와 12개 별방 전체 해설은 따로예요.'
       : '2026년 한 해만 짚는 마감 리포트입니다. 유년 궁과 사화 네 개, 남은 두 달의 할 일, 정리 체크리스트가 포함됩니다. 2027 신년 운세와 12궁 전체 해설은 별도입니다.';
   }
   if (product.id === 'newyear2027') {
     return theme === 'character'
-      ? '2027년 한 해만 짚는 신년 리포트야. 2027년 네 별방과 별빛 네 개, 열두 달에 할 일, 보완 습관까지 들어 있어. 12개 별방 전체 해설은 담기지 않아.'
+      ? '2027년 한 해만 짚는 신년 리포트예요. 2027년의 별방과 별빛 네 개, 열두 달에 할 일, 보완 습관까지 들어 있어요. 12개 별방 전체 해설은 담기지 않아요.'
       : '2027년 한 해만 짚는 신년 리포트입니다. 유년 명궁과 사화 네 개, 열두 달 처방, 보완 원석까지 포함합니다. 명궁·12궁 전체 해설은 포함되지 않습니다.';
   }
   if (product.id === 'basic') {
     return theme === 'character'
-      ? `수호별·돈·사랑·진로·배우자상·돈 새는 장면까지만 핵심으로 짚은 리포트야. 12개 별방 전체 해설과 달마다 처방은 '전체 별 이야기'(${premiumPrice}원)에 들어 있어.`
+      ? `수호별·돈·사랑·진로·배우자상·돈 새는 장면까지만 핵심으로 짚은 리포트예요. 12개 별방 전체 해설과 달마다 처방은 '전체 별 이야기'(${premiumPrice}원)에 들어 있어요.`
       : `명궁·재물·연애·진로·배우자상·돈 새는 장면까지만 핵심으로 짚은 핀셋 리포트입니다. 12궁 전체 해설과 월별 가이드는 프리미엄 리포트(${premiumPrice}원)에 포함됩니다.`;
   }
   if (product.id === 'premium') {
     return theme === 'character'
-      ? `12개 별방 전체 해설과 달마다 처방까지 모두 담긴 리포트야. (${premiumPrice}원)`
+      ? `12개 별방 전체 해설과 달마다 처방까지 모두 담긴 리포트예요. (${premiumPrice}원)`
       : `12궁 전체 해설과 월별 액션 가이드 12개까지 모두 담긴 리포트입니다. (${premiumPrice}원)`;
   }
   if (product.id === 'western') {
     return theme === 'character'
-      ? '태양·달·어센던트, 행성 7개의 자리와 하우스, 12개 하우스 풀이까지 담긴 서양 점성술 리포트야. 동양 자미두수 해설은 들어 있지 않아 — 그건 다른 리포트야!'
+      ? '태양·달·어센던트, 행성 7개의 자리와 하우스, 12개 하우스 풀이까지 담긴 서양 점성술 리포트예요. 동양 자미두수 해설은 들어 있지 않아요 — 그건 다른 리포트예요!'
       : '태양·달·어센던트, 행성 7개의 자리와 하우스, 12하우스 풀이까지 담긴 서양 점성술 리포트입니다. 동양 자미두수 해설은 포함되지 않습니다.';
   }
   if (product.id === 'synastry') {
     return theme === 'character'
-      ? '두 사람 천궁도의 행성을 교차로 맞댄 시너스트리 리포트야. 교차 각 전체와 관계 역학, 부딪히는 장면, 역할 나누기까지 담겨 있어. 한 사람 단독 천궁도 해설은 담기지 않아.'
+      ? '두 사람 천궁도의 행성을 교차로 맞댄 시너스트리 리포트예요. 교차 각 전체와 관계 역학, 부딪히는 장면, 역할 나누기까지 담겨 있어요. 한 사람 단독 천궁도 해설은 담기지 않아요.'
       : '두 사람 천궁도의 행성을 교차로 맞댄 시너스트리 리포트입니다. 교차 각 전체와 관계 역학, 갈등 포인트, 역할 나누기까지 포함합니다. 한 사람 단독 천궁도 해설은 포함되지 않습니다.';
   }
   if (product.id === 'bundle') {
     return theme === 'character'
-      ? '동양 자미두수 12개 별방 전체와 서양 천궁도 전체를 한 번에 여는 리포트야. 두 체계가 같은 곳을 가리킬 때의 교차 해석까지 들어 있어.'
+      ? '동양 자미두수 12개 별방 전체와 서양 천궁도 전체를 한 번에 여는 리포트예요. 두 체계가 같은 곳을 가리킬 때의 교차 해석까지 들어 있어요.'
       : '동양 자미두수 12궁 전체와 서양 출생 천궁도 전체를 함께 여는 리포트입니다. 두 체계가 같은 지점을 가리킬 때의 교차 해석까지 포함합니다.';
   }
   return null;

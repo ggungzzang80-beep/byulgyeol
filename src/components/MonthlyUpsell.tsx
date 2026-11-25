@@ -47,7 +47,7 @@ export default function MonthlyUpsell({ chart, onBundle }: { chart: ChartModel; 
           </h3>
           <p className="mt-2 text-[13.5px] leading-[1.9] t-muted">
             {isCharacter
-              ? '매달 1일, 그달의 흐름을 세 장으로 정리해 보내줄게. 금전·연애·일의 이달 처방과 조심할 날짜, 그리고 딱 하나의 행동을 담아.'
+              ? '매달 1일, 그달의 흐름을 세 장으로 정리해 보내 드려요. 금전·연애·일의 이달 처방과 조심할 날짜, 그리고 딱 하나의 행동을 담아요.'
               : '매달 1일, 그달의 흐름을 세 장으로 정리해 보내드립니다. 금전·연애·일의 이달 처방과 조심할 날짜, 그리고 딱 하나의 행동을 담습니다.'}
           </p>
           <ul className="mt-3 flex-1 space-y-1.5 text-[13px] leading-relaxed t-muted">
@@ -88,14 +88,14 @@ export default function MonthlyUpsell({ chart, onBundle }: { chart: ChartModel; 
             </h3>
             <p className="mt-2 text-[13.5px] leading-[1.9] t-panel-body">
               {isCharacter
-                ? '동양 12개 별방과 서양 출생 차트를 함께 놓고 교차해서 읽어. 두 체계가 같은 곳을 가리킬 때 가장 정확한 문장이 나와.'
+                ? '동양 12개 별방과 서양 출생 차트를 함께 놓고 교차해서 읽어요. 두 체계가 같은 곳을 가리킬 때 가장 정확한 문장이 나와요.'
                 : '동양 12궁과 서양 출생 차트를 함께 놓고 교차해서 읽습니다. 두 체계가 같은 지점을 가리킬 때 가장 정확한 문장이 나옵니다.'}
             </p>
 
             <div className="mt-4 rounded-xl p-3" style={{ background: 'rgba(9,8,18,0.28)', border: '1px solid var(--panel-rule)' }}>
               <p className="text-[12.5px] leading-[1.7] t-panel-faint">
                 {isCharacter
-                  ? '동양 12개 별방 전체와 서양 천궁도 전체를 한 번에 열어. 이미 결제한 금액은 그대로 쓸 수 있어.'
+                  ? '동양 12개 별방 전체와 서양 천궁도 전체를 한 번에 열어요. 이미 결제한 금액은 그대로 쓸 수 있어요.'
                   : '자미두수 12궁 전체 + 서양 천궁도 전체를 한 번에 엽니다. 이미 결제한 금액은 그대로 사용됩니다.'}
               </p>
             </div>

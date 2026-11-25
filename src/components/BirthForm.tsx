@@ -28,7 +28,7 @@ type Props = {
 const WESTERN_FORM = {
   eyebrow: '出生天宮圖 · 무료 계산',
   title: '태어난 하늘의 좌표를 알려주세요',
-  titleChar: '태어난 하늘의 좌표를 알려줘',
+  titleChar: '태어난 하늘의 좌표를 알려 주세요',
   desc: '같은 생년월일시로 태양·달·어센던트와 행성의 하우스를 그립니다.',
   submit: '내 천궁도 열기',
   timeHint: '시간을 모르면 어센던트와 하우스가 정오 기준으로 계산됩니다.',
@@ -93,7 +93,7 @@ export default function BirthForm({ onSubmit, draftRef, variant = 'hero', mode =
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!year || !month || !day) {
-      setError(isCharacter ? '태어난 날을 먼저 알려줘!' : '생년월일을 선택해 주세요.');
+      setError(isCharacter ? '태어난 날을 먼저 알려 주세요!' : '생년월일을 선택해 주세요.');
       return;
     }
     setError(null);
@@ -260,7 +260,7 @@ export default function BirthForm({ onSubmit, draftRef, variant = 'hero', mode =
             {isCharacter ? '별이 뜬 시간' : '태어난 시간'} <span className="opacity-60">(12시진)</span>
           </label>
           <select id="time" className="t-field" value={timeIndex} onChange={(e) => setTimeIndex(e.target.value)}>
-            <option value="">{isCharacter ? '몇 시쯤 태어났는지 알려줘' : '시진을 선택해 주세요'}</option>
+            <option value="">{isCharacter ? '몇 시쯤 태어났는지 알려 주세요' : '시진을 선택해 주세요'}</option>
             {TIME_OPTIONS.map((t) => (
               <option key={t.index} value={t.index}>
                 {t.label} · {t.range}

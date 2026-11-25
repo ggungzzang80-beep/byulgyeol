@@ -19,15 +19,106 @@ import { AMULET_FONTS, estimateWidth, wrapByWidth } from './amuletArt';
 /** 카드 좌표계 — 화면 SVG 540×960, 저장 이미지는 2배(1080×1920) */
 export const LOCK_CARD = { w: 540, h: 960, frame: 24, cx: 270 } as const;
 
-/** 일러스트가 들어가는 창 — 9:16 아트(1080×1683)를 잘림 없이 맞춘 비율 */
+/** 일러스트가 들어가는 창 — 9:16 아트(1080×1920)를 잘림 없이 맞춘 비율 */
 export const LOCK_ART = {
   x: 24,
   y: 24,
   w: 492,
   h: 766,
   r: 18,
-  url: `${import.meta.env.BASE_URL}art/haon-lockscreen.webp`,
 } as const;
+
+/* ------------------------------------------------ 부적 배경 테마(다섯 장면)
+ * 2026-11-25 @kooleumi8 피드백: 부적 배경이 한 장뿐이라 14개 수호별이 모두 같은
+ * 그림을 썼습니다. 하온 + 오드아이 별빛 고양이의 다섯 장면을 준비하고,
+ * 수호별의 기운(색·계절·원소)에 가장 맞는 장면을 자동으로 골라 씁니다.
+ * 화면(SVG)과 저장 PNG(canvas)가 같은 함수를 써서 배경이 어긋나지 않습니다.
+ */
+export type AmuletLockThemeId = 'pavilion' | 'dawn' | 'lotus' | 'plum' | 'observatory';
+
+export type AmuletLockTheme = {
+  id: AmuletLockThemeId;
+  /** 화면에 보여 주는 장면 이름 */
+  label: string;
+  /** 한 줄 설명 — 어떤 기운에 맞는 장면인지 */
+  mood: string;
+  /** public/art 안 파일 이름 */
+  file: string;
+  /** 이 장면이 잘 맞는 수호별(14주성) */
+  stars: string[];
+  /** 위쪽 글자가 읽히도록 덮는 어둠 — 장면마다 밝기가 달라 따로 정합니다. */
+  scrim: { rgb: string; top: number; mid: number; height: number };
+};
+
+export const AMULET_LOCK_THEMES: readonly AmuletLockTheme[] = [
+  {
+    id: 'pavilion',
+    label: '별빛 누각',
+    mood: '남보라 밤하늘과 등불 — 차분하게 빛을 모으는 별',
+    file: 'haon-lockscreen.webp',
+    stars: ['천부', '거문'],
+    scrim: { rgb: '12,9,28', top: 0.64, mid: 0.3, height: 300 },
+  },
+  {
+    id: 'dawn',
+    label: '금빛 새벽 누각',
+    mood: '해가 막 오르는 금빛 — 드러내고 이끄는 별',
+    file: 'haon-lockscreen-dawn.webp',
+    stars: ['태양', '무곡'],
+    scrim: { rgb: '34,20,8', top: 0.78, mid: 0.42, height: 340 },
+  },
+  {
+    id: 'lotus',
+    label: '달빛 연못',
+    mood: '청록 물빛과 연꽃 — 흐르고 품는 별',
+    file: 'haon-lockscreen-lotus.webp',
+    stars: ['천기', '천동', '태음', '천량'],
+    scrim: { rgb: '6,20,28', top: 0.66, mid: 0.32, height: 320 },
+  },
+  {
+    id: 'plum',
+    label: '홍매 봄정원',
+    mood: '붉은 매화와 금빛 — 뜨겁게 피어나는 별',
+    file: 'haon-lockscreen-plum.webp',
+    stars: ['염정', '탐랑', '칠살'],
+    scrim: { rgb: '42,16,12', top: 0.8, mid: 0.46, height: 360 },
+  },
+  {
+    id: 'observatory',
+    label: '천문대의 별',
+    mood: '보랏빛 별자리와 혼천의 — 판을 읽고 바꾸는 별',
+    file: 'haon-lockscreen-observatory.webp',
+    stars: ['자미', '천상', '파군'],
+    scrim: { rgb: '16,10,36', top: 0.6, mid: 0.3, height: 300 },
+  },
+] as const;
+
+/** 오행(수이국 등)별 기본 장면 — 수호별 표에 없을 때의 안전한 기준 */
+const ELEMENT_THEME: Record<string, AmuletLockThemeId> = {
+  수: 'lotus',
+  목: 'plum',
+  화: 'dawn',
+  토: 'dawn',
+  금: 'observatory',
+};
+
+/** 수호별(없으면 오행)로 부적 배경 장면을 고릅니다. */
+export function amuletLockThemeFor(star?: string, fiveElements?: string): AmuletLockTheme {
+  const byStar = AMULET_LOCK_THEMES.find((t) => (star ? t.stars.includes(star) : false));
+  if (byStar) return byStar;
+  const first = (fiveElements ?? '').trim().charAt(0);
+  const fallbackId = ELEMENT_THEME[first] ?? 'pavilion';
+  return AMULET_LOCK_THEMES.find((t) => t.id === fallbackId) ?? AMULET_LOCK_THEMES[0];
+}
+
+export function amuletLockTheme(id?: AmuletLockThemeId): AmuletLockTheme {
+  return AMULET_LOCK_THEMES.find((t) => t.id === id) ?? AMULET_LOCK_THEMES[0];
+}
+
+/** 장면 파일의 배포 경로 (GitHub Pages 서브경로 대응) */
+export function amuletLockArtUrl(theme: AmuletLockTheme): string {
+  return `${import.meta.env.BASE_URL}art/${theme.file}`;
+}
 
 export const LOCK_LAYOUT = {
   brand: { y: 70, size: 24, tracking: 2.4 },
@@ -47,7 +138,7 @@ export const LOCK_LAYOUT = {
 
 /** 카드 안 문구 — 화면·이미지 공용 (지칭 통일: '님' 없이 이름 + 의) */
 export function lockLines(chart: { name: string; primaryStar: string }, content: NewYear2027Content) {
-  const owner = chart.name?.trim() ? `${chart.name.trim()}의 2027 부적` : '나의 2027 부적';
+  const owner = chart.name?.trim() ? `${chart.name.trim()} 님의 2027 부적` : '나의 2027 부적';
   return {
     brand: '별의 속삭임',
     eyebrow: '2027 NEW YEAR AMULET',
@@ -57,7 +148,7 @@ export function lockLines(chart: { name: string; primaryStar: string }, content:
     owner,
     star: `수호별 · ${chart.primaryStar}별`,
     footerDate: '2027. 1. 1 — 12. 31 · 소장용 부적',
-    disclaimer: '효능을 보장하지 않는 소장용 콘텐츠야 · 의료·투자 판단의 근거는 아니야',
+    disclaimer: '효능을 보장하지 않는 소장용 콘텐츠예요 · 의료·투자 판단의 근거는 아니에요',
     seal: '守',
   };
 }
@@ -157,11 +248,12 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
 export async function renderLockscreenAmulet(
   chart: ChartModel,
   content: NewYear2027Content,
+  artTheme: AmuletLockTheme = amuletLockThemeFor(chart.primaryStar, chart.fiveElements),
 ): Promise<string> {
   await ensureFonts();
   const L = LOCK_LAYOUT;
   const T = lockLines(chart, content);
-  const A = LOCK_ART;
+  const A = { ...LOCK_ART, url: amuletLockArtUrl(artTheme) };
 
   const canvas = document.createElement('canvas');
   canvas.width = CW * S;
@@ -196,13 +288,14 @@ export async function renderLockscreenAmulet(
     ctx.fillRect(A.x, A.y, A.w, A.h);
   }
 
-  /* 위쪽 별하늘 — 글자가 읽히도록 살짝 어둡게 */
-  const topShade = ctx.createLinearGradient(0, A.y, 0, A.y + 300);
-  topShade.addColorStop(0, 'rgba(12,9,28,0.62)');
-  topShade.addColorStop(0.6, 'rgba(12,9,28,0.30)');
-  topShade.addColorStop(1, 'rgba(12,9,28,0)');
+  /* 위쪽 하늘 — 글자가 읽히도록 장면 밝기에 맞춰 어둡게 덮습니다 */
+  const scrim = artTheme.scrim;
+  const topShade = ctx.createLinearGradient(0, A.y, 0, A.y + scrim.height);
+  topShade.addColorStop(0, `rgba(${scrim.rgb},${scrim.top})`);
+  topShade.addColorStop(0.62, `rgba(${scrim.rgb},${scrim.mid})`);
+  topShade.addColorStop(1, `rgba(${scrim.rgb},0)`);
   ctx.fillStyle = topShade;
-  ctx.fillRect(A.x, A.y, A.w, 300);
+  ctx.fillRect(A.x, A.y, A.w, scrim.height);
   ctx.restore();
 
   /* 3. 아래 한지 띠 */

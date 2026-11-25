@@ -69,7 +69,7 @@ export default function CompatPreview({ chart, onUpgrade, onClose }: Props) {
 
   const calculate = async () => {
     if (!year || !month || !day) {
-      setError(isCharacter ? '상대방의 태어난 날도 알려줘!' : '상대방의 생년월일을 선택해 주세요.');
+      setError(isCharacter ? '상대방의 태어난 날도 알려 주세요!' : '상대방의 생년월일을 선택해 주세요.');
       return;
     }
     setError(null);
@@ -82,7 +82,7 @@ export default function CompatPreview({ chart, onUpgrade, onClose }: Props) {
       setStage('form');
       setError(
         isCharacter
-          ? '상대방의 별을 그리지 못했어. 생년월일을 확인해 줘!'
+          ? '상대방의 별을 그리지 못했어요. 생년월일을 확인해 주세요!'
           : '상대방의 명반을 계산하지 못했습니다. 생년월일을 확인해 주세요.',
       );
     }
@@ -123,7 +123,7 @@ export default function CompatPreview({ chart, onUpgrade, onClose }: Props) {
             </p>
             <h3 className="t-title mt-2 text-[20px] leading-snug">
               {chart.name ? (isCharacter ? `${chart.name}과 ` : `${chart.name} 님과 `) : ''}
-              {isCharacter ? '누구의 궁합을 볼까?' : '두 사람의 궁합'}
+              {isCharacter ? '누구의 궁합을 볼까요?' : '두 사람의 궁합'}
             </h3>
           </div>
           <button
@@ -224,7 +224,7 @@ export default function CompatPreview({ chart, onUpgrade, onClose }: Props) {
               </div>
               <p className="mt-2 text-[13px] leading-[1.7] t-faint">
                 {isCharacter
-                  ? '생년월일만 있으면 바로 점수가 나와. 시간을 모르면 정오 기준으로 계산해.'
+                  ? '생년월일만 있으면 바로 점수가 나와요. 시간을 모르면 정오 기준으로 계산해요.'
                   : '생년월일만 있으면 바로 계산됩니다. 시간을 모르면 정오 기준으로 계산합니다.'}
               </p>
               {error && (

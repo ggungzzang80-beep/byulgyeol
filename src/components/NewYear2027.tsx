@@ -7,6 +7,12 @@ import { findProduct, productPrice, productUnlockCta } from '../lib/products';
 import { useTheme, THEME_ART } from '../lib/theme';
 import { mutagenLight, roomOf } from '../lib/friendly';
 import { amuletPalette } from '../lib/amuletArt';
+import {
+  AMULET_LOCK_THEMES,
+  amuletLockTheme,
+  amuletLockThemeFor,
+  type AmuletLockThemeId,
+} from '../lib/amuletLockscreen';
 import AmuletCard2027 from './AmuletCard2027';
 import FreeOpenMeter from './FreeOpenMeter';
 import StoneGoods2027 from './StoneGoods2027';
@@ -27,6 +33,10 @@ export default function NewYear2027({ chart, unlocked, onUnlock }: Props) {
   const price = productPrice(findProduct('newyear2027'), theme);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  /* 부적 배경 — 수호별에 맞는 장면을 기본으로 고르고, 원하면 직접 바꿀 수 있습니다. */
+  const autoTheme = amuletLockThemeFor(chart.primaryStar, chart.fiveElements);
+  const [artThemeId, setArtThemeId] = useState<AmuletLockThemeId>(autoTheme.id);
+  const artTheme = amuletLockTheme(artThemeId);
 
   const flash = (msg: string) => {
     setToast(msg);
@@ -36,18 +46,18 @@ export default function NewYear2027({ chart, unlocked, onUnlock }: Props) {
   const saveCard = async () => {
     setSaving(true);
     try {
-      const url = await renderAmulet2027(chart, content, theme);
+      const url = await renderAmulet2027(chart, content, theme, artTheme);
       downloadAmulet(
         url,
         `${isCharacter ? '별의속삭임' : '자미원'}_2027정미년_부적_${chart.primaryStar}.png`,
       );
       flash(
         isCharacter
-          ? '2027 부적 카드를 저장했어! (1080×1920 · 폰 잠금화면 비율)'
+          ? '2027 부적 카드를 저장했어요! (1080×1920 · 폰 잠금화면 비율)'
           : '2027 부적 카드를 저장했습니다. (1080×1620)',
       );
     } catch {
-      flash(isCharacter ? '카드를 저장하지 못했어. 한 번만 다시 해볼게!' : '카드 저장에 실패했습니다. 다시 시도해 주세요.');
+      flash(isCharacter ? '카드를 저장하지 못했어요. 한 번만 다시 해 볼게요.' : '카드 저장에 실패했습니다. 다시 시도해 주세요.');
     } finally {
       setSaving(false);
     }
@@ -61,9 +71,9 @@ export default function NewYear2027({ chart, unlocked, onUnlock }: Props) {
         return;
       }
       await navigator.clipboard.writeText(text);
-      flash(isCharacter ? '부적 문구를 복사했어. 원하는 곳에 붙여넣어 줘!' : '부적 문구를 복사했습니다.');
+      flash(isCharacter ? '부적 문구를 복사했어요. 원하는 곳에 붙여넣어 주세요.' : '부적 문구를 복사했습니다.');
     } catch {
-      flash(isCharacter ? '공유를 그만뒀어.' : '공유를 취소했습니다.');
+      flash(isCharacter ? '공유를 그만두었어요.' : '공유를 취소했습니다.');
     }
   };
 
@@ -79,7 +89,7 @@ export default function NewYear2027({ chart, unlocked, onUnlock }: Props) {
       <h2 className="t-display mt-3 text-[23px] leading-[1.4] sm:text-[27px]">
         {isCharacter ? (
           <>
-            2027 정미년, 네 몫의 부적
+            2027 정미년, 나를 위한 부적
             <br className="sm:hidden" /> 한 장
           </>
         ) : (
@@ -88,7 +98,7 @@ export default function NewYear2027({ chart, unlocked, onUnlock }: Props) {
       </h2>
       <p className="mt-2 max-w-[440px] text-[13.5px] leading-[1.85] t-muted">
         {isCharacter
-          ? '수호별과 2027년의 별빛으로 그린 소장용 부적이야. 저장해서 두고 봐도 되고, 핵심 흐름만 먼저 볼 수도 있어.'
+          ? '수호별과 2027년의 별빛으로 그린 소장용 부적이에요. 저장해서 두고 보셔도 되고, 핵심 흐름만 먼저 볼 수도 있어요.'
           : '명궁의 주성과 2027년 유년 사화로 그린 소장용 부적입니다. 저장해 두고 보시거나, 핵심 흐름만 먼저 확인하실 수 있습니다.'}
       </p>
 
@@ -101,13 +111,49 @@ export default function NewYear2027({ chart, unlocked, onUnlock }: Props) {
                 <img src={THEME_ART.character.greeting} alt="" className="h-full w-full object-cover" />
               </span>
               <p className="text-[13px] leading-[1.7] t-muted">
-                <b style={{ color: 'var(--accent-deep)' }}>하온</b>이 네 수호별로 그린 부적이야. 저장은 무료야.
+                <b style={{ color: 'var(--accent-deep)' }}>하온</b>이 수호별로 그린 부적이에요. 저장은 무료예요.
               </p>
             </div>
           )}
           <div className="overflow-hidden rounded-[22px]" style={{ boxShadow: palette.shadow }}>
-            <AmuletCard2027 chart={chart} content={content} theme={theme} />
+            <AmuletCard2027 chart={chart} content={content} theme={theme} artTheme={isCharacter ? artTheme : undefined} />
           </div>
+
+          {isCharacter && (
+            <div className="mt-3 rounded-2xl px-3.5 py-3" style={{ background: 'var(--field-bg)', border: '1px solid var(--line)' }}>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5">
+                <p className="text-[12.5px] font-semibold tracking-[0.1em]" style={{ color: 'var(--accent-deep)' }}>
+                  부적 배경 · {artTheme.label}
+                </p>
+                <p className="text-[12px] t-faint">
+                  {chart.primaryStar}별에 맞춰 자동으로 골랐어요
+                </p>
+              </div>
+              <p className="mt-0.5 text-[12.5px] leading-[1.6] t-muted">{artTheme.mood}</p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {AMULET_LOCK_THEMES.map((t) => {
+                  const on = t.id === artThemeId;
+                  return (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => setArtThemeId(t.id)}
+                      aria-pressed={on}
+                      className="rounded-full px-2.5 py-1 text-[12.5px] transition"
+                      style={{
+                        background: on ? 'var(--accent)' : 'transparent',
+                        color: on ? '#fff' : 'var(--muted)',
+                        border: `1px solid ${on ? 'var(--accent)' : 'var(--line-strong)'}`,
+                      }}
+                    >
+                      {t.label}
+                      {t.id === autoTheme.id ? ' ✧' : ''}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div className="mt-2.5 flex flex-wrap gap-2">
             <button onClick={saveCard} disabled={saving} className="t-btn t-btn-primary !px-4 !py-2.5 text-[13.5px]">

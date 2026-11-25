@@ -73,7 +73,7 @@ export default function SynastryPreview({ model, onUpgrade, onClose }: Props) {
 
   const calculate = async () => {
     if (!year || !month || !day) {
-      setError(isCharacter ? '상대방의 태어난 날도 알려줘!' : '상대방의 생년월일을 선택해 주세요.');
+      setError(isCharacter ? '상대방의 태어난 날도 알려 주세요!' : '상대방의 생년월일을 선택해 주세요.');
       return;
     }
     setError(null);
@@ -86,7 +86,7 @@ export default function SynastryPreview({ model, onUpgrade, onClose }: Props) {
       setStage('form');
       setError(
         isCharacter
-          ? '상대방의 하늘을 그리지 못했어. 생년월일을 확인해 줘!'
+          ? '상대방의 하늘을 그리지 못했어요. 생년월일을 확인해 주세요!'
           : '상대방의 천궁도를 계산하지 못했습니다. 생년월일을 확인해 주세요.',
       );
     }
@@ -125,7 +125,7 @@ export default function SynastryPreview({ model, onUpgrade, onClose }: Props) {
             </p>
             <h3 className="t-title mt-2 text-[20px] leading-snug">
               {model.name ? `${model.name} 님과 ` : ''}
-              {isCharacter ? '누구의 궁합을 볼까?' : '누구와의 시너스트리인가요?'}
+              {isCharacter ? '누구의 궁합을 볼까요?' : '누구와의 시너스트리인가요?'}
             </h3>
           </div>
           <button

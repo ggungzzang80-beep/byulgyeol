@@ -166,8 +166,8 @@ export default function CompatReport({ chart, partner, onBack, onPremium }: Prop
               <p className="mt-2 text-[14.5px] leading-[1.9] t-body">
                 {isCharacter ? (
                   <>
-                    {nameA}의 약점은 {pa.caution} {nameB}의 약점은 {pb.caution} 이 두 가지가 같은 날 겹치면, 사소한
-                    말이 오래 남아.
+                    {nameA} 님의 약점은 {pa.caution} {nameB} 님의 약점은 {pb.caution} 이 두 가지가 같은 날 겹치면, 사소한
+                    말이 오래 남아요.
                   </>
                 ) : (
                   <>
@@ -188,8 +188,8 @@ export default function CompatReport({ chart, partner, onBack, onPremium }: Prop
               <p className="mt-2 text-[14.5px] leading-[1.9] t-body">
                 {isCharacter ? (
                   <>
-                    {nameA}의 무기는 {pa.style}, {nameB}의 무기는 {pb.style}이야. 이 두 힘이 같은 방향을 볼 때 관계의
-                    속도가 가장 좋아져.
+                    {nameA} 님의 무기는 {pa.style}, {nameB} 님의 무기는 {pb.style}이에요. 이 두 힘이 같은 방향을 볼 때 관계의
+                    속도가 가장 좋아져요.
                   </>
                 ) : (
                   <>
@@ -218,7 +218,7 @@ export default function CompatReport({ chart, partner, onBack, onPremium }: Prop
               return (
                 <div key={n} className="t-card p-6">
                   <div className="flex items-baseline justify-between gap-2">
-                    <h3 className="t-title text-[18px]">{n}의 부처궁</h3>
+                    <h3 className="t-title text-[18px]">{n} 님의 사랑·인연의 방</h3>
                     <span className="num text-[12.5px] t-faint">
                       {palace.stem}
                       {palace.branch} · 지수 {palaceScore(palace)}
@@ -237,10 +237,10 @@ export default function CompatReport({ chart, partner, onBack, onPremium }: Prop
                         </span>
                       ))
                     ) : (
-                      <span className="text-[13px] t-faint">주성 없음</span>
+                      <span className="text-[13px] t-faint">{isCharacter ? '메인 별 없음' : '주성 없음'}</span>
                     )}
                   </div>
-                  <p className="mt-3 text-[14px] leading-[1.9] t-muted">{palaceReadings(palace).paragraphs[0]}</p>
+                  <p className="mt-3 text-[14px] leading-[1.9] t-muted">{palaceReadings(palace, isCharacter ? 'casual' : 'formal').paragraphs[0]}</p>
                   <p className="mt-2 text-[14px] leading-[1.9] t-body">{n === nameA ? pa.love : pb.love}</p>
                 </div>
               );
@@ -255,7 +255,7 @@ export default function CompatReport({ chart, partner, onBack, onPremium }: Prop
               <p className="text-[12.5px] tracking-[0.22em] t-panel-accent">BOTTOM LINE</p>
               <p className="t-panel-title mt-4 text-[19px] leading-[1.8] sm:text-[21px]">
                 이 관계의 성패는 “누가 더 맞는가”가 아니라 “언제 말을 멈출 수 있는가”에 달려 있습니다.
-                <br className="hidden sm:block" /> {isCharacter ? `${nameA}과 ${nameB}가` : `${nameA} 님과 ${nameB} 님이`} 각자의 속도를 인정하는 순간, 궁합 지수는
+                <br className="hidden sm:block" /> {isCharacter ? `${nameA} 님과 ${nameB} 님이` : `${nameA} 님과 ${nameB} 님이`} 각자의 속도를 인정하는 순간, 궁합 지수는
                 숫자보다 훨씬 좋아집니다.
               </p>
               <div className="mt-6 flex flex-wrap gap-2.5 no-print">
@@ -267,7 +267,7 @@ export default function CompatReport({ chart, partner, onBack, onPremium }: Prop
                   PDF로 저장
                 </button>
                 <button onClick={onPremium} className="t-btn t-btn-onpanel !px-4 !py-2.5 text-[13.5px]">
-                  내 12궁 프리미엄 보기
+                  {isCharacter ? '전체 별 이야기 보기' : '내 12궁 프리미엄 보기'}
                 </button>
               </div>
             </div>

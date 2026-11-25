@@ -166,8 +166,8 @@ export function branchRoom(stem: string, branch: string, index: number): string 
   return `${stem}${branch}(${index + 1}번째) 방`;
 }
 
-/** 캐릭터 테마에서 '님' 없이 부르는 이름 */
+/** 캐릭터 테마에서 이름을 존중해 부르는 표현 — '이름 님의' */
 export function possessiveName(name?: string): string {
   const n = (name ?? '').trim();
-  return n ? `${n}의` : '나의';
+  return n ? `${n} 님의` : '나의';
 }

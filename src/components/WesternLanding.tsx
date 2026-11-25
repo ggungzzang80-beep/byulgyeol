@@ -28,9 +28,9 @@ export default function WesternLanding({ onSubmit, onProduct }: Props) {
   const t = {
     eyebrow: 'WESTERN · 出生天宮圖',
     h1a: isCharacter ? '태어난 하늘 그대로,' : '태어난 하늘의 좌표가',
-    h1b: isCharacter ? '네 별자리가 궁금해?' : '성격의 지도가 됩니다',
+    h1b: isCharacter ? '별자리가 궁금하신가요?' : '성격의 지도가 됩니다',
     desc: isCharacter
-      ? '생년월일시로 태양·달·어센던트, 그리고 행성 7개의 하우스를 그려. 자미두수와는 다른 체계야 — 12개 별방이 아니라 출생 천궁도 하나로 읽어.'
+      ? '생년월일시로 태양·달·어센던트, 그리고 행성 7개의 하우스를 그려요. 자미두수와는 다른 체계예요 — 12개 별방이 아니라 출생 천궁도 하나로 읽어요.'
       : '생년월일시로 태양·달·어센던트와 행성 7개의 하우스를 계산합니다. 자미두수와는 다른 체계 — 12궁 명반이 아니라 출생 천궁도(네이탈 차트)로 읽습니다.',
     cta: isCharacter ? '내 천궁도 열기' : '무료로 천궁도 보기',
   };
@@ -95,7 +95,7 @@ export default function WesternLanding({ onSubmit, onProduct }: Props) {
               label: '태양 자리',
               means: '나의 중심과 의지',
               body: isCharacter
-                ? '겉으로 보이는 성격이 아니라, 네가 결국 어떤 사람이 되려는지.'
+                ? '겉으로 보이는 성격이 아니라, 결국 어떤 사람이 되려는지를 보여줘요.'
                 : '겉으로 드러난 성격이 아니라, 결국 어떤 사람이 되려는지.',
             },
             {
@@ -103,7 +103,7 @@ export default function WesternLanding({ onSubmit, onProduct }: Props) {
               label: '달 자리',
               means: '감정과 안전 욕구',
               body: isCharacter
-                ? '혼자 있을 때의 기분, 위로받고 싶은 방식이 여기에 있어.'
+                ? '혼자 있을 때의 기분, 위로받고 싶은 방식이 여기에 있어요.'
                 : '혼자 있을 때의 기분과 위로받는 방식이 여기에 있습니다.',
             },
             {
@@ -111,7 +111,7 @@ export default function WesternLanding({ onSubmit, onProduct }: Props) {
               label: '어센던트',
               means: '첫인상과 시작 방식',
               body: isCharacter
-                ? '처음 만난 사람이 느끼는 너의 온도. 태어난 시간까지 알아야 정확해져.'
+                ? '처음 만난 사람이 느끼는 나의 온도예요. 태어난 시간까지 알아야 정확해져요.'
                 : '처음 만난 사람이 느끼는 인상. 태어난 시간까지 알아야 정확해집니다.',
             },
           ].map((c) => (
@@ -137,9 +137,9 @@ export default function WesternLanding({ onSubmit, onProduct }: Props) {
             <h2 className="t-display mt-3 text-[23px] leading-[1.5]">
               {isCharacter ? (
                 <>
-                  하늘은 이미 그려져 있어.
+                  하늘은 이미 그려져 있어요.
                   <br />
-                  <span style={{ color: 'var(--accent)' }}>좌표만</span> 알려줘.
+                  <span style={{ color: 'var(--accent)' }}>좌표만</span> 알려 주세요.
                 </>
               ) : (
                 <>
@@ -151,7 +151,7 @@ export default function WesternLanding({ onSubmit, onProduct }: Props) {
             </h2>
             <p className="mt-3 max-w-[330px] text-[14px] leading-[1.9] t-muted">
               {isCharacter
-                ? '자미두수와 같은 생년월일시를 써서, 이번엔 서양 방식으로 다시 그려. 태어난 시간을 모르면 어센던트는 정오 기준으로 계산돼.'
+                ? '자미두수와 같은 생년월일시를 써서, 이번에는 서양 방식으로 다시 그려요. 태어난 시간을 모르면 어센던트는 정오 기준으로 계산돼요.'
                 : '자미두수와 같은 생년월일시를 사용하되, 계산과 해석은 서양 방식으로 다시 합니다. 시간을 모르면 어센던트는 정오 기준입니다.'}
             </p>
             <div className="mt-5 space-y-2.5">
@@ -188,12 +188,23 @@ export default function WesternLanding({ onSubmit, onProduct }: Props) {
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl p-4" style={{ background: 'var(--field-bg)', border: '1px solid var(--line)' }}>
               <p className="text-[12.5px] tracking-[0.16em] t-faint">東洋 · 자미두수</p>
-              <p className="t-title mt-1.5 text-[16px]">12궁 명반 · 14주성</p>
+              <p className="t-title mt-1.5 text-[16px]">{isCharacter ? '12개 별방 · 14개의 별' : '12궁 명반 · 14주성'}</p>
               <ul className="mt-2 space-y-1 text-[13px] leading-[1.75] t-muted">
-                <li>· 생년월일시로 12칸 명반을 세움</li>
-                <li>· 별(주성)이 앉은 자리로 읽음</li>
-                <li>· 사화·대한·유년의 흐름</li>
-                <li>· 해석 단위: 명궁·재백궁·부처궁 같은 12궁</li>
+                {isCharacter ? (
+                  <>
+                    <li>· 생년월일시로 열두 칸 별지도를 세움</li>
+                    <li>· 별이 앉은 방으로 읽음</li>
+                    <li>· 별빛 네 개 · 10년 흐름 · 올해 흐름</li>
+                    <li>· 해석 단위: 나라는 방·돈의 방·사랑의 방 같은 12개 별방</li>
+                  </>
+                ) : (
+                  <>
+                    <li>· 생년월일시로 12칸 명반을 세움</li>
+                    <li>· 별(주성)이 앉은 자리로 읽음</li>
+                    <li>· 사화·대한·유년의 흐름</li>
+                    <li>· 해석 단위: 명궁·재백궁·부처궁 같은 12궁</li>
+                  </>
+                )}
               </ul>
             </div>
             <div className="rounded-2xl p-4" style={{ background: 'var(--accent-soft)', border: '1px solid var(--line-strong)' }}>
@@ -223,7 +234,7 @@ export default function WesternLanding({ onSubmit, onProduct }: Props) {
           {isCharacter ? '서양 점성술 리포트' : '서양 점성술 리포트 세 가지'}
         </h2>
         <p className="mt-2 max-w-[380px] text-[14px] leading-[1.9] t-muted">
-          자미두수 리포트와는 별개 상품입니다. 여기서 결제하는 것은 <b style={{ color: 'var(--accent-deep)' }}>천궁도</b> 리포트예요.
+          자미두수 리포트와는 별개 상품이에요. 여기서 결제하는 것은 <b style={{ color: 'var(--accent-deep)' }}>천궁도</b> 리포트예요.
         </p>
 
         <div className="mt-5 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">

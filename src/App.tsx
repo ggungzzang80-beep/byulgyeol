@@ -192,7 +192,7 @@ export default function App() {
       document.getElementById('western-chart')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       flash(
         theme === 'character'
-          ? '먼저 네 천궁도를 그리면 상대와의 궁합 점수를 바로 볼 수 있어!'
+          ? '먼저 내 천궁도를 그리면 상대와의 궁합 점수를 바로 볼 수 있어요!'
           : '먼저 내 천궁도를 열면 두 사람의 궁합 점수를 무료로 볼 수 있습니다.',
       );
       return;
@@ -208,7 +208,7 @@ export default function App() {
       else setLandingStep(1);
       flash(
         theme === 'character'
-          ? '먼저 네 별지도를 그리면 궁합 점수를 바로 볼 수 있어!'
+          ? '먼저 내 별지도를 그리면 궁합 점수를 바로 볼 수 있어요!'
           : '먼저 명반을 열면 궁합 점수를 무료로 볼 수 있습니다.',
       );
       return;
@@ -229,7 +229,7 @@ export default function App() {
     else setLandingStep(1);
     flash(
       theme === 'character'
-        ? '먼저 태어난 순간을 알려주면, 바로 이어서 열어줄게!'
+        ? '먼저 태어난 순간을 알려 주시면, 바로 이어서 열어 드릴게요!'
         : '먼저 생년월일시를 입력하면 바로 이어서 열어드리겠습니다.',
     );
   };
@@ -305,7 +305,7 @@ export default function App() {
           setPartner(await buildChart(partnerInput));
           setView('compat');
         } catch {
-          flash('상대방 명반을 계산하지 못했어요. 생년월일을 확인해 주세요.');
+          flash(theme === 'character' ? '상대방의 별지도를 계산하지 못했어요. 생년월일을 확인해 주세요.' : '상대방의 명반을 계산하지 못했습니다. 생년월일을 확인해 주세요.');
         }
         return;
       }
@@ -481,7 +481,7 @@ export default function App() {
     }, 420);
     flash(
       theme === 'character'
-        ? '생년월일만 알려주면 2027 부적을 바로 그려줄게!'
+        ? '생년월일만 알려 주시면 2027 부적을 바로 그려 드릴게요!'
         : '생년월일을 입력하시면 2027 부적을 바로 그려드립니다.',
     );
   };

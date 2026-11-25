@@ -54,7 +54,7 @@ export function stoneGoods(stone: StoneSpec, theme: 'mystic' | 'character'): Sto
       name: '2027 정미년 금박 부적 참',
       material: '황동 · 금박 압인 · 4cm',
       detail: c
-        ? '가방이나 파우치에 다는 손바닥 크기 부적. 부적 카드와 같은 문양이 새겨져 있어.'
+        ? '가방이나 파우치에 다는 손바닥 크기 부적이에요. 부적 카드와 같은 문양이 새겨져 있어요.'
         : '가방이나 파우치에 다는 손바닥 크기 부적입니다. 부적 카드와 같은 문양이 새겨집니다.',
       care: c
         ? '물과 땀에 약해. 닦아서 파우치에 넣어 두면 오래가.'
@@ -69,7 +69,7 @@ export function stoneGoods(stone: StoneSpec, theme: 'mystic' | 'character'): Sto
       detail: c
         ? '내 수호별 문양과 이니셜을 새긴 키링. 가방·파우치에 달아 두면 좋아.'
         : '내 수호별 문양과 이니셜을 새긴 키링입니다. 가방·파우치에 달아 두십시오.',
-      care: c ? '직사광선을 피해 보관해.' : '직사광선을 피해 보관하십시오.',
+      care: c ? '직사광선을 피해 보관해 주세요.' : '직사광선을 피해 보관하십시오.',
       price: 9900,
     },
   ];

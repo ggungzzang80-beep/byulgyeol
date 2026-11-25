@@ -497,15 +497,15 @@ export function palaceReadings(
         .replace('{room}', isCasual ? roomOf(palace.name) : palace.name)
         .replace('{style}', profile.style)
     : isCasual
-      ? `${roomOf(palace.name)}에는 메인 별이 앉지 않았어. 대신 옆 방의 별이 ${profile.style}으로 이 자리를 채워.`
+      ? `${roomOf(palace.name)}에는 메인 별이 앉지 않았어요. 대신 옆 방의 별이 ${profile.style}으로 이 자리를 채워요.`
       : `${palace.name}에는 주성이 앉지 않았습니다. 대신 옆 궁의 별이 ${profile.style}으로 이 자리를 채웁니다.`;
 
   const second = palace.major.length
     ? isCasual
-      ? `${profile.identity}의 결이 이 방에서 특히 또렷해. ${body.reads[0]}`
+      ? `${profile.identity}의 결이 이 방에서 특히 또렷해요. ${body.reads[0]}`
       : `${profile.identity}의 결이 이 궁에서 특히 또렷합니다. ${body.reads[0]}`
     : isCasual
-      ? `${body.reads[0]} 비어 있다는 건 힘이 없다는 뜻이 아니라, 옆 방의 영향을 그대로 받는다는 뜻이야.`
+      ? `${body.reads[0]} 비어 있다는 것은 힘이 없다는 뜻이 아니라, 옆 방의 영향을 그대로 받는다는 뜻이에요.`
       : `${body.reads[0]} 비어 있다는 것은 힘이 없다는 뜻이 아니라, 옆 궁의 영향을 그대로 받는다는 뜻입니다.`;
 
   const thirdParts: string[] = [];
@@ -520,7 +520,7 @@ export function palaceReadings(
     const m = palace.major.find((s) => s.mutagen)!;
     thirdParts.push(
       isCasual
-        ? `${m.name}별에 ${mutagenLight(m.mutagen)}이 붙었어. ${mutagenPhrase(m.mutagen!, tone)}`
+        ? `${m.name}별에 ${mutagenLight(m.mutagen)}이 붙었어요. ${mutagenPhrase(m.mutagen!, tone)}`
         : `${m.name}성에 ${m.mutagen}${josa(m.mutagen!, '이', '가')} 붙어 ${mutagenPhrase(m.mutagen!, tone)}`,
     );
   }
@@ -535,7 +535,7 @@ export function palaceReadings(
   const concrete =
     palace.name === '명궁'
       ? isCasual
-        ? `연애에서 끌리는 타입은 분명해. ${deep.loveType}`
+        ? `연애에서 끌리는 타입은 분명해요. ${deep.loveType}`
         : `연애에서 끌리는 타입은 분명합니다. ${deep.loveType}`
       : palace.name === '재백궁'
         ? isCasual
@@ -543,7 +543,7 @@ export function palaceReadings(
           : `돈이 새는 구체적인 장면 — ${deep.moneyLeak}`
         : palace.name === '관록궁'
           ? isCasual
-            ? `실제로 맞는 직업군은 ${deep.careers.join(' · ')}. 전공은 ${deep.majors.join('·')} 쪽이 힘을 받아.`
+            ? `실제로 맞는 직업군은 ${deep.careers.join(' · ')}. 전공은 ${deep.majors.join('·')} 쪽이 힘을 받아요.`
             : `실제로 맞는 직업군은 ${deep.careers.join(' · ')}. 전공은 ${deep.majors.join('·')} 쪽이 힘을 받습니다.`
           : palace.name === '부처궁'
             ? isCasual
@@ -570,16 +570,16 @@ function brightnessPhrase(b: string, tone: Tone = 'formal'): string {
     함: '힘이 눌린 자리라 서두르기보다 때를 기다리는 편이 낫습니다',
   };
   const casual: Record<string, string> = {
-    묘: '이 방의 장점이 그대로 드러나는 자리야',
-    왕: '기세가 살아 있어서 밀어붙일수록 결과가 커져',
-    득: '무난하게 힘을 받아서 큰 무리 없이 굴러가',
-    리: '조건이 맞을 때만 빛나니까 환경을 고르는 게 중요해',
-    평: '평범하게 작동해. 특별한 기대보다 꾸준함이 답이야',
-    불: '힘이 조금 눌려 있어서 다른 별의 도움이 필요해',
-    함: '힘이 눌린 자리라 서두르기보다 때를 기다리는 편이 나아',
+    묘: '이 방의 장점이 그대로 드러나는 자리예요',
+    왕: '기세가 살아 있어서 밀어붙일수록 결과가 커져요',
+    득: '무난하게 힘을 받아서 큰 무리 없이 굴러가요',
+    리: '조건이 맞을 때만 빛나니까 환경을 고르는 것이 중요해요',
+    평: '평범하게 작동해요. 특별한 기대보다 꾸준함이 답이에요',
+    불: '힘이 조금 눌려 있어서 다른 별의 도움이 필요해요',
+    함: '힘이 눌린 자리라 서두르기보다 때를 기다리는 편이 나아요',
   };
   const table = tone === 'casual' ? casual : formal;
-  return table[b] ?? (tone === 'casual' ? '무난하게 작동해' : '무난하게 작동합니다');
+  return table[b] ?? (tone === 'casual' ? '무난하게 작동해요' : '무난하게 작동합니다');
 }
 
 /** 사화 문구 — 말투별 */
@@ -591,10 +591,10 @@ function mutagenPhrase(m: string, tone: Tone = 'formal'): string {
     화기: '집착과 피로가 몰립니다. 정리할 때 길이 열립니다.',
   };
   const casual: Record<string, string> = {
-    화록: '먼저 손을 뻗을수록 남는 게 커.',
-    화권: '다만 밀어붙일수록 반발도 커져.',
-    화과: '기록하고 알린 만큼 돌아와.',
-    화기: '미련을 정리할 때 길이 열려.',
+    화록: '먼저 손을 뻗을수록 남는 것이 커져요.',
+    화권: '다만 밀어붙일수록 반발도 커져요.',
+    화과: '기록하고 알린 만큼 돌아와요.',
+    화기: '미련을 정리할 때 길이 열려요.',
   };
   const table = tone === 'casual' ? casual : formal;
   return table[m] ?? '';
@@ -614,10 +614,10 @@ export function buildTeaser(chart: ChartModel, tone: Tone = 'formal'): { money: 
 
   const moneyExtra = isCasual
     ? moneyScore >= 70
-      ? '다만 지금은 들어오는 길이 열려 있는 만큼, 새는 곳을 막지 않으면 손에 남는 게 없어.'
+      ? '다만 지금은 들어오는 길이 열려 있는 만큼, 새는 곳을 막지 않으면 손에 남는 것이 없어요.'
       : moneyScore <= 45
-        ? '올해는 벌기보다 지키는 해야. 큰 지출은 반드시 하루 두고 결정해.'
-        : '올해는 크게 벌지도 잃지도 않는 해야. 습관을 정리하면 다음 해가 달라져.'
+        ? '올해는 벌기보다 지키는 해예요. 큰 지출은 반드시 하루를 두고 결정하세요.'
+        : '올해는 크게 벌지도 잃지도 않는 해예요. 습관을 정리하면 다음 해가 달라져요.'
     : moneyScore >= 70
       ? '다만 지금은 들어오는 길이 열려 있는 만큼, 새는 곳을 막지 않으면 손에 남는 것이 없습니다.'
       : moneyScore <= 45
@@ -626,10 +626,10 @@ export function buildTeaser(chart: ChartModel, tone: Tone = 'formal'): { money: 
 
   const loveExtra = isCasual
     ? loveScore >= 70
-      ? '다만 확신을 요구할수록 상대는 물러서. 속도를 반씩 나누는 게 관건이야.'
+      ? '다만 확신을 요구할수록 상대는 물러서요. 속도를 반씩 나누는 것이 관건이에요.'
       : loveScore <= 45
-        ? '올해는 관계의 온도가 낮게 유지돼. 새로 시작하기보다 이미 있는 관계를 돌봐.'
-        : '올해는 관계가 정체되는 해야. 같은 자리에서 반복되는 패턴을 알아차리는 게 먼저야.'
+        ? '올해는 관계의 온도가 낮게 유지돼요. 새로 시작하기보다 이미 있는 관계를 돌봐 주세요.'
+        : '올해는 관계가 정체되는 해예요. 같은 자리에서 반복되는 패턴을 알아차리는 것이 먼저예요.'
     : loveScore >= 70
       ? '다만 확신을 요구할수록 상대는 물러섭니다. 속도를 반씩 나누는 것이 관건입니다.'
       : loveScore <= 45

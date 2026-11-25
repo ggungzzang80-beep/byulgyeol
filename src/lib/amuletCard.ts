@@ -11,7 +11,7 @@
  * - 미스틱(자미원)       : 밤 한지(먹빛 남색·금박·별자리 새김)
  */
 import type { ChartModel } from './chart';
-import { renderLockscreenAmulet } from './amuletLockscreen';
+import { amuletLockThemeFor, renderLockscreenAmulet, type AmuletLockTheme } from './amuletLockscreen';
 import type { NewYear2027Content } from './newyear2027';
 import { drawStarEmblem, starVisual } from './starPalette';
 import { STAR_HANJA } from './terms';
@@ -121,10 +121,13 @@ export async function renderAmulet2027(
   chart: ChartModel,
   content: NewYear2027Content,
   theme: ThemeId = 'character',
+  artTheme?: AmuletLockTheme,
 ): Promise<string> {
   /* 별의 속삭임(캐릭터)은 9:16(1080×1920) 잠금화면 카드로 저장합니다.
      자미원(미스틱)은 기존 540×810 카드 그대로입니다. (2026-11-25 피드백 6번) */
-  if (theme === 'character') return renderLockscreenAmulet(chart, content);
+  if (theme === 'character') {
+    return renderLockscreenAmulet(chart, content, artTheme ?? amuletLockThemeFor(chart.primaryStar, chart.fiveElements));
+  }
 
   await ensureFonts();
 

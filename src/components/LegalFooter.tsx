@@ -66,7 +66,7 @@ export default function LegalFooter() {
           <div className="mt-4 flex flex-col gap-1 text-[12.5px] leading-[1.8] t-faint">
             <p>
               {isCharacter
-                ? '결제는 페이앱(PayApp)을 통해 처리되고, 디지털 리포트는 결제 확인 즉시 열려 청약 철회가 제한돼요. 자세한 기준은 환불 정책에서 확인할 수 있어.'
+                ? '결제는 페이앱(PayApp)을 통해 처리되고, 디지털 리포트는 결제 확인 즉시 열려 청약 철회가 제한돼요. 자세한 기준은 환불 정책에서 확인할 수 있어요.'
                 : '결제는 페이앱(PayApp)을 통해 처리됩니다. 디지털 리포트는 결제 확인 즉시 제공되어 청약 철회가 제한되며, 자세한 기준은 환불 및 청약철회 정책을 따릅니다.'}
             </p>
             <p>

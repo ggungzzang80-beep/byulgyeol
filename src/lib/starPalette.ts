@@ -190,7 +190,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}jami.webp`,
     guardianFocus: 'center 10%',
     guardianName: '루미',
-    guardianDesc: '별 왕관을 쓴 별빛 고양이. 네 안의 품위와 중심을 지켜줘.',
+    guardianDesc: '별 왕관을 쓴 별빛 고양이예요. 나 안의 품위와 중심을 지켜 드려요.',
   },
   천기: {
     hanja: '天機',
@@ -205,7 +205,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}cheongi.webp`,
     guardianFocus: 'center 14%',
     guardianName: '리브',
-    guardianDesc: '나침반을 든 별빛 고양이. 헷갈리는 밤에도 갈 길을 짚어줘.',
+    guardianDesc: '나침반을 든 별빛 고양이예요. 헷갈리는 밤에도 갈 길을 짚어 드려요.',
   },
   태양: {
     hanja: '太陽',
@@ -220,7 +220,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}taeyang.webp`,
     guardianFocus: 'center 60%',
     guardianName: '솔',
-    guardianDesc: '태양 구슬을 높이 들어올린 별빛 고양이. 네 하루를 환하게 데워줘.',
+    guardianDesc: '태양 구슬을 높이 들어 올린 별빛 고양이예요. 나의 하루를 환하게 데워 드려요.',
   },
   무곡: {
     hanja: '武曲',
@@ -235,7 +235,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}mugok.webp`,
     guardianFocus: 'center 40%',
     guardianName: '코코',
-    guardianDesc: '금화 더미 곁에 엎드린 별빛 고양이. 네 손에 남는 것을 함께 세어줘.',
+    guardianDesc: '금화 더미 곁에 엎드린 별빛 고양이예요. 내 손에 남는 것을 함께 세어 드려요.',
   },
   천동: {
     hanja: '天同',
@@ -250,7 +250,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}cheondong.webp`,
     guardianFocus: 'center 36%',
     guardianName: '연',
-    guardianDesc: '연꽃 위에 몸을 쉬는 별빛 고양이. 오늘은 쉬어도 괜찮다고 말해줘.',
+    guardianDesc: '연꽃 위에 몸을 쉬는 별빛 고양이예요. 오늘은 쉬어도 괜찮다고 말해 줘요.',
   },
   염정: {
     hanja: '廉貞',
@@ -265,7 +265,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}yeomjeong.webp`,
     guardianFocus: 'center 20%',
     guardianName: '루즈',
-    guardianDesc: '장미빛 불꽃을 바라보는 별빛 고양이. 네 열정을 예쁘게 태워줘.',
+    guardianDesc: '장미빛 불꽃을 바라보는 별빛 고양이예요. 나의 열정을 예쁘게 태워 드려요.',
   },
   천부: {
     hanja: '天府',
@@ -280,7 +280,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}cheonbu.webp`,
     guardianFocus: 'center 30%',
     guardianName: '보미',
-    guardianDesc: '보물 주머니에 기댄 별빛 고양이. 네 곳간을 포근히 지켜줘.',
+    guardianDesc: '보물 주머니에 기댄 별빛 고양이예요. 나의 곳간을 포근히 지켜 드려요.',
   },
   태음: {
     hanja: '太陰',
@@ -295,7 +295,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}taeeum.webp`,
     guardianFocus: 'center 22%',
     guardianName: '루나',
-    guardianDesc: '초승달에 올라탄 별빛 고양이. 네 마음을 조용히 비춰줘.',
+    guardianDesc: '초승달에 올라탄 별빛 고양이예요. 나의 마음을 조용히 비춰 드려요.',
   },
   탐랑: {
     hanja: '貪狼',
@@ -310,7 +310,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}tamnang.webp`,
     guardianFocus: 'center 24%',
     guardianName: '피치',
-    guardianDesc: '복숭아꽃을 들고 돌아보는 별빛 고양이. 네 매력을 알고 쓰게 해줘.',
+    guardianDesc: '복숭아꽃을 들고 돌아보는 별빛 고양이예요. 나의 매력을 알고 쓰게 도와줘요.',
   },
   거문: {
     hanja: '巨門',
@@ -325,7 +325,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}geomun.webp`,
     guardianFocus: 'center 24%',
     guardianName: '그레이',
-    guardianDesc: '은방울을 든 별빛 고양이. 하고 싶은 말을 또박또박 꺼내게 해줘.',
+    guardianDesc: '은방울을 든 별빛 고양이예요. 하고 싶은 말을 또박또박 꺼내게 도와줘요.',
   },
   천상: {
     hanja: '天相',
@@ -340,7 +340,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}cheonsang.webp`,
     guardianFocus: 'center 30%',
     guardianName: '세라',
-    guardianDesc: '황금 저울 앞에 선 별빛 고양이. 네 균형을 고르게 잡아줘.',
+    guardianDesc: '황금 저울 앞에 선 별빛 고양이예요. 나의 균형을 고르게 잡아 드려요.',
   },
   천량: {
     hanja: '天梁',
@@ -355,7 +355,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}cheonryang.webp`,
     guardianFocus: 'center 34%',
     guardianName: '포레',
-    guardianDesc: '나뭇잎 등불을 든 별빛 고양이. 지친 네 등 뒤를 받쳐줘.',
+    guardianDesc: '나뭇잎 등불을 든 별빛 고양이예요. 지친 나의 등 뒤를 받쳐 드려요.',
   },
   칠살: {
     hanja: '七殺',
@@ -370,7 +370,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}chilsal.webp`,
     guardianFocus: 'center 26%',
     guardianName: '카이',
-    guardianDesc: '수정 검을 짚은 별빛 고양이. 네 앞길을 과감하게 열어줘.',
+    guardianDesc: '수정 검을 짚은 별빛 고양이예요. 나의 앞길을 과감하게 열어 드려요.',
   },
   파군: {
     hanja: '破軍',
@@ -385,7 +385,7 @@ export const STAR_VISUAL: Record<string, StarVisual> = {
     guardianImage: `${GUARDIAN_ART}pagun.webp`,
     guardianFocus: 'center 34%',
     guardianName: '마루',
-    guardianDesc: '별빛 파도 위를 달리는 별빛 고양이. 판을 바꿀 용기를 건네줘.',
+    guardianDesc: '별빛 파도 위를 달리는 별빛 고양이예요. 판을 바꿀 용기를 건네 드려요.',
   },
 };
 

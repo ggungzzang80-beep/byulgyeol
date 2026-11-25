@@ -158,15 +158,15 @@ function IntroStep({ onNext }: { onNext: () => void }) {
                 <span aria-hidden="true">✦</span> 오늘도 별이 반짝이는 중
               </span>
               <h1 className="t-display mt-4 text-[27px] leading-[1.45] text-[#4d3a6d] sm:text-[40px] lg:text-[44px]">
-                오늘 너의 별이
+                오늘 나의 별이
                 <br />
-                살짝 신호를 보내고 있어
+                살짝 신호를 보내고 있어요
                 <span className="ml-1 align-middle text-[19px]" style={{ color: '#f0b968' }} aria-hidden="true">
                   ✦
                 </span>
               </h1>
               <p className="mt-3 max-w-[330px] text-[15px] leading-[1.9] text-[#7c6a99] sm:text-[16px]">
-                별빛 가디언이 읽어주는
+                별빛 가디언이 읽어 드리는
                 <br />
                 나만의 사용설명서
               </p>
@@ -204,7 +204,7 @@ function IntroStep({ onNext }: { onNext: () => void }) {
                   하온 · 별을 읽는 사람
                 </span>
                 <p className="mt-1.5">
-                  태어난 순간만 알려주면, <b className="font-semibold text-[#6b4fa0]">네 별지도부터</b> 펼쳐 볼게.
+                  태어난 순간만 알려 주시면, <b className="font-semibold text-[#6b4fa0]">별지도부터</b> 펼쳐 볼게요.
                 </p>
               </div>
             </div>
@@ -212,7 +212,7 @@ function IntroStep({ onNext }: { onNext: () => void }) {
 
           {/* 이 여정에서 볼 세 장면 */}
           <div className="mt-7">
-            <SectionLabel index="✧">이런 별을 볼 수 있어</SectionLabel>
+            <SectionLabel index="✧">이런 별을 볼 수 있어요</SectionLabel>
             <div className="mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 sm:grid sm:grid-cols-3 sm:gap-3.5 sm:overflow-visible">
               {THEME_ART.character.scenes.map((s) => {
                 const caption = SCENE_COPY[s.id] ?? { title: '', line: '' };
@@ -243,7 +243,7 @@ function IntroStep({ onNext }: { onNext: () => void }) {
               <img src={THEME_ART.character.avatar} alt="" className="h-full w-full object-cover" />
             </span>
             <p className="text-[13px] leading-[1.75] text-[#5b4382]">
-              “어제는 고양이가 먼저 너를 알아보더라.” <span className="text-[#8f6fe0]">— 하온</span>
+              “어제는 고양이가 먼저 알아보더라고요.” <span className="text-[#8f6fe0]">— 하온</span>
             </p>
           </div>
           <p className="mt-3 text-center text-[12.5px] text-[#9a86b6]">{copy.brand.line}</p>
@@ -267,12 +267,12 @@ function BirthStep({
         <div className="order-2 lg:order-1">
           <SectionLabel index="✧">YOUR STARS</SectionLabel>
           <h2 className="t-display mt-3 text-[23px] leading-[1.5] text-[#4d3a6d]">
-            별은 이미 떠 있어.
+            별은 이미 떠 있어요.
             <br />
-            <span className="text-[#8f6fe0]">네가 태어난 순간</span>만 알려줘.
+            <span className="text-[#8f6fe0]">태어난 순간</span>만 알려 주세요.
           </h2>
           <p className="mt-3 max-w-[320px] text-[14px] leading-[1.9] text-[#6a5788]">
-            양력·음력, 윤달, 태어난 시간까지 보정해서 그려. 시간을 몰라도 괜찮아 — 정오 기준으로 별을 놓아줄게.
+            양력·음력, 윤달, 태어난 시간까지 보정해서 그려요. 시간을 몰라도 괜찮아요 — 정오 기준으로 별을 놓아 드릴게요.
           </p>
           <div className="mt-5 space-y-2.5">
             {['수호별과 성격의 결', '12개 별방 이야기', '올해 조심할 별방 하나'].map((t, i) => (
@@ -292,7 +292,7 @@ function BirthStep({
               <img src={THEME_ART.character.greeting} alt="" className="h-full w-full object-cover" />
             </span>
             <p className="text-[13px] leading-[1.7] text-[#5b4382]">
-              고양이가 네 생일을 기다리고 있어. 하단의 <b className="text-[#7c59cf]">다음</b>을 누르면 바로 그려줄게.
+              고양이가 생일을 기다리고 있어요. 하단의 <b className="text-[#7c59cf]">다음</b>을 누르면 바로 그려 드릴게요.
             </p>
           </div>
         </div>
@@ -336,8 +336,8 @@ function BooksStep({ onProduct, onNewYear }: { onProduct: (id: ProductId) => voi
             ? '2027 신년 운세가 메인, 2026년은 마감 할인. '
             : '동양 자미두수 다섯 권, 서양 점성술 두 권. '}
           첫 이야기는{' '}
-          <b className="font-semibold text-[#7c59cf]">커피 한 잔 값({CHARACTER_FIRST_PRICE.toLocaleString('ko-KR')}원)</b>이야.
-          가볍게 시작하고, 더 궁금할 때만 다음 책을 펼쳐.
+          <b className="font-semibold text-[#7c59cf]">커피 한 잔 값({CHARACTER_FIRST_PRICE.toLocaleString('ko-KR')}원)</b>이에요.
+          가볍게 시작하시고, 더 궁금할 때만 다음 책을 펼쳐 보세요.
         </p>
         {shownRates.length > 0 && (
           <p
@@ -349,7 +349,7 @@ function BooksStep({ onProduct, onNewYear }: { onProduct: (id: ProductId) => voi
             <b className="font-semibold text-[#7c59cf]">
               {Math.min(...shownRates)}~{Math.max(...shownRates)}%
             </b>{' '}
-            할인 · 결제 전에 <b className="font-semibold text-[#7c59cf]">무료로 30%</b> 먼저 읽어
+            할인 · 결제 전에 <b className="font-semibold text-[#7c59cf]">무료로 30%</b> 먼저 읽어 보세요
           </p>
         )}
 
@@ -422,7 +422,7 @@ function BooksStep({ onProduct, onNewYear }: { onProduct: (id: ProductId) => voi
                       <PriceTag product={p} variant="card" onDark={featured} />
                     </div>
                     {p.id === 'basic' && !ZIWEI_ONLY && (
-                      <p className="mt-1 text-[12.5px] text-[#b07ac9]">☕ 커피 한 잔 값, 부담 없이 시작해</p>
+                      <p className="mt-1 text-[12.5px] text-[#b07ac9]">☕ 커피 한 잔 값, 부담 없이 시작해 보세요</p>
                     )}
                     <ul
                       className="mt-3 flex-1 space-y-1.5 text-[13px] leading-relaxed"
@@ -457,7 +457,7 @@ function BooksStep({ onProduct, onNewYear }: { onProduct: (id: ProductId) => voi
           ))}
         </div>
         <p className="mt-4 text-center text-[13px] text-[#75628f]">
-          1회 결제 · 언제든 다시 보기 · 별지도는 서버에 저장하지 않아
+          1회 결제 · 언제든 다시 보기 · 별지도는 서버에 저장하지 않아요
         </p>
         {!ZIWEI_ONLY && (
           <div
@@ -465,12 +465,12 @@ function BooksStep({ onProduct, onNewYear }: { onProduct: (id: ProductId) => voi
             style={{ background: 'rgba(255,255,255,0.7)', border: '1px dashed rgba(146,116,192,0.25)' }}
           >
             <p className="text-[13px] leading-[1.8] text-[#6a5788]">
-              곧 · <b className="text-[#7c59cf]">매달 1일 월간 별빛 편지</b>(구독)가 열려. 서양 별자리까지 함께 읽는{' '}
-              <b className="text-[#7c59cf]">통합 리포트</b>는 위에서 바로 결제할 수 있어.
+              곧 · <b className="text-[#7c59cf]">매달 1일 월간 별빛 편지</b>(구독)가 열려요. 서양 별자리까지 함께 읽는{' '}
+              <b className="text-[#7c59cf]">통합 리포트</b>는 위에서 바로 결제할 수 있어요.
             </p>
           </div>
         )}
-        {ZIWEI_ONLY && <p className="mt-3 text-center text-[13px] text-[#75628f]">곧 · 매달 1일 별빛 편지(구독)가 열려.</p>}
+        {ZIWEI_ONLY && <p className="mt-3 text-center text-[13px] text-[#75628f]">곧 · 매달 1일 별빛 편지(구독)가 열려요.</p>}
       </section>
 
       <section className="mt-10">
@@ -481,11 +481,11 @@ function BooksStep({ onProduct, onNewYear }: { onProduct: (id: ProductId) => voi
           </div>
           <div className="mt-3 divide-y" style={{ borderColor: 'rgba(146,116,192,0.1)' }}>
             {[
-              { q: '태어난 시간을 몰라도 돼?', a: '응! 정오(오시) 기준으로 계산하고, 수호별이 달라질 수 있다는 것도 같이 알려줄게.' },
-              { q: '음력 생일인데 그대로 넣어도 돼?', a: '당연하지. 한국 음력 기준으로 양력 변환해서 그리고, 윤달도 선택할 수 있어.' },
+              { q: '태어난 시간을 몰라도 되나요?', a: '네, 정오(오시) 기준으로 계산해요. 수호별이 달라질 수 있다는 점도 함께 알려 드릴게요.' },
+              { q: '음력 생일인데 그대로 넣어도 되나요?', a: '물론이에요. 한국 음력 기준으로 양력으로 바꿔서 그리고, 윤달도 선택할 수 있어요.' },
               {
-                q: '결제하면 뭐가 열려?',
-                a: '커피 한 잔 값 이야기(3,900원)는 수호별·성격, 연애·배우자상, 진로·전공, 돈이 새는 장면까지 핵심만 열려. 12개 별방 전체랑 달마다 처방은 전체 별 이야기(12,900원)에서 볼 수 있어.',
+                q: '결제하면 무엇이 열리나요?',
+                a: '커피 한 잔 값 이야기(3,900원)에서는 수호별·성격, 연애·배우자상, 진로·전공, 돈이 새는 장면까지 핵심만 열려요. 12개 별방 전체와 달마다 처방은 전체 별 이야기(12,900원)에서 볼 수 있어요.',
               },
             ].map((f) => (
               <details key={f.q} className="group py-3.5">

@@ -3,6 +3,7 @@ import type { ChartModel } from '../lib/chart';
 import { guardianRecommendation } from '../lib/guardianGoods';
 import { GOODS_CHECKOUT_ENABLED } from '../config/env';
 import { useTheme } from '../lib/theme';
+import { elementLight } from '../lib/friendly';
 import { SectionLabel } from './ui';
 
 export default function GuardianGoods({ chart }: { chart: ChartModel }) {
@@ -46,7 +47,7 @@ export default function GuardianGoods({ chart }: { chart: ChartModel }) {
 
             <div className="mt-4 flex flex-wrap gap-1.5">
               <span className="rounded-full px-2.5 py-1 text-[12.5px]" style={{ border: '1px solid var(--panel-rule)', color: 'var(--panel-muted)' }}>
-                오행국 {chart.fiveElements}
+                {isCharacter ? `몸의 결 ${elementLight(chart.fiveElements)}` : `오행국 ${chart.fiveElements}`}
               </span>
               <span className="rounded-full px-2.5 py-1 text-[12.5px]" style={{ border: '1px solid var(--panel-rule)', color: 'var(--panel-muted)' }}>
                 약한 궁 {rec.weakestArea} {rec.weakestScore}
@@ -74,7 +75,7 @@ export default function GuardianGoods({ chart }: { chart: ChartModel }) {
             <p className="mt-4 text-[13px] leading-[1.85] t-panel-faint">{rec.reason}</p>
             <p className="mt-2 text-[12.5px] leading-[1.7] t-panel-faint">
               {isCharacter
-                ? '* 원석·굿즈는 효능을 보장하지 않는 소장용 소품이야. 의료·투자 판단의 근거가 아니야.'
+                ? '* 원석·굿즈는 효능을 보장하지 않는 소장용 소품이에요. 의료·투자 판단의 근거가 아니에요.'
                 : '* 원석·굿즈는 효능을 보장하지 않는 자기이해용 소품입니다. 의료·투자 판단의 근거가 아닙니다.'}
             </p>
           </div>
@@ -109,7 +110,7 @@ export default function GuardianGoods({ chart }: { chart: ChartModel }) {
       <div className="mt-3 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
         <p className="text-[13px] leading-relaxed t-faint">
           {isCharacter
-            ? '스마트스토어·굿즈 판매 연동을 준비 중이야. 지금은 출시 알림만 등록할 수 있어.'
+            ? '스마트스토어·굿즈 판매 연동을 준비 중이에요. 지금은 출시 알림만 등록할 수 있어요.'
             : '스마트스토어·굿즈 판매 연동을 준비 중입니다. 지금은 출시 알림만 등록할 수 있습니다.'}
         </p>
         <button
