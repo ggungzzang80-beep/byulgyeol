@@ -5,7 +5,7 @@ import { build2027 } from '../lib/newyear2027';
 import { PALACES, STAR_HANJA } from '../lib/terms';
 import { generateAiReport, isAiConfigured } from '../services/aiReport';
 import { useTheme } from '../lib/theme';
-import { brightLight, elementLight, mutagenLight, roomOf } from '../lib/friendly';
+import { brightLight, elementLight, mutagenLight, roomOf, roomShort } from '../lib/friendly';
 import { starGuardian } from '../lib/starPalette';
 import { findProduct, productPrice } from '../lib/products';
 import GuardianGoods from './GuardianGoods';
@@ -334,7 +334,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
                             : { border: '1px solid var(--panel-rule)', color: 'var(--panel-faint)' }
                         }
                       >
-                        {p.decadalRange[0]}-{p.decadalRange[1]} {p.name}
+                        {p.decadalRange[0]}-{p.decadalRange[1]} {isCharacter ? roomShort(p.name) : p.name}
                       </span>
                     );
                   })}
@@ -344,13 +344,13 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
 
             <div className="t-card p-6">
               <p className="text-[12.5px] tracking-[0.2em]" style={{ color: 'var(--accent-deep)' }}>
-                {isCharacter ? '올해 흐름' : '유년'} · {reportYear} {year2027.stemBranch}
+                {isCharacter ? `올해 흐름 · ${reportYear}년` : `유년 · ${reportYear} ${year2027.stemBranch}`}
               </p>
               <p className="mt-3 text-[14.5px] leading-[1.9] t-body">
                 {isCharacter ? (
                   <>
-                    {reportYear}년 네 별방은 <b className="font-semibold">{roomOf(year2027.stage.palace)}</b>
-                    야. 이 해에는 그 방의 주제가 가장 크게 움직여.
+                    {reportYear}년 네 별방은 <b className="font-semibold">{roomOf(year2027.stage.palace)}</b>이야. 이 해에는
+                    그 방의 주제가 가장 크게 움직여.
                   </>
                 ) : (
                   <>
@@ -592,7 +592,7 @@ export default function PremiumReport({ chart, tier, focusAi = false, onBack, on
             </h3>
             <p className="mt-3 max-w-[620px] text-[13.5px] leading-[1.9] t-muted">
               {isCharacter
-                ? '현재 가디언 정밀 엔진으로 분석된 리포트예요. 실시간 AI 대화형 풀이는 곧 연결될 예정이에요.'
+                ? '지금은 가디언 정밀 엔진이 분석한 리포트야. 실시간 AI 대화형 풀이는 곧 연결될 거야.'
                 : '현재 정밀 엔진으로 분석된 리포트입니다. 실시간 AI 대화형 풀이는 곧 연결될 예정입니다.'}
             </p>
 

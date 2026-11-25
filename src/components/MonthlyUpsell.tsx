@@ -51,11 +51,10 @@ export default function MonthlyUpsell({ chart, onBundle }: { chart: ChartModel; 
               : '매달 1일, 그달의 흐름을 세 장으로 정리해 보내드립니다. 금전·연애·일의 이달 처방과 조심할 날짜, 그리고 딱 하나의 행동을 담습니다.'}
           </p>
           <ul className="mt-3 flex-1 space-y-1.5 text-[13px] leading-relaxed t-muted">
-            {[
-              '이번 달 조심할 날 3일 (달력 표시)',
-              '금전·연애·일 3장 처방',
-              '내 명반 변화와 대한·유년 업데이트',
-            ].map((t) => (
+            {(isCharacter
+              ? ['이번 달 조심할 날 3일 (달력 표시)', '금전·연애·일 3장 처방', '내 별지도 변화와 10년·올해 흐름 업데이트']
+              : ['이번 달 조심할 날 3일 (달력 표시)', '금전·연애·일 3장 처방', '내 명반 변화와 대한·유년 업데이트']
+            ).map((t) => (
               <li key={t} className="flex gap-1.5">
                 <span style={{ color: 'var(--accent)' }}>·</span>
                 {t}
